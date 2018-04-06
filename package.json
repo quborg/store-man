@@ -1,0 +1,14 @@
+{
+  "name": "ferme-ayla",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "postinstall": "npm install --prefix server && npm install --prefix client",
+    "server": "npm start --prefix server",
+    "server:prod": "npm start:prod --prefix server",
+    "dev": "npm run dev --prefix client",
+    "start": "npm start --prefix client",
+    "build": "npm run build --prefix client",
+    "test": "npm test --prefix client"
+  }
+}
