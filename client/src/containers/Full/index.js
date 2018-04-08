@@ -5,12 +5,23 @@ import Header from '../../components/Header/';
 import Sidebar from '../../components/Sidebar/';
 import Breadcrumb from '../../components/Breadcrumb/';
 import Aside from '../../components/Aside/';
-import Footer from '../../components/Footer/';
 
 import Dashboard from '../../views/Dashboard/';
 
 class Full extends Component {
+
+  state = {
+    loggedIn: false
+  }
+
+  componentWillMount() {
+    this.setState({loggedIn: localStorage.getItem('loggedIn')})
+  }
+
   render() {
+    if (!this.state.loggedIn) {
+      return <Redirect to="/login" />
+    }
     return (
       <div className="app">
         <Header />
@@ -27,9 +38,8 @@ class Full extends Component {
           </main>
           <Aside />
         </div>
-        <Footer />
       </div>
-    );
+    )
   }
 }
 

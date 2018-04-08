@@ -17,9 +17,15 @@ import '../scss/core/_dropdown-menu-right.scss'
 // Containers
 import Full from './containers/Full/'
 
+// Pages
+import Login from './views/Pages/Login/';
+
+// <TransitionGroup>
+//   <CSSTransition key='login' timeout={500} classNames="fading-animation-transition" mountOnEnter={true} unmountOnExit={true}>
 ReactDOM.render((
   <HashRouter>
     <Switch>
+      <Route path="/login" name="Login" component={Login}/>
       <Route path="/" name="Home" component={Full}/>
     </Switch>
   </HashRouter>
