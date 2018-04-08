@@ -1,5 +1,29 @@
 This project is a combination between ReactJS, ExpressJS and MongoDB.
 
+```
+         . . .
+       .        .  .     ..    .
+    .                 .         .  .
+                    .
+                   .                ..
+   .          .            .              .
+   .            '.,        .               .
+   .              'b      *
+    .              '$    #.                ..
+   .    .           $:   #:               .
+ ..      .  ..      *#  @):        .   . .
+              .     :@,@):   ,.**:'   .
+  .      .,         :@@*: ..**'      .   .
+           '#o.    .:(@'.@*"'  .
+   .  .       'bq,..:,@@*'   ,*      .  .
+              ,p$q8,:@)'  .p*'      .
+       .     '  . '@@Pp@@*'    .  .
+        .  . ..    Y7'.'     .  .
+                  :@):.
+                 .:@:'.
+               .::(@:.'.**  # Ferme d'Ayla
+```
+
 # Ferme Ayla
 
 
@@ -13,11 +37,7 @@ This project is a combination between ReactJS, ExpressJS and MongoDB.
 
 ## Prerequisites
 
-Make sure you have NodeJS(>=8.9.4) and MongoDB(>=3.0) installed.<br>
-
-Optional:
-  - When this command `npm run dev` is used, my advise is to install `live-reload` package to watch over `/build` (dev mode).
-  - `npm install -g live-reload`<br>
+Make sure you have NodeJS(>=8.9.4) and MongoDB(>=3.0) installed.
 
 ## Available Scripts
 
