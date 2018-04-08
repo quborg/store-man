@@ -27,12 +27,13 @@ This project is a combination between ReactJS, ExpressJS and MongoDB.
 # Ferme Ayla
 
 
-- [Prerequisites](#prerequisites)
-- [Available Scripts](#available-scripts)
-  - [npm run server](#npm-server)
-  - [npm start](#npm-start)
-  - [npm run build](#npm-run-build)
-  - [mongod -dbpath ~/Mongodb/](#mongod--dbpath-~/Mongodb/)
+## Table of content :
+  - [Prerequisites](#prerequisites)
+  - [Available Scripts](#available-scripts)
+    - [npm run server](#npm-server)
+    - [npm start](#npm-start)
+    - [npm run build](#npm-run-build)
+    - [mongod -dbpath ~/Mongodb/](#mongod--dbpath-~/Mongodb/)
 
 
 ## Prerequisites
