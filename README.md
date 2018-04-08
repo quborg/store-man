@@ -1,5 +1,5 @@
+# Ferme Ayla
 This project is a combination between ReactJS, ExpressJS and MongoDB.
-
 ```
          . . .
        .        .  .     ..    .
@@ -23,8 +23,6 @@ This project is a combination between ReactJS, ExpressJS and MongoDB.
                  .:@:'.
                .::(@:.'.**  # Ferme d'Ayla
 ```
-
-# Ferme Ayla
 
 
 ## Table of content :
