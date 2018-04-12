@@ -1,1 +1,104 @@
 // Here you can add other styles
+
+// flex
+.fx {
+  display: flex;
+  &.fx-ac {
+    align-items: center;
+  }
+  &.fx-ab {
+    align-items: baseline;
+  }
+  &.fx-afe {
+    align-items: flex-end;
+  }
+  &.fx-jc {
+    justify-content: center;
+  }
+  &.fx-je {
+    justify-content: flex-end;
+  }
+  &.fx-js {
+    justify-content: flex-start;
+  }
+  &.fx-jsb {
+    justify-content: space-between;
+  }
+  &.fx-rev {
+    flex-direction: row-reverse;
+  }
+  .fx-grow-1 {
+    flex-grow: 1
+  }
+  .fx-grow-2 {
+    flex-grow: 2
+  }
+  .fx-grow-3 {
+    flex-grow: 3
+  }
+}
+
+// < Colors
+$danger: #f86c6b;
+
+.flat-burn {
+  color: rgba(79, 105, 118, 0.81)
+}
+.color-danger {
+  color: $danger;
+}
+// Colors >
+
+// < Override
+.btn-info {
+  color: white;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  filter: progid:DXImageTransform.Microsoft.Blur(PixelRadius='0.8');
+  -webkit-filter: url(#blur-filter);
+  filter: url(#blur-filter);
+  -webkit-filter: blur(0.8px);
+  filter: blur(0.8px);
+}
+// Override >
+
+// < enhancers
+tr.pointer {
+  cursor: pointer;
+}
+
+.main-table > div {
+  height: auto !important;
+}
+
+.form-warning .form-control:focus {
+  border-color: #ffc107;
+  box-shadow: 0 0 0 0.2rem rgba(255,193,7,.5);
+}
+
+.modal-footer > :not(:last-child) {
+  margin-left: 10px;
+}
+// enhancers >
+
+// < custom
+.entity-del {
+  width: 80%;
+  margin: 0 auto;
+  padding: 5px;
+  border: {
+    color: $danger;
+    width: 2px;
+    style: solid;
+  }
+}
+// custom >
+
+// < Common
+.b {
+  font-weight: bold
+}
+// Common >

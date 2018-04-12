@@ -9,15 +9,22 @@ const extractSCSS = new ExtractTextPlugin('[name].styles.css');
 
 const BUILD_DIR = path.resolve(__dirname, 'build');
 const SRC_DIR = path.resolve(__dirname, 'src');
-
-console.log('BUILD_DIR', BUILD_DIR);
-console.log('SRC_DIR', SRC_DIR);
+const SCSS_DIR = path.resolve(__dirname, 'scss');
 
 module.exports = (env = {}) => {
+  var entry = {
+    index: SRC_DIR + '/index.js'
+  }
+  if (env.dev) {
+    entry = [
+      'react-hot-loader/patch',
+      'webpack-dev-server/client?http://localhost:8080',
+      'webpack/hot/only-dev-server',
+      entry.index
+    ]
+  }
   return {
-    entry: {
-      index: [SRC_DIR + '/index.js']
-    },
+    entry,
     output: {
       path: BUILD_DIR,
       filename: '[name].bundle.js'
@@ -26,7 +33,7 @@ module.exports = (env = {}) => {
     devtool: env.prod ? 'source-map' : 'cheap-module-eval-source-map',
     devServer: {
       contentBase: BUILD_DIR,
-      //   port: 9001,
+      port: 8080,
       compress: true,
       hot: true,
       open: true
@@ -40,7 +47,6 @@ module.exports = (env = {}) => {
             loader: 'babel-loader',
             options: {
               cacheDirectory: true,
-              // presets: ['react', 'env']
             }
           }
         },
@@ -90,6 +96,12 @@ module.exports = (env = {}) => {
           }
         }]
     },
+    resolve: {
+      alias: {
+        'ayla-client': SRC_DIR,
+        'ayla-scss': SCSS_DIR
+      }
+    },
     plugins: [
       new webpack.HotModuleReplacementPlugin(),
       new webpack.optimize.UglifyJsPlugin({sourceMap: true}),
@@ -106,7 +118,12 @@ module.exports = (env = {}) => {
           {from: './public/img', to: 'img'}
         ],
         {copyUnmodified: false}
-      )
+      ),
+      new webpack.DefinePlugin({
+        'process.env': {
+          NODE_ENV: JSON.stringify(env.prod ? 'production':'development'),
+        }
+      })
     ]
   }
 };

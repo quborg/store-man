@@ -5,13 +5,18 @@ var passport        = require('passport')
   , cookieParser    = require('cookie-parser')
   , expressSession  = require('express-session')
   , LocalStrategy   = require('passport-local').Strategy
+  , mongoose        = require('mongoose')
   , Models          = {
       // order : require('../models/Order'),
-      user : require('../models/User')
+      user: require('../models/User'),
+      client: require('../models/Client'),
+      product: require('../models/Product')
     }
   , Routes          = {
       // order: require('./Order'),
-      user: require('./User')
+      user: require('./User'),
+      client: require('./Client'),
+      product: require('./Product')
     }
 
 
@@ -44,6 +49,8 @@ module.exports = Server => {
      })
 
     .use('/api', Routes.user)
+    .use('/api', Routes.client)
+    .use('/api', Routes.product)
     // .use('/api', Routes.order)
   ;
 

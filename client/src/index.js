@@ -1,32 +1,30 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import {HashRouter, Route, Switch} from 'react-router-dom';
+import React from 'react'
+import { render } from 'react-dom'
+import { Provider } from 'react-redux'
+import { AppContainer } from 'react-hot-loader'
+import { configureStore } from 'ayla-client/redux/stores/configure-store'
 
-// Styles
-// Import Flag Icons Set
-import 'flag-icon-css/css/flag-icon.min.css';
-// Import Font Awesome Icons Set
-import 'font-awesome/css/font-awesome.min.css';
-// Import Simple Line Icons Set
-import 'simple-line-icons/css/simple-line-icons.css';
-// Import Main styles for this application
-import '../scss/style.scss'
-// Temp fix for reactstrap
-import '../scss/core/_dropdown-menu-right.scss'
+import Main from './react'
 
-// Containers
-import Full from './containers/Full/'
+const store = configureStore()
+const rootElement = document.getElementById('root')
 
-// Pages
-import Login from './views/Pages/Login/';
+const renderApp = Component => {
+  render(
+    <AppContainer>
+      <Provider store={store}>
+        <Component />
+      </Provider>
+    </AppContainer>
+    , rootElement)
+}
 
-// <TransitionGroup>
-//   <CSSTransition key='login' timeout={500} classNames="fading-animation-transition" mountOnEnter={true} unmountOnExit={true}>
-ReactDOM.render((
-  <HashRouter>
-    <Switch>
-      <Route path="/login" name="Login" component={Login}/>
-      <Route path="/" name="Home" component={Full}/>
-    </Switch>
-  </HashRouter>
-), document.getElementById('root'));
+renderApp(Main)
+
+const isDev = () => process.env.NODE_ENV === 'development'
+
+if (isDev && module.hot) {
+  module.hot.accept('./react', () => {
+    renderApp(require('./react').default)
+  })
+}

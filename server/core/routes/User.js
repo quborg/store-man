@@ -10,12 +10,12 @@ var Router = require('express').Router()
 
 Router.get('/users', Controllers.Users.getAll)
       .get('/user', Controllers.Users.profile)
-      .get('/user/:id', Controllers.Users.findOne)
+      .get('/user/:_id', Controllers.Users.findOne)
       .post('/user', Controllers.Users.create)
       .post('/user/login', passport.authenticate('local'), Controllers.Users.login)
       .get('/user/logout', Controllers.Users.logout)
-      .put('/user/:id', Controllers.Users.update)
-      .delete('/user/:id', Controllers.Users.destroy)
+      .put('/user/:_id', Controllers.Users.update)
+      .delete('/user/:_id', Controllers.Users.destroy)
 
 
 

@@ -1,7 +1,0 @@
-{
-  "name": "Full",
-  "version": "0.0.0",
-  "private": true,
-  "main": "./index.js",
-  "description": "Here starts our app after successful user login"
-}

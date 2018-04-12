@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon index.js",
-    "start:prod": "node index.js production",
+    "start": "pm2 start ecosystem.config.js",
+    "start:prod": "pm2 start ecosystem.config.js --env production",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
@@ -16,10 +16,11 @@
     "express-session": "^1.15.6",
     "lodash": "^4.17.5",
     "mongodb": "^3.0.5",
-    "mongoose": "^5.0.13",
+    "mongoose": "4.7.2",
     "nodemon": "^1.17.3",
     "passport": "^0.4.0",
     "passport-local": "^1.0.0",
-    "passport-local-mongoose": "^5.0.0"
+    "passport-local-mongoose": "^5.0.0",
+    "pm2": "^2.10.2"
   }
 }

@@ -1,28 +1,20 @@
 'use strict'
 
-var config =  {
-                development: {
-                  mode: 'development',
-                  db_url: 'mongodb://localhost/fermeayla_dev',
-                  port: 3031
-                },
-                production: {
-                  mode: 'production',
-                  db_url: 'mongodb://localhost/fermeayla',
-                  port: 8081
-                }
-              }
-  , DEFAULT_ENV = config.development.mode
-
+const DB_DEV_URL  = "mongodb://localhost/fermeayla_dev"
+    , DB_PROD_URL = "mongodb://localhost/fermeayla"
 
 
 module.exports = Server => {
 
-  let ENV = process.argv[2] || DEFAULT_ENV
-    , appConfig = config[ENV]
+  let ENV = process.env.NODE_ENV
+    , PORT = process.env.PORT
+    , DB_URL = ENV == 'production'
+                ? DB_PROD_URL
+                : DB_DEV_URL
 
-  Server.mode    = appConfig.mode;
-  Server.db_url  = appConfig.db_url;
-  Server.port    = appConfig.port;
+
+  Server.mode   = ENV  || 'development';
+  Server.port   = PORT || '3000';
+  Server.db_url = DB_URL;
 
 }
