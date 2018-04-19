@@ -44,6 +44,7 @@
     "react-dom": "16.2.0",
     "react-redux": "^5.0.7",
     "react-router-dom": "4.2.2",
+    "react-upload-file": "^2.0.0-beta.6",
     "reactstrap": "5.0.0-beta",
     "redux": "^3.7.2",
     "redux-logger": "^3.0.6",
@@ -54,7 +55,7 @@
   },
   "scripts": {
     "start": "NODE_ENV=development && webpack-dev-server --progress --color --inline --env.dev",
-    "build": "NODE_ENV=production && npm run clean && webpack -p --progress --env.prod",
+    "start:build": "NODE_ENV=production && npm run clean && webpack -p --progress --env.prod",
     "clean": "rimraf ./build"
   },
   "engines": {

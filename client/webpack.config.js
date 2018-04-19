@@ -11,6 +11,10 @@ const BUILD_DIR = path.resolve(__dirname, 'build');
 const SRC_DIR = path.resolve(__dirname, 'src');
 const SCSS_DIR = path.resolve(__dirname, 'scss');
 
+const HOST = 'localhost';
+const PORT = '8080';
+
+
 module.exports = (env = {}) => {
   var entry = {
     index: SRC_DIR + '/index.js'
@@ -18,7 +22,7 @@ module.exports = (env = {}) => {
   if (env.dev) {
     entry = [
       'react-hot-loader/patch',
-      'webpack-dev-server/client?http://localhost:8080',
+      `webpack-dev-server/client?http://${HOST}:${PORT}`,
       'webpack/hot/only-dev-server',
       entry.index
     ]
@@ -33,7 +37,7 @@ module.exports = (env = {}) => {
     devtool: env.prod ? 'source-map' : 'cheap-module-eval-source-map',
     devServer: {
       contentBase: BUILD_DIR,
-      port: 8080,
+      port: PORT,
       compress: true,
       hot: true,
       open: true

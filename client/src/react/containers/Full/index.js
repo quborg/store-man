@@ -6,10 +6,9 @@ import {Container} from 'reactstrap';
 import Header from 'ayla-client/react/components/Header';
 import Sidebar from 'ayla-client/react/components/Sidebar';
 
-import Orders from 'ayla-client/react/views/Orders';
+import Orders, {WeeksOrders} from 'ayla-client/react/views/Orders';
 import Clients from 'ayla-client/react/views/Clients';
-import WeeksOrders from 'ayla-client/react/views/WeeksOrders';
-import WeeksProducts from 'ayla-client/react/views/WeeksProducts';
+import Products from 'ayla-client/react/views/Products';
 
 class Full extends Component {
 
@@ -26,7 +25,7 @@ class Full extends Component {
                 <Route path="/commandes" name="Orders" component={Orders}/>
                 <Route path="/clients" name="Clients" component={Clients}/>
                 <Route path="/commandes-semaine" name="WeeksOrders" component={WeeksOrders}/>
-                <Route path="/produits-semaine" name="WeeksProducts" component={WeeksProducts}/>
+                <Route path="/produits-semaine" name="Products" component={Products}/>
                 <Redirect from="*" to="/commandes"/>
               </Switch>
             </Container>

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 
+
 class Orders extends Component {
 
   render() {
@@ -12,3 +13,5 @@ class Orders extends Component {
 }
 
 export default Orders;
+
+export WeeksOrders from './WeeksOrders'

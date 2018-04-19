@@ -2,7 +2,22 @@ import React, { Component } from 'react'
 import {Row, Col, FormGroup, Input, Label} from 'reactstrap'
 
 
-export default class AddClient extends Component {
+export default class ClientForm extends Component {
+
+  state = {
+    civility: ''
+  }
+
+  componentWillMount() {
+    this.props.styleType == 'warning' &&
+    this.setState({
+      civility: this.props.data.civility
+    })
+  }
+
+  civilityHandler = e => {
+    this.setState({civility: e.target.value})
+  }
 
   render() {
     let keys =  Object.keys(this.props.data).reduce((keys, key) => {
@@ -32,15 +47,15 @@ export default class AddClient extends Component {
             </Col>
             <Col md="9">
               <FormGroup check inline>
-                <Input className="form-check-input" type="radio" name="civility" checked={this.props.data.civility=='mr'} value="mr"/>
+                <Input className="form-check-input" type="radio" name="civility" checked={this.state.civility=='mr'} value="mr" onChange={this.civilityHandler} />
                 <Label className="form-check-label" check>Mr</Label>
               </FormGroup>
               <FormGroup check inline>
-                <Input className="form-check-input" type="radio" name="civility" checked={this.props.data.civility=='mme'} value="mme"/>
+                <Input className="form-check-input" type="radio" name="civility" checked={this.state.civility=='mme'} value="mme" onChange={this.civilityHandler} />
                 <Label className="form-check-label" check>Mme</Label>
               </FormGroup>
               <FormGroup check inline>
-                <Input className="form-check-input" type="radio" name="civility" checked={this.props.data.civility=='mlle'} value="mlle"/>
+                <Input className="form-check-input" type="radio" name="civility" checked={this.state.civility=='mlle'} value="mlle" onChange={this.civilityHandler} />
                 <Label className="form-check-label" check>Mlle</Label>
               </FormGroup>
             </Col>

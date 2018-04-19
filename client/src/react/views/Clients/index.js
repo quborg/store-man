@@ -17,7 +17,8 @@ const options = {
   sizePerPageList: [ 10, 100 ],
   sizePerPage: 10,
   sortName: 'firstname',
-  sortOrder: 'desc'
+  sortOrder: 'desc',
+  noDataText: 'Aucun client enregistré.'
 }
 
 
@@ -84,26 +85,28 @@ class Clients extends Component {
   }
 
   getClientsActions = () => [
-    <button key='add-cli-board' type='button' className='fx fx-afe px-4 btn btn-primary'
+    <button key='add-cli-board' type='button' className='fx fx-ae px-4 btn btn-primary'
       onClick={() => this.setModal(true, 'primary', 'Ajouter')}>
       <i className='fa fa-plus lead'></i>
     </button>,
-    <button key='edit-cli-board' type='button' className='fx fx-afe px-4 btn btn-warning' {...{disabled: !this.state.selected}}
+    <button key='edit-cli-board' type='button' className='fx fx-ae px-4 btn btn-warning' {...{disabled: !this.state.selected}}
       onClick={() => this.setModal(true, 'warning', 'Modifier')}>
       <i className='fa fa-edit lead'></i>
     </button>,
-    <button key='del-cli-board' type='button' className='fx fx-afe px-4 btn btn-danger' {...{disabled: !this.state.selected}}
+    <button key='del-cli-board' type='button' className='fx fx-ae px-4 btn btn-danger' {...{disabled: !this.state.selected}}
       onClick={() => this.setModal(true, 'danger', 'Supprimer')}>
       <i className='fa fa-trash lead'></i>
     </button>
   ]
 
   render() {
-    const clientFormData = this.state.modalAction == 'Ajouter' ? {} : this.state.client
+    const Obj = {}
+        , isAjout = this.state.modalAction == 'Ajouter'
+        , clientData = isAjout ? Obj : this.state.client
     return (
       <div className='animated fadeIn'>
         <Container>
-          <Row className='fx fx-jsb'>
+          <Row className='fx fx-jb'>
             <div>
               <h2 className='flat-burn mb-0'>Tous les clients</h2>
             </div>
@@ -111,14 +114,15 @@ class Clients extends Component {
               {this.getClientsActions()}
             </div>
           </Row>
-          <Row className='pt-3'>
+          <Row className='pt-5'>
             <BootstrapTable striped hover
+                maxHeight='376'
                 containerClass='main-table'
                 trClassName='pointer'
                 data={this.props.data}
                 selectRow={selectRowProp(this.onSelectClient)}
                 pagination options={options} >
-              <TableHeaderColumn dataField='_id' isKey hidden>#</TableHeaderColumn>
+              <TableHeaderColumn dataField='_id' isKey width='200'>#</TableHeaderColumn>
               <TableHeaderColumn dataField='firstname' dataSort={true}>Prénom</TableHeaderColumn>
               <TableHeaderColumn dataField='lastname' dataSort={true}>Nom</TableHeaderColumn>
               <TableHeaderColumn dataField='phone'>Tél</TableHeaderColumn>
@@ -131,7 +135,7 @@ class Clients extends Component {
           <ModalHeader>{this.state.modalAction} un client</ModalHeader>
             <ModalBody>
               <form id="client-form" className="form-horizontal" onChange={this.clientHandler}>
-                <ClientForm data={clientFormData} styleType={this.state.modalTheme}/>
+                <ClientForm data={clientData} styleType={this.state.modalTheme}/>
               </form>
             </ModalBody>
             <ModalFooter>

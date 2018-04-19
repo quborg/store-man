@@ -15,7 +15,7 @@ const headers = { 'Content-Type': 'application/json' }
 
 
 export const getClients = () => dispatch => {
-  dispatch({ type: 'PENDING_CLIENTS' });
+  dispatch({ type: 'PENDING_CLIENTS' })
 
   const url = urls.client + 's'
   fetch(url, {headers})
@@ -31,14 +31,13 @@ export const getClients = () => dispatch => {
 
 
 export const saveClient = data => dispatch => {
-  dispatch({ type: 'PENDING_CLIENT' });
+  dispatch({ type: 'PENDING_CLIENT' })
 
   let {_id} = data
     , url = urls.client +'/'+ (_id||'')
     , method = _id ? 'PUT' : 'POST'
     , _options = options.ppt(method, data)
 
-  console.log(url, _options)
   fetch(url, _options)
     .then(res  => res.json())
     .then(data => { dispatch({ type: 'FULFILLED_CLIENT' }); dispatch(getClients()) })
@@ -46,7 +45,7 @@ export const saveClient = data => dispatch => {
 }
 
 export const delClient = id => dispatch => {
-  dispatch({ type: 'PENDING_CLIENT' });
+  dispatch({ type: 'PENDING_CLIENT' })
 
   const url = urls.client +'/'+ id
   fetch(url, options.del)

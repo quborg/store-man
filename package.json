@@ -4,10 +4,12 @@
   "private": true,
   "scripts": {
     "postinstall": "npm install --prefix server && npm install --prefix client",
+    "start2": "npm run start2 --prefix server",
+    "mongodb": "npm run mongodb --prefix server",
     "server": "npm start --prefix server",
     "server:prod": "npm start:prod --prefix server",
-    "start": "npm start --prefix client",
-    "build": "npm run build --prefix client"
+    "client": "npm start --prefix client",
+    "client:build": "npm start:build --prefix client"
   },
   "dependencies": {}
 }

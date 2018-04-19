@@ -1,31 +1,43 @@
 // Here you can add other styles
 
-// flex
+// < flex
 .fx {
   display: flex;
+  &.fx-col {
+    flex-direction: column
+  }
   &.fx-ac {
-    align-items: center;
+    align-items: center
   }
   &.fx-ab {
-    align-items: baseline;
+    align-items: baseline
   }
-  &.fx-afe {
-    align-items: flex-end;
+  &.fx-ae {
+    align-items: flex-end
+  }
+  &.fx-as {
+    align-items: flex-start
   }
   &.fx-jc {
-    justify-content: center;
+    justify-content: center
   }
   &.fx-je {
-    justify-content: flex-end;
+    justify-content: flex-end
   }
   &.fx-js {
-    justify-content: flex-start;
+    justify-content: flex-start
   }
-  &.fx-jsb {
-    justify-content: space-between;
+  &.fx-jb {
+    justify-content: space-between
+  }
+  &.fx-ja {
+    justify-content: space-around
   }
   &.fx-rev {
-    flex-direction: row-reverse;
+    flex-direction: row-reverse
+  }
+  .fx-1 {
+    flex: 1
   }
   .fx-grow-1 {
     flex-grow: 1
@@ -36,7 +48,11 @@
   .fx-grow-3 {
     flex-grow: 3
   }
+  .fx-wrap {
+    flex-flow: row wrap;
+  }
 }
+// flex >
 
 // < Colors
 $danger: #f86c6b;
@@ -63,10 +79,19 @@ $danger: #f86c6b;
   -webkit-filter: blur(0.8px);
   filter: blur(0.8px);
 }
+
+.react-bs-table-sizePerPage-dropdown .dropdown-menu a {
+  display: inline-block;
+  width: 100%;
+}
+
+.app-header.navbar .navbar-brand {
+  background-size: 100px auto;
+}
 // Override >
 
 // < enhancers
-tr.pointer {
+.pointer {
   cursor: pointer;
 }
 
@@ -82,6 +107,10 @@ tr.pointer {
 .modal-footer > :not(:last-child) {
   margin-left: 10px;
 }
+
+.sidebar-nav li.nav-item a {
+  text-transform: uppercase !important;
+}
 // enhancers >
 
 // < custom
@@ -95,10 +124,94 @@ tr.pointer {
     style: solid;
   }
 }
+
+.ico-menu-user {
+  width: 35px;
+  height: 35px;
+  background-color: rgba(228, 229, 230, 0.5019607843137255);
+  border: { radius: 50em };
+}
 // custom >
 
 // < Common
+h2 {
+  border-bottom: 1px solid;
+  padding-bottom: 10px;
+}
+
 .b {
   font-weight: bold
 }
+
+.mb-30 {
+  margin-bottom: 30px;
+}
 // Common >
+
+// < Products
+
+.product-preview {
+  border: 1px solid $gray-200;
+}
+
+.product-history {
+  margin-right: -10px;
+  margin-left: -10px;
+}
+
+.product-history:after {
+  content: "";
+  flex: auto;
+}
+// < Card
+.product-card {
+  &.i-right {
+    margin-right: 30px;
+  }
+  word-wrap: break-word;
+  padding: 1px;
+  width: 230px;
+  height: 90px;
+  background-color: $primary;
+  background-clip: border-box;
+  box-shadow: 0 0 0 5px $primary;
+  box-sizing: border-box;
+  overflow: hidden;
+  $card-width: 88px;
+  $card-height: 88px;
+  .img {
+    width: $card-width;
+    height: $card-height;
+    background-color: $white;
+    img {
+      width: $card-width - 2;
+      height: $card-height - 2;
+    }
+  }
+  .txt {
+    width: 140px;
+    height: $card-height;
+    .nbr {
+      color: white;
+    }
+    .name {
+      color: $gray-100;
+      word-wrap: break-word;
+      word-break: break-word;
+    }
+    .uty {
+      color: $gray-200;
+    }
+  }
+  &:hover {
+    box-shadow: 0 0 0 5px $info;
+  }
+  &.selected {
+    box-shadow: 0 0 0 7px $orange;
+    &:hover {
+      box-shadow: 0 0 0 7px $yellow;
+    }
+  }
+}
+// Card >
+// Products >

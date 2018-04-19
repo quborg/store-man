@@ -30,7 +30,7 @@ class HeaderDropdown extends Component {
   render() {
     return <Dropdown nav isOpen={this.state.dropdownOpen} toggle={this.toggle}>
       <DropdownToggle nav>
-        <img src={'img/avatars/6.jpg'} className="img-avatar" />
+        <i className="ico-menu-user fa fa-user-o fx fx-ac fx-jc font-lg" />
       </DropdownToggle>
       <DropdownMenu right>
         <DropdownItem onClick={() => this.goto('/logout')}><i className="fa fa-lock"></i> Logout</DropdownItem>

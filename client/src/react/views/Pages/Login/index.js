@@ -7,34 +7,43 @@ import {Container, Row, Col,
         Button, Input, InputGroup, InputGroupAddon, InputGroupText,
         Alert} from 'reactstrap'
 
-const MSG_ERROR_LOGIN = 'Informations non valides.'
+const FAILURE_MSG = 'Echec d\'obtenir une session.'
 
 
 class Login extends Component {
 
+  state = {
+    failure: false
+  }
+
+  componentWillReceiveProps({failure}) {
+    this.setState({failure})
+  }
+
   nameHandler = e => {
     this.setState({
       username: e.target.value,
-      error: false
+      failure: false
     })
   }
 
   passHandler = e => {
     this.setState({
       password: e.target.value,
-      error: false
+      failure: false
     })
   }
 
   onSubmit = e => {
     e.preventDefault();
+    this.setState({failure: false})
     const { username, password } = this.state;
     this.props.dispatch(login(username, password))
   }
 
   render() {
     const [{ nameHandler, passHandler, onSubmit }
-        , { loggedIn, error, dispatch }] = [this, this.props]
+        , { loggedIn, dispatch }] = [this, this.props]
 
     return loggedIn
     ? <Redirect from="/" to="/dashboard"/>
@@ -53,7 +62,7 @@ class Login extends Component {
                           <i className="icon-user"></i>
                         </InputGroupText>
                       </InputGroupAddon>
-                      <Input type="text" placeholder="bensaadat.amine@gmail.com" onChange={nameHandler}/>
+                      <Input type="text" placeholder="Email" onChange={nameHandler}/>
                     </InputGroup>
                     <InputGroup className="mb-4">
                       <InputGroupAddon addonType="prepend">
@@ -61,7 +70,7 @@ class Login extends Component {
                           <i className="icon-lock"></i>
                         </InputGroupText>
                       </InputGroupAddon>
-                      <Input type="password" placeholder="12345678" onChange={passHandler}/>
+                      <Input type="password" placeholder="mot de pass" onChange={passHandler}/>
                     </InputGroup>
                     <Row>
                       <Col xs="4">
@@ -70,12 +79,15 @@ class Login extends Component {
                           Login
                         </Button>
                       </Col>
-                      <Col xs="8" className="text-right">
+                      <Col xs="8" className="text-right fx fx-ac fx-je">
                         {
-                          error &&
+                          this.state.failure &&
                           <div className="text-danger align-middle h-100" style={{lineHeight:'2.5'}}>
-                            { error }
+                            { FAILURE_MSG }
                           </div>
+                        }
+                        {
+                          this.props.isFetching && <i className="fa fa-spinner fa-spin font-2xl" />
                         }
                       </Col>
                     </Row>

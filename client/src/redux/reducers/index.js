@@ -2,12 +2,14 @@
 
 import { combineReducers } from 'redux'
 
-import clients from './clients'
 import user from './user'
+import clients from './clients'
+import products from './products'
 
 const Reducers = combineReducers({
+  user,
   clients,
-  user
+  products
 })
 
 

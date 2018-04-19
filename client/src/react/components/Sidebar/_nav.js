@@ -1,5 +1,3 @@
-import moment from 'moment'
-
 export const nav = {
   items: [
     {
@@ -12,7 +10,7 @@ export const nav = {
       class: ''             // optional class names space delimited list for title item ex: "text-center"
     },
     {
-      name: 'Gestion de commandes',
+      name: 'Gestion commandes',
       url: '/commandes',
       icon: 'fa fa-pie-chart'
       // badge: {
@@ -26,12 +24,12 @@ export const nav = {
       icon: 'fa fa-users'
     },
     {
-      name: 'Commandes de la semaine',
+      name: 'Commandes semaine',
       url: '/commandes-semaine',
       icon: 'fa fa-shopping-basket'
     },
     {
-      name: 'Tableau de bord de la semaine du '+moment().day(1).format('DD/MM')+' au '+moment().day(7).format('DD/MM'),
+      name: 'Tableau de bord',
       url: '/produits-semaine',
       icon: 'fa fa-edit'
     }

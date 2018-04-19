@@ -13,7 +13,7 @@ const headers = { 'Content-Type': 'application/json' }
       }
 
 export const login = (username, password) => dispatch => {
-  dispatch({ type: 'PENDING_USER' });
+  dispatch({ type: 'PENDING_USER' })
   let url = urls.user + '/login'
   fetch(url, options.login(username, password))
     .then(res  => res.json())
@@ -22,7 +22,7 @@ export const login = (username, password) => dispatch => {
         type: 'FULFILLED_USER',
         payload: {data, loggedIn: true}
       })
-      localStorage.setItem('loggedIn', true);
+      localStorage.setItem('loggedIn', true)
     })
     .catch(e   => {
       dispatch({ type:'REJECTED_USER', payload: e })
@@ -31,7 +31,7 @@ export const login = (username, password) => dispatch => {
 
 
 export const logout = () => dispatch => {
-  // dispatch({ type: 'PENDING_USER' });
+  // dispatch({ type: 'PENDING_USER' })
   // let url = urls.user + '/logout'
   // fetch(url, options.logout)
   //   .then(res  => res.json())
