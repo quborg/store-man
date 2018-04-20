@@ -60,6 +60,7 @@ $danger: #f86c6b;
 .flat-burn {
   color: rgba(79, 105, 118, 0.81)
 }
+
 .color-danger {
   color: $danger;
 }
@@ -87,6 +88,10 @@ $danger: #f86c6b;
 
 .app-header.navbar .navbar-brand {
   background-size: 100px auto;
+}
+
+.sidebar .nav-title {
+  padding: 2rem 1rem;
 }
 // Override >
 
@@ -137,6 +142,7 @@ $danger: #f86c6b;
 h2 {
   border-bottom: 1px solid;
   padding-bottom: 10px;
+  font-weight: bold;
 }
 
 .b {
