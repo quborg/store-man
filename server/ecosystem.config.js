@@ -4,7 +4,7 @@ module.exports = {
         "name": "api-ferme-ayla",
         "script": "./index.js",
         "max_restarts": 2,
-        "watch": ["./api/**/*.js"],
+        "watch": ["./api/"],
         "env": {
             "PORT": 3031,
             "NODE_ENV": "development",
@@ -20,7 +20,7 @@ module.exports = {
         "name": "mongo-db",
         "script": "./services/mongod.sh",
         "max_restarts": 2,
-        "watch": ["./api/models/*.js"],
+        "watch": ["./api/models/"],
         "out_file": "./logs/mongodb.stdout.log",
         "error_file": "./logs/mongodb.stderr.log"
       }

@@ -16,7 +16,8 @@ const renderApp = Component => {
         <Component />
       </Provider>
     </AppContainer>
-    , rootElement)
+    , rootElement
+  )
 }
 
 renderApp(Main)

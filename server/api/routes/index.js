@@ -7,13 +7,13 @@ var passport        = require('passport')
   , LocalStrategy   = require('passport-local').Strategy
   , mongoose        = require('mongoose')
   , Models          = {
-      // order : require('../models/Order'),
+      order : require('../models/Order'),
       user: require('../models/User'),
       client: require('../models/Client'),
       product: require('../models/Product')
     }
   , Routes          = {
-      // order: require('./Order'),
+      order: require('./Order'),
       user: require('./User'),
       client: require('./Client'),
       product: require('./Product')
@@ -51,7 +51,7 @@ module.exports = Server => {
     .use('/api', Routes.user)
     .use('/api', Routes.client)
     .use('/api', Routes.product)
-    // .use('/api', Routes.order)
+    .use('/api', Routes.order)
   ;
 
   passport.use(new LocalStrategy(Models.user.authenticate()));

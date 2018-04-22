@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import {connect} from 'react-redux'
 import moment from 'moment'
-import {getProducts} from 'ayla-client/react/actions'
 import ProductCard from './ProductCard'
 import ProductForm from './ProductForm'
 import {Container, Row} from 'reactstrap'
@@ -31,10 +30,6 @@ class Products extends Component {
     title: ''
   }
 
-  componentWillMount() {
-    this.props.dispatch(getProducts())
-  }
-
   onProductClick(product, isTheSame=product._id==this.state.product._id) {
     isTheSame
     ? this.setState({product: {}, selected: false})
@@ -45,8 +40,16 @@ class Products extends Component {
     this.setState({product})
   }
 
+  resetSelection() {
+    console.log('reset product')
+  }
+
   openModal = (theme, title, isOpen=true) => {
     this.setState({ isOpen, theme, title })
+  }
+
+  closeModal = () => {
+    this.setState({isOpen:false})
   }
 
   boardControls = selected =>
@@ -65,10 +68,11 @@ class Products extends Component {
         , period  = `${day1} au ${day2}`
         , [
             {isOpen, theme, title, product, selected},
-            {data, dispatch, modalWillClose=()=>{this.setState({isOpen:false})}}
-          ] = [this.state, this.props]
-        , modalProps    = {isOpen, theme, title, modalWillClose}
-        , productProps  = {dispatch, product}
+            {data, dispatch},
+            {closeModal, resetSelection}
+          ] = [this.state, this.props, this]
+        , modalProps    = {isOpen, theme, title, modalWillClose: closeModal}
+        , productProps  = {dispatch, product, resetSelection}
 
     return (
       <div className='animated fadeIn'>

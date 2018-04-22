@@ -1,13 +1,15 @@
 'use strinct'
 
-var _ = require('lodash')
+var _     = require('lodash')
+  , help  = require('api/helper')
+
 
 module.exports = {
 
   getAll: function(req, res, next) {
     req.models.client.find(req.query, function(err, result){
       if (err) res.status(err.status||500).json(err);
-      res.status(200).json(_.orderBy(result, 'created_at', 'desc'));
+      res.status(200).json(help.sortBy(result, 'created_at', 'desc'));
     })
   },
 

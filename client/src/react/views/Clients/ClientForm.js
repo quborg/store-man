@@ -9,10 +9,10 @@ export default class ClientForm extends Component {
   }
 
   componentWillMount() {
-    this.props.styleType == 'warning' &&
-    this.setState({
-      civility: this.props.data.civility
-    })
+    if (this.props.theme == 'warning')
+      this.setState({
+        civility: this.props.data.civility
+      })
   }
 
   civilityHandler = e => {
@@ -25,7 +25,7 @@ export default class ClientForm extends Component {
                   safeKey && keys.push(key)
                   return keys
                 }, [])
-    return this.props.styleType == 'danger'
+    return this.props.theme == 'danger'
     ? <Row className='fx fx-jc'>
         <h4 className='color-danger pb-2'>Vous êtes sur le point de supprimer le client suivant :</h4>
         <div className='entity-del'>
@@ -38,7 +38,7 @@ export default class ClientForm extends Component {
           }
         </div>
       </Row>
-    : <Row className={`form-${this.props.styleType}`}>
+    : <Row className={`form-${this.props.theme}`}>
         <Col xs="12">
           <Input hidden type="text" name="_id" defaultValue={this.props.data._id}/>
           <FormGroup row className='fx fx-ac'>

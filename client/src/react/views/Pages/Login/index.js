@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import {Redirect} from 'react-router-dom'
 import {connect}  from 'react-redux'
-import {login} from 'ayla-client/react/actions'
+import {login} from 'ayla-client/redux/actions'
 import {Container, Row, Col,
         CardGroup, Card, CardBody,
         Button, Input, InputGroup, InputGroupAddon, InputGroupText,

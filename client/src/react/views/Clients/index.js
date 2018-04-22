@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
 import {connect} from 'react-redux'
 import serialize from 'form-serialize'
-import {getClients, saveClient, delClient} from 'ayla-client/react/actions'
+import {saveClient, delClient} from 'ayla-client/redux/actions'
 import {Container, Row, Col, Button,
         Modal, ModalHeader, ModalBody, ModalFooter} from 'reactstrap'
-import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table'
+import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table'
 import ClientForm from './ClientForm'
 
 const selectRowProp = cb => ({
@@ -26,14 +26,10 @@ class Clients extends Component {
 
   state = {
     modal: false,
-    modalTheme: 'primary',
+    modalTheme: '',
     modalAction: '',
     client: {},
     selected: false
-  }
-
-  componentWillMount() {
-    this.props.dispatch(getClients())
   }
 
   setModal(isOpen, theme, action) {
@@ -51,17 +47,13 @@ class Clients extends Component {
   }
 
   saveClient = () => {
-    this.props.dispatch(
-      saveClient(this.state.client)
-    )
+    this.props.dispatch( saveClient(this.state.client) )
     this.setState({modal: false})
   }
 
   delClient = () => {
-    this.props.dispatch(
-      delClient(this.state.client._id)
-    )
-    this.setState({modal: false})
+    this.props.dispatch( delClient(this.state.client._id) )
+    this.setState({modal: false, selected: false, client: {}})
   }
 
   clientHandler = () => {
@@ -78,7 +70,7 @@ class Clients extends Component {
       case 'warning': return <Button color="warning" onClick={this.saveClient}>
                                <i className='fa fa-save'></i> Sauvegarder
                              </Button>
-      case 'danger': return <Button color="danger" onClick={this.delClient}>
+      case 'danger':  return <Button color="danger" onClick={this.delClient}>
                                <i className='fa fa-trash'></i> Supprimer
                              </Button>
     }
@@ -100,9 +92,9 @@ class Clients extends Component {
   ]
 
   render() {
-    const Obj = {}
-        , isAjout = this.state.modalAction == 'Ajouter'
-        , clientData = isAjout ? Obj : this.state.client
+    const isAjout     = this.state.modalAction == 'Ajouter'
+        , clientData  = isAjout ? {} : this.state.client
+
     return (
       <div className='animated fadeIn'>
         <Container>
@@ -122,7 +114,7 @@ class Clients extends Component {
                 data={this.props.data}
                 selectRow={selectRowProp(this.onSelectClient)}
                 pagination options={options} >
-              <TableHeaderColumn dataField='_id' isKey width='200'>#</TableHeaderColumn>
+              <TableHeaderColumn dataField='_id' isKey hidden>#</TableHeaderColumn>
               <TableHeaderColumn dataField='firstname' dataSort={true}>Prénom</TableHeaderColumn>
               <TableHeaderColumn dataField='lastname' dataSort={true}>Nom</TableHeaderColumn>
               <TableHeaderColumn dataField='phone'>Tél</TableHeaderColumn>
@@ -135,7 +127,7 @@ class Clients extends Component {
           <ModalHeader>{this.state.modalAction} un client</ModalHeader>
             <ModalBody>
               <form id="client-form" className="form-horizontal" onChange={this.clientHandler}>
-                <ClientForm data={clientData} styleType={this.state.modalTheme}/>
+                <ClientForm data={clientData} theme={this.state.modalTheme}/>
               </form>
             </ModalBody>
             <ModalFooter>

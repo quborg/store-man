@@ -2,14 +2,14 @@
 
 var _        = require('lodash')
   , passport = require('passport')
-
+  , help     = require('api/helper')
 
 module.exports = {
 
   getAll: function(req, res, next) {
     req.models.user.find(req.query, function(err, users){
       if (err) res.status(err.status||500).json(err);
-      res.status(200).json(_.orderBy(users, 'created_at', 'desc'));
+      res.status(200).json(help.sortBy(result, 'created_at', 'desc'));
     })
   },
 

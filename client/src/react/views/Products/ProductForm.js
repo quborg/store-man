@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import serialize from 'form-serialize'
-import {saveProduct, delProduct} from 'ayla-client/react/actions'
-import {Row, Col, FormGroup, Input, Label, Media} from 'reactstrap'
+import {saveProduct, delProduct} from 'ayla-client/redux/actions'
+import {Row, Col, FormGroup, Input, Label, InputGroup, InputGroupAddon, InputGroupText} from 'reactstrap'
 import {Image} from 'ayla-client/react/components/Media'
 
 
@@ -52,6 +52,7 @@ export default class ProductForm extends Component {
 
   delProduct() {
     this.props.dispatch( delProduct(this.state.product._id) )
+    this.props.resetSelection()
     this.props.initModal()
   }
 
@@ -84,7 +85,7 @@ export default class ProductForm extends Component {
         <h4 className='color-danger pb-2'>Vous êtes sur le point de supprimer le produit suivant :</h4>
         <div className='entity-del'>
           <div className='b'>
-            {product.name}
+            {product.name} ( {(product.price/100).toFixed(2)} DH )
           </div>
           <div>
             <Image src={product.image} id='product-preview' width='50' height='50' alt='Image aperçu' className='product-preview' />
@@ -101,6 +102,17 @@ export default class ProductForm extends Component {
               </Col>
               <Col xs='12' md='9'>
                 <Input type='text' name='name' defaultValue={product.name} placeholder='Entrez le nom du produit'/>
+              </Col>
+            </FormGroup>
+            <FormGroup row className='fx fx-ac'>
+              <Col md='3'>
+                <Label>Prix :</Label>
+              </Col>
+              <Col xs='12' md='9'>
+                <InputGroup dir='rtl'>
+                  <InputGroupAddon addonType="append"><InputGroupText>CENT</InputGroupText></InputGroupAddon>
+                  <Input dir='ltr' type='text' name='price' defaultValue={product.price} placeholder='00' className='text-right' />
+                </InputGroup>
               </Col>
             </FormGroup>
             <FormGroup row className='fx fx-ac'>

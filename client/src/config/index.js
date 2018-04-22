@@ -7,6 +7,7 @@ const HOST = 'localhost'
 
 export default {
   user : `${API}/user`,
+  order : `${API}/order`,
   client : `${API}/client`,
   product : `${API}/product`
 }

@@ -11,6 +11,8 @@ const headers = { 'Content-Type': 'application/json' }
           headers
         }
       }
+    ;
+
 
 export const login = (username, password) => dispatch => {
   dispatch({ type: 'PENDING_USER' })

@@ -27,7 +27,6 @@
 
 ## Table of content :
   - [Prerequisites](#prerequisites)
-  - [Indication](#indication)
   - [Available Scripts](#available-scripts)
     - [npm run start2](#npm-run-start2)
     - [npm run mongodb](#npm-run-mongodb)
@@ -48,11 +47,6 @@ Make sure you have :
   * Install project dependencies `npm install`.
 (optional) Install PM2 globally `npm install -g pm2`.<br>
 (recommended) Use Yarn over NPM.
-
-
-## Indication
-
-You have to get **Mongo db up and ready listening to connections** first before starting node server api if you ran them separately, please respect the order or may the two apps crashes (like back and forth request/response not ready, interrupt tasks, reload task..). If you get in that situation, escape by kill all processes `pm2 stop id|name|all`.
 
 
 ## Available Scripts
@@ -95,6 +89,10 @@ Bundles the React app for production in `/client/build` folder.
 * **Used Ports**
   * **Server**, development and production ports setup in [ecosystem](./server/ecosystem.config.js).
   * **React/Redux development mode**, get a look into [webpack](/client/webpack.config.js) `PORT` variable.
+
+* **Redux Store**
+  * After a true authentication, we used Saga middleware to fire up data on the browser.
+  * [File configuration](./client/redux/middlewares/Saga.js)
 
 
 ## Metrics and Monitoring

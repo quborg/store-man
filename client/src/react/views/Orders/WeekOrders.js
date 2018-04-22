@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-class WeeksOrders extends Component {
+class WeekOrders extends Component {
 
   render() {
     return (
@@ -11,4 +11,4 @@ class WeeksOrders extends Component {
   }
 }
 
-export default WeeksOrders;
+export default WeekOrders;

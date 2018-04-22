@@ -1,8 +1,9 @@
 var mongoose   = require('mongoose')
 
   , UserSchema = mongoose.Schema({
-      name: String,
-      image : String,
+      name:  String,
+      price: Number,
+      image: String,
       created_at: { type: Date, default: Date.now },
       updated_at: { type: Date, default: Date.now }
     })

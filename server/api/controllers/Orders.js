@@ -1,39 +1,45 @@
 'use strinct'
 
-var _ = require('lodash')
+var _     = require('lodash')
+  , help  = require('api/helper')
+
+
 
 module.exports = {
 
   getAll: function(req, res, next) {
-    req.models.order.find(req.query, function(err, orders){
+    req.models.order.find(req.query, function(err, result){
       if (err) res.status(err.status||500).json(err);
-      res.status(200).json(_.orderBy(orders, 'created_at', 'desc'));
+      res.status(200).json(help.sortBy(result, 'created_at', 'desc'));
     })
   },
 
   findOne: function(req, res, next) {
-    req.models.order.findOne(req.params.id, function(err, order) {
-      if (order === undefined) res.status(404).json(err);
+    req.models.order.findById(req.params.id, function(err, result) {
+      if (result === undefined) res.status(404).json(err);
       if (err) res.status(err.status||500).json(err);
-      res.status(200).json(order);
+      res.status(200).json(result)
     });
   },
 
   create: function(req, res, next) {
-    req.models.order.create(req.body, function(err, order) {
+    req.models.order.create(req.body, function(err, result) {
       if (err) res.status(err.status||500).json(err);
-      res.status(201).json(order);
+      res.status(201).json(result);
     });
   },
 
   update: function(req, res, next) {
-    var id       = req.params.id
-      , criteria = _.merge({}, req.params, req.body);
+    let id   = req.params.id
+      , data = _.merge({}, req.body);
+
     if (!id) res.status(400).json({msg:'No id provided.', err});
-    req.models.order.update(id, criteria, function(err, order) {
-      if (order === undefined) res.status(404).json(err);
+    delete data._id
+
+    req.models.order.findByIdAndUpdate(id, data, function(err, result) {
+      if (result === undefined) res.status(404).json(err);
       if (err) res.status(err.status||500).json(err);
-      res.json(order);
+      res.json(result)
     });
   },
 
