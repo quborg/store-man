@@ -10,13 +10,11 @@ export default class ClientForm extends Component {
 
   componentWillMount() {
     if (this.props.theme == 'warning')
-      this.setState({
-        civility: this.props.data.civility
-      })
+      this.setState({ civility: this.props.data.civility })
   }
 
   civilityHandler = e => {
-    this.setState({civility: e.target.value})
+    this.setState({ civility: e.target.value })
   }
 
   render() {
@@ -31,7 +29,7 @@ export default class ClientForm extends Component {
         <div className='entity-del'>
           {
             keys.map( key =>
-              <div key={`key-${key}`} className='b'>
+              <div key={`del-cli-form-${key}`} className='b'>
                 {this.props.data[key]}
               </div>
             )

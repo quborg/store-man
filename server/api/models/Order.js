@@ -5,7 +5,6 @@ var mongoose    = require('mongoose')
                     basket_type : { type: String, enum: ['family', 'discovery'] },
                     basket      : [{
                                     product_id  : String,
-                                    price       : Number,
                                     quantity    : Number
                                   }],
                     total_price : { type: Number, default: 0 },

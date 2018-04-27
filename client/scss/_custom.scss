@@ -137,7 +137,7 @@ $danger: #f86c6b;
 .ico-menu-user {
   width: 35px;
   height: 35px;
-  background-color: rgba(228, 229, 230, 0.5019607843137255);
+  background-color: rgba(228, 229, 230, 0.5);
   border: { radius: 50em };
 }
 // custom >
@@ -225,3 +225,42 @@ h2 {
 }
 // Card >
 // Products >
+
+// < search
+div.search-list-wrapper {
+  position: relative;
+  // &.active {
+  // }
+  ul.search-list-box {
+    position: absolute;
+    max-height: 137px;
+    z-index: 1;
+    overflow-x: auto;
+    box-shadow: 0 1px 1px 0 $light;
+    li:hover {
+      background-color: $light;
+    }
+  }
+}
+// search >
+
+
+// < orders
+.basket-form {
+  .basket-form-unit {
+    margin-bottom: 3px;
+    > .input-group {
+      margin-bottom: -1px;
+      .close-line {
+        i { width: 8px }
+        color: $white;
+        background-color: $danger;
+      }
+    }
+    &.box-border {
+      padding: 2px 4px 3px;
+      box-shadow: inset 0 0 0 1px $gray-200;
+    }
+  }
+}
+// orders >

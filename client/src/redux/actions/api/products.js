@@ -1,4 +1,4 @@
-import urls from 'ayla-client/config'
+import urls from 'ayla-client/redux/config'
 
 const headers = { 'Content-Type': 'application/json' }
     , options = {

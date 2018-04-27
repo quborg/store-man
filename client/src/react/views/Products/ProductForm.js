@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import serialize from 'form-serialize'
-import {saveProduct, delProduct} from 'ayla-client/redux/actions'
+import {saveProduct, delProduct} from 'ayla-client/redux/actions/api'
 import {Row, Col, FormGroup, Input, Label, InputGroup, InputGroupAddon, InputGroupText} from 'reactstrap'
 import {Image} from 'ayla-client/react/components/Media'
 
@@ -25,10 +25,7 @@ export default class ProductForm extends Component {
     let { product, theme } = this.props
     const toAdd    = theme == 'primary'
         , toDelete = theme == 'danger'
-    if (toAdd && product._id) {
-      console.log('delete id')
-      delete product._id
-    }
+    if (toAdd) product = {}
     this.setState({product, toDelete})
   }
 
@@ -106,22 +103,44 @@ export default class ProductForm extends Component {
             </FormGroup>
             <FormGroup row className='fx fx-ac'>
               <Col md='3'>
-                <Label>Prix :</Label>
-              </Col>
-              <Col xs='12' md='9'>
-                <InputGroup dir='rtl'>
-                  <InputGroupAddon addonType="append"><InputGroupText>CENT</InputGroupText></InputGroupAddon>
-                  <Input dir='ltr' type='text' name='price' defaultValue={product.price} placeholder='00' className='text-right' />
-                </InputGroup>
-              </Col>
-            </FormGroup>
-            <FormGroup row className='fx fx-ac'>
-              <Col md='3'>
                 <Label>Image :</Label>
               </Col>
               <Col xs='12' md='9'>
                 <Image src={product.image} id='product-preview' width='75' height='75' alt='Image aperçu' className='product-preview' />
                 <Input type='file' accept='image/*' name='image' defaultValue={product.image} />
+              </Col>
+            </FormGroup>
+            <FormGroup row className='fx fx-ac'>
+              <Col md='3'>
+                <Label>Prix par KG :</Label>
+              </Col>
+              <Col xs='12' md='9'>
+                <InputGroup>
+                  <InputGroupAddon addonType="prepend"><InputGroupText>CENT</InputGroupText></InputGroupAddon>
+                  <Input type='number' name='price' defaultValue={product.price} placeholder='00' />
+                </InputGroup>
+              </Col>
+            </FormGroup>
+            <FormGroup row className='fx fx-ac'>
+              <Col md='3'>
+                <Label>Unité Familiale :</Label>
+              </Col>
+              <Col xs='12' md='9'>
+                <InputGroup>
+                  <InputGroupAddon addonType="prepend"><InputGroupText>KG</InputGroupText></InputGroupAddon>
+                  <Input type='number' name='family_unit' defaultValue={product.family_unit} placeholder='Le poid unitaire dans un panier familiale' />
+                </InputGroup>
+              </Col>
+            </FormGroup>
+            <FormGroup row className='fx fx-ac'>
+              <Col md='3'>
+                <Label>Unité Découverte :</Label>
+              </Col>
+              <Col xs='12' md='9'>
+                <InputGroup>
+                  <InputGroupAddon addonType="prepend"><InputGroupText>KG</InputGroupText></InputGroupAddon>
+                  <Input type='number' name='discovery_unit' defaultValue={product.discovery_unit} placeholder='Le poid unitaire dans un panier découverte' />
+                </InputGroup>
               </Col>
             </FormGroup>
           </Col>

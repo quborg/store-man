@@ -88,9 +88,9 @@ class Products extends Component {
           <Row className={'pt-5 product-history fx fx-wrap fx-' + (data.length>3 ?'jb':'ja')}>
             {
               data.length
-              ? data.map((item, i) => <ProductCard  key={item._id}
+              ? data.map((item, i) => <ProductCard  key={'key-prod-card-'+item._id}
                                                     _class={(i+1)%4?'i-right':''}
-                                                    {...{...item, selected:selected&&item._id==product._id}}
+                                                    {...{...item, selected: selected&&item._id==product._id}}
                                                     onClick={() => this.onProductClick(item)} />)
               : NO_PRODUCT_MSG
             }

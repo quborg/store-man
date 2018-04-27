@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import {connect}  from 'react-redux'
 import {Redirect} from 'react-router-dom'
-import {logout} from 'ayla-client/redux/actions'
+import {logout} from 'ayla-client/redux/actions/api'
 import {
   Badge,
   DropdownItem,

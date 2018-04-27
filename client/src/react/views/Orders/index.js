@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import {connect} from 'react-redux'
 import serialize from 'form-serialize'
-import {saveOrder, delOrder} from 'ayla-client/redux/actions'
+import {saveOrder, delOrder} from 'ayla-client/redux/actions/api'
 import {Container, Row, Col, Button,
         Modal, ModalHeader, ModalBody, ModalFooter} from 'reactstrap'
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table'
@@ -88,8 +88,9 @@ class Orders extends Component {
   ]
 
   render() {
-    const isAjout = this.state.action == 'Ajouter'
+    const isAjout   = this.state.action == 'Ajouter'
         , orderData = isAjout ? {} : this.state.client
+        , {clients, products} = this.props
 
     return (
       <div className='animated fadeIn'>
@@ -123,7 +124,7 @@ class Orders extends Component {
           <ModalHeader>{this.state.action} une commande</ModalHeader>
             <ModalBody>
               <form id="order-form" className="form-horizontal" onChange={this.orderHandler}>
-                <OrderForm data={orderData} clients={this.props.clients} theme={this.state.theme}/>
+                <OrderForm {...{data:orderData, clients, products}} theme={this.state.theme} />
               </form>
             </ModalBody>
             <ModalFooter>
@@ -138,8 +139,8 @@ class Orders extends Component {
   }
 }
 
-const mapState = ({orders:{data}, clients:{data:clients}}, ownProps) => {
-  ownProps = { ...ownProps, data, clients }
+const mapState = ({orders:{data}, clients:{data:clients}, products:{data:products}}, ownProps) => {
+  ownProps = { ...ownProps, data, clients, products }
   return ownProps
 }
 

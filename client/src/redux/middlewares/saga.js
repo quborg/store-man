@@ -1,6 +1,6 @@
 import { put, takeLatest } from 'redux-saga/effects';
 
-import {getClients, getProducts, getOrders} from 'ayla-client/redux/actions'
+import {getClients, getProducts, getOrders} from 'ayla-client/redux/actions/api'
 
 
 /* Default Root () */

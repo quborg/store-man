@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import {connect} from 'react-redux'
 import serialize from 'form-serialize'
-import {saveClient, delClient} from 'ayla-client/redux/actions'
+import {saveClient, delClient} from 'ayla-client/redux/actions/api'
 import {Container, Row, Col, Button,
         Modal, ModalHeader, ModalBody, ModalFooter} from 'reactstrap'
 import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table'

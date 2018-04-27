@@ -31,9 +31,9 @@
     - [npm run start2](#npm-run-start2)
     - [npm run mongodb](#npm-run-mongodb)
     - [npm run server](#npm-run-server)
-    - [npm run server:prod](#npm-run-server:prod)
+    - [npm run server:prod](#npm-run-serverprod)
     - [npm run client](#npm-run-client)
-    - [npm run client:build](#npm-run-build:client)
+    - [npm run client:build](#npm-run-buildclient)
   - [Configs indications](#configs-indications)
   - [Metrics / Monitoring](#metrics-and-monitoring)
 
@@ -45,8 +45,8 @@ Make sure you have :
   * MongoDB(>=3.0)
   * `/bin/bash` environment available for current unix user.
   * Install project dependencies `npm install`.
-(optional) Install PM2 globally `npm install -g pm2`.<br>
-(recommended) Use Yarn over NPM.
+  * (optional) Install PM2 globally `npm install -g pm2`.<br>
+  * (recommended) Use Yarn over NPM.
 
 
 ## Available Scripts

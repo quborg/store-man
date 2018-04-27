@@ -3,6 +3,7 @@ import { render } from 'react-dom'
 import { Provider } from 'react-redux'
 import { AppContainer } from 'react-hot-loader'
 import { configureStore } from 'ayla-client/redux/stores/configure-store'
+import 'ayla-client/react/helper/prototypes'
 
 import Main from './react'
 
@@ -20,7 +21,11 @@ const renderApp = Component => {
   )
 }
 
+
+
 renderApp(Main)
+
+
 
 const isDev = () => process.env.NODE_ENV === 'development'
 
