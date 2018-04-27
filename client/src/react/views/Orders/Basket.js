@@ -53,6 +53,7 @@ export default class Basket extends Component {
       leftBasket = this.props.products
     }
     this.setState({basket, leftBasket})
+    this.props.updateTotalPrice(basket)
   }
 
   basketProductHandler = (selectedProduct, e) => {
@@ -132,15 +133,16 @@ export default class Basket extends Component {
             this.state.basket.map( product =>
               <InputGroup key={'key-basket-item-'+this.props.type+'-'+product._id}>
                 <input hidden name='basket[][_id]' defaultValue={product._id} />
-                <InputGroupAddon addonType='prepend' style={{width:'242px'}}><InputGroupText style={{width:'100%'}}>{product.name}</InputGroupText></InputGroupAddon>
+                <InputGroupAddon addonType='prepend' style={{width:'220px'}}><InputGroupText style={{width:'100%'}}>{product.name}</InputGroupText></InputGroupAddon>
                 <input  type='number' step='0.1'
                         name='basket[][quantity]'
                         defaultValue={product.quantity}
                         onChange={e => this.props.updatedBasketType(this.state.basket, product._id, e.target.value)}
                         autoFocus={this.props.focusBasketId==product._id}
                         placeholder='Quantité ..'
-                        style={{width:'80px'}}
+                        style={{width:'66px'}}
                         className='text-right' />
+                <InputGroupAddon addonType="append"><InputGroupText>DH</InputGroupText></InputGroupAddon>
                 <InputGroupAddon addonType='append' onClick={() => this.removeBasketItem(product)}><InputGroupText className='close-line'><i className='fa fa-close'/></InputGroupText></InputGroupAddon>
               </InputGroup>
             )

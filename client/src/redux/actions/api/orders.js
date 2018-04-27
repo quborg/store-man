@@ -31,6 +31,7 @@ export const getOrders = () => dispatch => {
 
 
 export const saveOrder = data => dispatch => {
+  console.log('save order', data); return;
   dispatch({ type: 'PENDING_ORDER' })
 
   let {_id} = data

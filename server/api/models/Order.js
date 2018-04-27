@@ -8,7 +8,7 @@ var mongoose    = require('mongoose')
                                     quantity    : Number
                                   }],
                     total_price : { type: Number, default: 0 },
-                    status      : { type: String, default: 'close', enum: ['open','pending','close'] },
+                    status      : { type: String, default: 'close', enum: ['open','stock','pending','close'] },
                     created_at  : { type: Date, default: Date.now },
                     updated_at  : { type: Date, default: Date.now }
                   })

@@ -116,8 +116,8 @@ export default class ProductForm extends Component {
               </Col>
               <Col xs='12' md='9'>
                 <InputGroup>
-                  <InputGroupAddon addonType="prepend"><InputGroupText>CENT</InputGroupText></InputGroupAddon>
-                  <Input type='number' name='price' defaultValue={product.price} placeholder='00' />
+                  <InputGroupAddon addonType="prepend"><InputGroupText>DH</InputGroupText></InputGroupAddon>
+                  <Input type='number' name='price' defaultValue={product.price} placeholder='0' />
                 </InputGroup>
               </Col>
             </FormGroup>

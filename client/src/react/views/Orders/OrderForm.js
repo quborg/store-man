@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import {Row, Col, FormGroup, Input, Label, ListGroup, ListGroupItem} from 'reactstrap'
+import {Row, Col, FormGroup, Input, Label, InputGroup, InputGroupAddon, InputGroupText, ListGroup, ListGroupItem} from 'reactstrap'
 import Basket from './Basket'
 
 
@@ -11,6 +11,7 @@ export default class OrderForm extends Component {
     familyBasket: [],
     discoveryBasket: [],
     focusBasketId: null,
+    totalPrice: 0,
     status: '',
     clientId: '',
     clientName: '',
@@ -24,7 +25,8 @@ export default class OrderForm extends Component {
         basket: this.props.data.basket,
         basketType: this.props.data.basket_type,
         status: this.props.data.status,
-        clientId: this.props.data.client_id
+        clientId: this.props.data.client_id,
+        totalPrice: this.props.data.total_price
       })
   }
 
@@ -53,6 +55,7 @@ export default class OrderForm extends Component {
     }
     else {
       this.setState({
+        clientId: '',
         clientName: '',
         searchList: [],
         activeSearch: false
@@ -75,13 +78,50 @@ export default class OrderForm extends Component {
   }
 
   updatedBasketType = (basket=[], id, eventQuantity) => {
-    if (id) {
+    let {totalPrice} = this.state
+    if (id) // save input basket event on component receives props
       basket =  basket.map(product => {
-                  if (product._id == id) product.quantity = eventQuantity
+                  if (product._id == id) product.quantity = Number(eventQuantity)
                   return product
                 })
+
+    this.setState({
+      basket,
+      totalPrice,
+      basketType: 'special',
+      focusBasketId: id
+    })
+    this.updateTotalPrice(basket) // update totalPrice too
+  }
+
+  updateTotalPrice = basket => {
+    let {totalPrice} = this.state
+    if (basket.length) { // update totalPrice
+      totalPrice = this.getTotalPrice(basket)
     }
-    this.setState({basket, basketType: 'special', focusBasketId: id})
+    this.setState({totalPrice})
+  }
+
+  getTotalPrice(basketProducts) {
+    return  basketProducts.reduce(
+              (total, {_id, quantity}) => {
+                let price = this.getProductKey(_id, 'price')
+                total += Number(quantity||0) * price
+                return total
+              }, 0
+            )
+            || 0
+  }
+
+  getProductKey(id, key) {
+    let result = 0
+      , {products} = this.props
+
+    if (products && !products.length) return 0
+    for(let i in products) {
+      if (products[i]._id == id) result = products[i].price
+    }
+    return result
   }
 
   render() {
@@ -151,6 +191,7 @@ export default class OrderForm extends Component {
                     updatedBasketType={this.updatedBasketType}
                     focusBasketId={this.state.focusBasketId}
                     type={this.state.basketType}
+                    updateTotalPrice={this.updateTotalPrice}
                     products={this.props.products} />
           </Col>
         </FormGroup>
@@ -159,25 +200,41 @@ export default class OrderForm extends Component {
             <Label>Prix totale</Label>
           </Col>
           <Col xs="12" md="9">
-            <Input type="number" name="total_price" defaultValue={this.props.data.total_price} disabled />
+            <InputGroup>
+              <Input type="number" name="total_price" value={this.state.totalPrice} disabled className='b text-right' />
+              <InputGroupAddon addonType="append"><InputGroupText style={{width:'64px'}}>DH</InputGroupText></InputGroupAddon>
+            </InputGroup>
           </Col>
         </FormGroup>
-        <FormGroup row className='fx fx-ac'>
+        <FormGroup row className='fx fx-ac order-status-groups'>
           <Col md="3">
             <Label>Status</Label>
           </Col>
-          <Col xs="12" md="9">
+          <Col xs="12" md="9" className='status-group'>
             <FormGroup check inline>
               <Input className="form-check-input" type="radio" name="status" checked={this.state.status=='open'} value="open" onChange={this.statusHandler} />
-              <Label className="form-check-label" check>ouvert</Label>
+              <Label className="form-check-label" check>Ouvert</Label>
             </FormGroup>
+          </Col>
+          <Col md="3"></Col>
+          <Col xs="12" md="9" className='status-group'>
             <FormGroup check inline>
               <Input className="form-check-input" type="radio" name="status" checked={this.state.status=='pending'} value="pending" onChange={this.statusHandler} />
-              <Label className="form-check-label" check>en attente</Label>
+              <Label className="form-check-label" check>En attente de verification de stock</Label>
             </FormGroup>
+          </Col>
+          <Col md="3"></Col>
+          <Col xs="12" md="9" className='status-group'>
+            <FormGroup check inline>
+              <Input className="form-check-input" type="radio" name="status" checked={this.state.status=='stock'} value="stock" onChange={this.statusHandler} />
+              <Label className="form-check-label" check>En attente de payement</Label>
+            </FormGroup>
+          </Col>
+          <Col md="3"></Col>
+          <Col xs="12" md="9" className='status-group'>
             <FormGroup check inline>
               <Input className="form-check-input" type="radio" name="status" checked={this.state.status=='close'} value="close" onChange={this.statusHandler} />
-              <Label className="form-check-label" check>fermé</Label>
+              <Label className="form-check-label" check>Cloturé</Label>
             </FormGroup>
           </Col>
         </FormGroup>
