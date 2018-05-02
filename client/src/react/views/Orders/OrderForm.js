@@ -3,40 +3,29 @@ import {Row, Col, FormGroup, Input, Label, InputGroup, InputGroupAddon, InputGro
 import Basket from './Basket'
 
 
+
 export default class OrderForm extends Component {
 
   state = {
-    basket: [],
-    basketType: '',
-    familyBasket: [],
-    discoveryBasket: [],
-    focusBasketId: null,
-    totalPrice: 0,
-    status: '',
-    clientId: '',
     clientName: '',
     activeSearch: false,
-    searchList: []
+    searchList: [],
+    familyBasket: [],
+    discoveryBasket: []
   }
 
   componentWillMount() {
-    if (this.props.theme == 'warning')
-      this.setState({
-        basket: this.props.data.basket,
-        basketType: this.props.data.basket_type,
-        status: this.props.data.status,
-        clientId: this.props.data.client_id,
-        totalPrice: this.props.data.total_price
-      })
+    if (this.props.theme == 'warning') // on update order
+      this.setState({...this.props.order})
   }
 
-  basketTypeHandler = e => {
-    this.setState({basketType: e.target.value})
-  }
-
-  statusHandler = e => {
-    this.setState({status: e.target.value})
-  }
+  // shouldComponentUpdate(nextProps) {
+  //   console.log('scu form', this.props.order.basket, nextProps.order.basket)
+  //   if (this.props.order.basket !== nextProps.order.basket) {
+  //     return false
+  //   }
+  //   return true
+  // }
 
   searchListHandler = e => {
     let searchList  = []
@@ -53,14 +42,7 @@ export default class OrderForm extends Component {
                     )
       this.setState({searchList, activeSearch: true, clientName: keyword})
     }
-    else {
-      this.setState({
-        clientId: '',
-        clientName: '',
-        searchList: [],
-        activeSearch: false
-      })
-    }
+    else this.selectedClient({})
   }
 
   cleanNameAdress = ({firstname, lastname, adress}) =>
@@ -69,59 +51,12 @@ export default class OrderForm extends Component {
     (adress?', '+adress:'')
 
   selectedClient = ({_id, firstname, lastname}) => {
+    this.props.orderHandler({client_id: _id})
     this.setState({
-      clientId: _id,
       clientName: this.cleanNameAdress({firstname, lastname}),
       searchList: [],
       activeSearch: false
     })
-  }
-
-  updatedBasketType = (basket=[], id, eventQuantity) => {
-    let {totalPrice} = this.state
-    if (id) // save input basket event on component receives props
-      basket =  basket.map(product => {
-                  if (product._id == id) product.quantity = Number(eventQuantity)
-                  return product
-                })
-
-    this.setState({
-      basket,
-      totalPrice,
-      basketType: 'special',
-      focusBasketId: id
-    })
-    this.updateTotalPrice(basket) // update totalPrice too
-  }
-
-  updateTotalPrice = basket => {
-    let {totalPrice} = this.state
-    if (basket.length) { // update totalPrice
-      totalPrice = this.getTotalPrice(basket)
-    }
-    this.setState({totalPrice})
-  }
-
-  getTotalPrice(basketProducts) {
-    return  basketProducts.reduce(
-              (total, {_id, quantity}) => {
-                let price = this.getProductKey(_id, 'price')
-                total += Number(quantity||0) * price
-                return total
-              }, 0
-            )
-            || 0
-  }
-
-  getProductKey(id, key) {
-    let result = 0
-      , {products} = this.props
-
-    if (products && !products.length) return 0
-    for(let i in products) {
-      if (products[i]._id == id) result = products[i].price
-    }
-    return result
   }
 
   render() {
@@ -135,7 +70,7 @@ export default class OrderForm extends Component {
           {
             keys.map( key =>
               <div key={`key-del-order-${key}`} className='b'>
-                {this.props.data[key]}
+                {this.props.order[key]}
               </div>
             )
           }
@@ -145,13 +80,13 @@ export default class OrderForm extends Component {
 
     return <Row className={`form-${this.props.theme}`}>
       <Col xs="12">
-        <Input hidden type="text" name="_id" defaultValue={this.props.data._id}/>
+        <Input hidden type="text" name="_id" defaultValue={this.props.order._id}/>
         <FormGroup row className='fx fx-ac'>
           <Col md="3">
             <Label>Client</Label>
           </Col>
           <Col xs="12" md="9">
-            <Input hidden type="text" name="client_id" value={this.state.clientId} />
+            <Input hidden type="text" name="client_id" value={this.props.order.client_id} />
             <Input type="text" value={this.state.clientName} onChange={this.searchListHandler} placeholder="Nom du client" />
             <div className={`search-list-wrapper ${listClass}`}>
               <ListGroup className="search-list-box">
@@ -172,11 +107,11 @@ export default class OrderForm extends Component {
           </Col>
           <Col md="9">
             <FormGroup check inline>
-              <Input className="form-check-input" type="radio" name="basket_type" checked={this.state.basketType=='family'} value="family" onChange={this.basketTypeHandler} />
+              <Input className="form-check-input" type="radio" name="basket_type" checked={this.props.order.basket_type=='family'} value="family" onChange={e => this.props.orderHandler({basket_type: e.target.value})} />
               <Label className="form-check-label" check>Familiale</Label>
             </FormGroup>
             <FormGroup check inline>
-              <Input className="form-check-input" type="radio" name="basket_type" checked={this.state.basketType=='discovery'} value="discovery" onChange={this.basketTypeHandler} />
+              <Input className="form-check-input" type="radio" name="basket_type" checked={this.props.order.basket_type=='discovery'} value="discovery" onChange={e => this.props.orderHandler({basket_type: e.target.value})} />
               <Label className="form-check-label" check>Découverte</Label>
             </FormGroup>
           </Col>
@@ -187,11 +122,8 @@ export default class OrderForm extends Component {
           </Col>
           <Col xs="12" md="9">
             <Basket theme={this.props.theme}
-                    basket={this.state.basket}
-                    updatedBasketType={this.updatedBasketType}
-                    focusBasketId={this.state.focusBasketId}
-                    type={this.state.basketType}
-                    updateTotalPrice={this.updateTotalPrice}
+                    order={this.props.order}
+                    orderHandler={this.props.orderHandler}
                     products={this.props.products} />
           </Col>
         </FormGroup>
@@ -201,7 +133,7 @@ export default class OrderForm extends Component {
           </Col>
           <Col xs="12" md="9">
             <InputGroup>
-              <Input type="number" name="total_price" value={this.state.totalPrice} disabled className='b text-right' />
+              <Input type="number" name="total_price" value={this.props.order.total_price} disabled className='b text-right' />
               <InputGroupAddon addonType="append"><InputGroupText style={{width:'64px'}}>DH</InputGroupText></InputGroupAddon>
             </InputGroup>
           </Col>
@@ -212,28 +144,28 @@ export default class OrderForm extends Component {
           </Col>
           <Col xs="12" md="9" className='status-group'>
             <FormGroup check inline>
-              <Input className="form-check-input" type="radio" name="status" checked={this.state.status=='open'} value="open" onChange={this.statusHandler} />
+              <Input className="form-check-input" type="radio" name="status" checked={this.props.order.status=='open'} value="open" onChange={e => this.props.orderHandler({status: e.target.value})} />
               <Label className="form-check-label" check>Ouvert</Label>
             </FormGroup>
           </Col>
           <Col md="3"></Col>
           <Col xs="12" md="9" className='status-group'>
             <FormGroup check inline>
-              <Input className="form-check-input" type="radio" name="status" checked={this.state.status=='pending'} value="pending" onChange={this.statusHandler} />
+              <Input className="form-check-input" type="radio" name="status" checked={this.props.order.status=='pending'} value="pending" onChange={e => this.props.orderHandler({status: e.target.value})} />
               <Label className="form-check-label" check>En attente de verification de stock</Label>
             </FormGroup>
           </Col>
           <Col md="3"></Col>
           <Col xs="12" md="9" className='status-group'>
             <FormGroup check inline>
-              <Input className="form-check-input" type="radio" name="status" checked={this.state.status=='stock'} value="stock" onChange={this.statusHandler} />
+              <Input className="form-check-input" type="radio" name="status" checked={this.props.order.status=='stock'} value="stock" onChange={e => this.props.orderHandler({status: e.target.value})} />
               <Label className="form-check-label" check>En attente de payement</Label>
             </FormGroup>
           </Col>
           <Col md="3"></Col>
           <Col xs="12" md="9" className='status-group'>
             <FormGroup check inline>
-              <Input className="form-check-input" type="radio" name="status" checked={this.state.status=='close'} value="close" onChange={this.statusHandler} />
+              <Input className="form-check-input" type="radio" name="status" checked={this.props.order.status=='close'} value="close" onChange={e => this.props.orderHandler({status: e.target.value})} />
               <Label className="form-check-label" check>Cloturé</Label>
             </FormGroup>
           </Col>

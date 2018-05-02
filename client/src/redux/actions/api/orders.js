@@ -31,7 +31,8 @@ export const getOrders = () => dispatch => {
 
 
 export const saveOrder = data => dispatch => {
-  console.log('save order', data); return;
+  console.log('save order', data);
+  return;
   dispatch({ type: 'PENDING_ORDER' })
 
   let {_id} = data
@@ -44,6 +45,7 @@ export const saveOrder = data => dispatch => {
     .then(data => { dispatch({ type: 'FULFILLED_ORDER' }); dispatch(getOrders()) })
     .catch(e   => { dispatch({ type:'REJECTED_ORDER', payload: e }) })
 }
+
 
 export const delOrder = id => dispatch => {
   dispatch({ type: 'PENDING_ORDER' })

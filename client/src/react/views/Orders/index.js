@@ -8,24 +8,31 @@ import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table'
 import OrderForm from './OrderForm'
 
 const selectRowProp = cb => ({
-  mode: 'radio',
-  clickToSelect: true,
-  onSelect: cb,
-})
-
-const options = {
-  sizePerPageList: [ 10, 100 ],
-  sizePerPage: 10,
-  sortName: 'created_at',
-  sortOrder: 'desc',
-  noDataText: 'Aucune commande n\'a été prise.'
-}
+                              mode: 'radio',
+                              clickToSelect: true,
+                              onSelect: cb,
+                            })
+    , options       = {
+                        sizePerPageList: [ 10, 100 ],
+                        sizePerPage: 10,
+                        sortName: 'created_at',
+                        sortOrder: 'desc',
+                        noDataText: 'Aucune commande n\'a été prise.'
+                      }
+    , DEFAULT_ORDER = {
+                        _id         : '',
+                        client_id   : '',
+                        basket_type : '',
+                        basket      : [],
+                        total_price : 0,
+                        status      : 'open'
+                      }
 
 
 class Orders extends Component {
 
   state = {
-    order: {},
+    order: DEFAULT_ORDER,
     selected: false,
     isOpen: false,
     theme: '',
@@ -39,12 +46,12 @@ class Orders extends Component {
   onSelectOrder = (order, selected) => {
     selected
     ? this.setState({order, selected})
-    : this.setState({order: {}, selected})
+    : this.setState({order: DEFAULT_ORDER, selected})
   }
 
   saveOrder = () => {
-    this.props.dispatch( saveOrder(this.state.client) )
-    this.setState({isOpen: false})
+    this.props.dispatch( saveOrder(this.state.order) )
+    // this.setState({isOpen: false})
   }
 
   delClient = () => {
@@ -52,21 +59,21 @@ class Orders extends Component {
     this.setState({isOpen: false, selected: false, client: {}})
   }
 
-  orderHandler = () => {
-    let form = document.getElementById('order-form')
-      , data = serialize(form,{ hash: true })
-    this.setState({order: data})
+  orderHandler = (nextOrder) => {
+    let order = Object.assign(this.state.order, nextOrder)
+    console.log('order handler', this.state.order)
+    this.setState({order})
   }
 
   getModalAction() {
     switch(this.state.theme) {
-      case 'primary': return <Button color="primary" onClick={this.saveOrder}>
+      case 'primary': return <Button color='primary' onClick={this.saveOrder}>
                                <i className='fa fa-plus'></i> Ajouter
                              </Button>
-      case 'warning': return <Button color="warning" onClick={this.saveOrder}>
+      case 'warning': return <Button color='warning' onClick={this.saveOrder}>
                                <i className='fa fa-save'></i> Sauvegarder
                              </Button>
-      case 'danger': return <Button color="danger" onClick={this.delClient}>
+      case 'danger': return  <Button color='danger' onClick={this.delClient}>
                                <i className='fa fa-trash'></i> Supprimer
                              </Button>
     }
@@ -88,8 +95,8 @@ class Orders extends Component {
   ]
 
   render() {
-    const isAjout   = this.state.action == 'Ajouter'
-        , orderData = isAjout ? {} : this.state.client
+    const isAjout = this.state.action == 'Ajouter'
+        , order   = isAjout ? DEFAULT_ORDER : this.state.order
         , {clients, products} = this.props
 
     return (
@@ -123,13 +130,13 @@ class Orders extends Component {
         <Modal isOpen={this.state.isOpen} toggle={() => this.setState({isOpen: false})} className={`modal-${this.state.theme}`}>
           <ModalHeader>{this.state.action} une commande</ModalHeader>
             <ModalBody>
-              <form id="order-form" className="form-horizontal" onChange={this.orderHandler}>
-                <OrderForm {...{data:orderData, clients, products}} theme={this.state.theme} />
+              <form id='order-form' className='form-horizontal'>
+                <OrderForm {...{order, clients, products}} theme={this.state.theme} orderHandler={this.orderHandler} />
               </form>
             </ModalBody>
             <ModalFooter>
               {this.getModalAction()}
-              <Button color="secondary" onClick={() => this.setState({isOpen: false})}>
+              <Button color='secondary' onClick={() => this.setState({isOpen: false})}>
                 <i className='fa fa-ban'></i> Annuler
               </Button>
             </ModalFooter>

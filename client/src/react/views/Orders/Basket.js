@@ -1,36 +1,39 @@
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
 import {Col, FormGroup, InputGroup, InputGroupAddon, InputGroupText} from 'reactstrap'
+import {computeTotalPrice} from './helper'
 
 
 
-export default class Basket extends Component {
+export default class Basket extends PureComponent {
 
   state = {
-    basket: [],
+    basket_type: '',
     leftBasket: [],
     selectedProducts: [],
     addMode: false,
-    stack: 0,
+    focusBasketId: null
   }
-
-  inputBasket = []
 
   componentWillMount() {
     this.props.theme == 'primary'
     ? this.setBasket()
-    : this.setBasket(this.props.basket)
+    : this.setBasket(this.props.order.basket)
   }
 
-  componentWillReceiveProps({type:nextType, basket:nextBasket}) {
-    if(this.props.type != nextType) {
+  componentWillReceiveProps({order:{basket_type:nextType, basket:nextBasket}}) {
+    console.log(this.state.basket_type=='special', nextType!='special', this.state.basket_type, nextType)
+    if (this.state.basket_type != nextType) {
       nextType == 'special'
-      ? this.setBasket(nextBasket)
+      ? this.props.order.basket != nextBasket
+        ? this.setBasket(nextBasket)
+        : null
       : this.setBasket([], nextType)
     }
   }
 
-  setBasket(basket=[], type=this.state.basketType, leftBasket=[]) {
-    if (basket.length) { // on update an order (or on custumize type), we get products basket order, typed or less
+  setBasket(basket=[], basket_type=this.state.basket_type, leftBasket=[]) {
+    // on update an order (or on custumize order type), we get products basket order, typed or less
+    if (basket.length) {
       leftBasket =  this.props.products.reduce( (leftProducts, {_id, name, ...product}) => {
                       let notInBasket = true
                       basket.map( basketProduct => {
@@ -40,20 +43,26 @@ export default class Basket extends Component {
                       return leftProducts
                     }, [])
     }
-    if (type && !basket.length) { // typefull basket on Add order
+    // typefull basket on Mount or Receive Props
+    if (basket_type && !basket.length) {
       basket = this.props.products.reduce( (products, {_id, name, ...product}) => {
-                 let quantity = product[type+'_unit']
+                 let quantity = product[basket_type+'_unit']
                  quantity
                  ? products.push({ _id, name, quantity })
                  : leftBasket.push({ _id, name, quantity })
                  return products
                }, [])
     }
-    if (!type && !basket.length) { // on Create new order, if basket form used before basket type, we take all to leftBasket
+    // if (basket_type && basket_type!='special' && basket.length) {
+    //
+    // }
+    // on Create new order, if basket form used before basket type, we take all products to leftBasket
+    if (!basket_type && !basket.length) {
       leftBasket = this.props.products
     }
-    this.setState({basket, leftBasket})
-    this.props.updateTotalPrice(basket)
+    this.setState({leftBasket, basket_type})
+    let total_price = computeTotalPrice(basket, this.props.products)
+    this.props.orderHandler({basket, total_price})
   }
 
   basketProductHandler = (selectedProduct, e) => {
@@ -79,7 +88,7 @@ export default class Basket extends Component {
   }
 
   saveSelectedToBasket = () => {
-    let basket      = [ ...this.state.basket, ...this.state.selectedProducts ]
+    let basket      = [ ...this.props.order.basket, ...this.state.selectedProducts ]
       , leftBasket  = this.state.leftBasket.reduce( (leftProducts, leftItem) => {
                         let itemNotInSelection = true
                         this.state.selectedProducts.map(selectedItem => {
@@ -88,18 +97,31 @@ export default class Basket extends Component {
                         if (itemNotInSelection) leftProducts.push(leftItem)
                         return leftProducts
                       }, [])
-    this.setState({basket, leftBasket})
+    this.setState({leftBasket})
+    this.props.orderHandler({basket})
     this.closeAddMode()
-    this.props.updatedBasketType(basket)
   }
 
   removeBasketItem(productEvent) {
     let leftBasket  = [ ...this.state.leftBasket, productEvent ]
-      , basket      = this.state.basket.reduce( (products, {_id, ...product}) => {
+      , basket      = this.props.order.basket.reduce( (products, {_id, ...product}) => {
                         if (_id!==productEvent._id) products = [...products, {_id, ...product}]
                         return products
                       }, [])
-    this.setState({basket, leftBasket})
+    this.setState({leftBasket})
+    this.props.orderHandler({basket})
+  }
+
+  basketHandler = (id, eventQuantity) => {
+    let basket = []
+    if (id) basket  = this.props.order.basket.map(product => {
+                        if (product._id == id) product.quantity = Number(eventQuantity)
+                        return product
+                      })
+    let total_price = computeTotalPrice(basket, this.props.products)
+
+    this.setState({focusBasketId: id})
+    this.props.orderHandler({basket, total_price, basket_type: 'special'})
   }
 
   render() {
@@ -130,22 +152,24 @@ export default class Basket extends Component {
     : <div className='basket-form'>
         <div className='basket-form-unit'>
           {
-            this.state.basket.map( product =>
-              <InputGroup key={'key-basket-item-'+this.props.type+'-'+product._id}>
-                <input hidden name='basket[][_id]' defaultValue={product._id} />
-                <InputGroupAddon addonType='prepend' style={{width:'220px'}}><InputGroupText style={{width:'100%'}}>{product.name}</InputGroupText></InputGroupAddon>
-                <input  type='number' step='0.1'
-                        name='basket[][quantity]'
-                        defaultValue={product.quantity}
-                        onChange={e => this.props.updatedBasketType(this.state.basket, product._id, e.target.value)}
-                        autoFocus={this.props.focusBasketId==product._id}
-                        placeholder='Quantité ..'
-                        style={{width:'66px'}}
-                        className='text-right' />
-                <InputGroupAddon addonType="append"><InputGroupText>DH</InputGroupText></InputGroupAddon>
-                <InputGroupAddon addonType='append' onClick={() => this.removeBasketItem(product)}><InputGroupText className='close-line'><i className='fa fa-close'/></InputGroupText></InputGroupAddon>
-              </InputGroup>
-            )
+            this.props.order.basket.length
+            ? this.props.order.basket.map( product =>
+                <InputGroup key={'key-basket-item-'+this.props.order.basket_type+'-'+product._id}>
+                  <input hidden name='basket[][_id]' defaultValue={product._id||''} />
+                  <InputGroupAddon addonType='prepend' style={{width:'220px'}}><InputGroupText style={{width:'100%'}}>{product.name}</InputGroupText></InputGroupAddon>
+                  <input  type='number' step='0.1'
+                          name='basket[][quantity]'
+                          defaultValue={product.quantity||''}
+                          onChange={e => this.basketHandler(product._id, e.target.value)}
+                          autoFocus={this.state.focusBasketId==product._id}
+                          placeholder='Quantité ..'
+                          style={{width:'66px'}}
+                          className='text-right' />
+                  <InputGroupAddon addonType="append"><InputGroupText>DH</InputGroupText></InputGroupAddon>
+                  <InputGroupAddon addonType='append' onClick={() => this.removeBasketItem(product)}><InputGroupText className='close-line'><i className='fa fa-close'/></InputGroupText></InputGroupAddon>
+                </InputGroup>
+              )
+            : null
           }
         </div>
         <button type='button' className='btn btn-primary' onClick={() => this.addModeBasket()}>

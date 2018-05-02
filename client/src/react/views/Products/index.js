@@ -8,7 +8,7 @@ import {Modal} from 'ayla-client/react/components/Notifications'
 import {ButtonControl} from 'ayla-client/react/components/Buttons'
 
 const DISPLAY         = 'product'
-    , NO_PRODUCT_MSG  = 'Aucun produit reçu !'
+    , NO_PRODUCT_MSG  = 'Aucun produit enregistré !'
     , CTL             = {
                           primary: { icon: 'plus',  title: `Ajouter un ${DISPLAY}`   },
                           warning: { icon: 'save',  title: `Modifier un ${DISPLAY}`  },

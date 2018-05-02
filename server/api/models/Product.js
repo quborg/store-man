@@ -11,4 +11,4 @@ var mongoose   = require('mongoose')
     })
   ;
 
-module.exports = mongoose.model('Product', UserSchema);
+module.exports = mongoose.model('Product', UserSchema)
