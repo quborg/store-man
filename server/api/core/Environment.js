@@ -1,5 +1,9 @@
 'use strict'
 
+/**
+ * ENVIRENMENT CONFIGURATION
+ */
+
 const DB_DEV_URL  = "mongodb://localhost/fermeayla_dev"
     , DB_PROD_URL = "mongodb://localhost/fermeayla"
     , OPTIONS     = {

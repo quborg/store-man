@@ -8,8 +8,8 @@ import Sidebar from 'ayla-client/react/components/Sidebar';
 
 import Clients  from 'ayla-client/react/views/Clients';
 import Products from 'ayla-client/react/views/Products';
-import Embalages from 'ayla-client/react/views/Embalages';
-import Paniers  from 'ayla-client/react/views/Paniers';
+import Bags     from 'ayla-client/react/views/Bags';
+import Baskets  from 'ayla-client/react/views/Baskets';
 import Orders, {WeekOrders} from 'ayla-client/react/views/Orders';
 
 
@@ -33,8 +33,8 @@ class Full extends Component {
               <Switch>
                 <Route path="/clients" name="Clients" component={Clients} />
                 <Route path="/produits" name="Products" component={Products} />
-                <Route path="/embalages" name="Embalages" component={Embalages} />
-                <Route path="/paniers" name="Paniers" component={Paniers} />
+                <Route path="/embalages" name="Bags" component={Bags} />
+                <Route path="/paniers" name="Baskets" component={Baskets} />
                 <Route path="/commandes" name="Orders" component={Orders} />
                 <Route path="/commandes-semaine" name="WeekOrders" component={WeekOrders} />
                 <Redirect from="*" to="/commandes" />

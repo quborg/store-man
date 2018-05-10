@@ -3,15 +3,19 @@
 import { combineReducers } from 'redux'
 
 import user from './user'
-import orders from './orders'
 import clients from './clients'
 import products from './products'
+import bags from './bags'
+import baskets from './baskets'
+import orders from './orders'
 
 const Reducers = combineReducers({
   user,
-  orders,
   clients,
-  products
+  products,
+  bags,
+  baskets,
+  orders,
 })
 
 

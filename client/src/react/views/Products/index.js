@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {connect} from 'react-redux'
-import moment from 'moment'
+import {getProducts} from 'ayla-client/redux/actions/api'
 import ProductCard from './ProductCard'
 import ProductForm from './ProductForm'
 import {Container, Row} from 'reactstrap'
@@ -23,16 +23,20 @@ class Products extends Component {
   }
 
   state = {
-    product: {},
+    product: { price: 0 },
     selected: false,
     isOpen: false,
     theme: '',
     title: ''
   }
 
+  componentWillMount() {
+    this.props.dispatch(getProducts())
+  }
+
   onProductClick(product, isTheSame=product._id==this.state.product._id) {
     isTheSame
-    ? this.setState({product: {}, selected: false})
+    ? this.resetSelection()
     : this.setState({product,     selected: true})
   }
 
@@ -41,7 +45,7 @@ class Products extends Component {
   }
 
   resetSelection() {
-    console.log('reset product')
+    this.setState({product: {}, selected: false})
   }
 
   openModal = (theme, title, isOpen=true) => {
@@ -63,10 +67,7 @@ class Products extends Component {
   )
 
   render() {
-    const day1    = moment().day(1).format('DD/MM')
-        , day2    = moment().day(7).format('DD/MM')
-        , period  = `${day1} au ${day2}`
-        , [
+    const [
             {isOpen, theme, title, product, selected},
             {data, dispatch},
             {closeModal, resetSelection}
@@ -79,9 +80,9 @@ class Products extends Component {
         <Container>
           <Row className='fx fx-jb'>
             <div>
-              <h2 className='flat-burn mb-0'>Produits de la semaine {period}</h2>
+              <h2 className='flat-burn mb-0'>Tous les produits</h2>
             </div>
-            <div className='fx fx-je fx-rev pt-3'>
+            <div className='fx fx-je fx-rev pt-3 ops-btns'>
               {this.boardControls(selected)}
             </div>
           </Row>

@@ -3,8 +3,11 @@
 
 require('app-module-path').addPath(__dirname)
 
+
 var Express = require('express')
-, Server  = Express()
+  , Server  = Express()
+  , paths   = require('config/paths')
+
 
 require('./api/core/Application')(Server)
 

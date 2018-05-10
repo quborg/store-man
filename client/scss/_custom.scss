@@ -1,8 +1,11 @@
 // Here you can add other styles
+body {
+  font-family: Roboto, sans-serif;
+}
 
 // < flex
 .fx {
-  display: flex;
+  display: flex !important;
   &.fx-col {
     flex-direction: column
   }
@@ -58,12 +61,30 @@
 $danger: #f86c6b;
 
 .flat-burn {
-  color: rgba(79, 105, 118, 0.81)
+  color: rgba(51, 68, 76, 0.6);
+  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5);
+  font-size: 22px;
 }
 
 .color-danger {
   color: $danger;
 }
+
+.open-bg { background-color: #4CAF50; @extend .gray-bg }
+.stock-bg { background-color: #FFEB3B; @extend .gray-bg }
+.payment-bg { background-color: #03A9F4; @extend .gray-bg }
+.close-bg { background-color: #9E9E9E; @extend .gray-bg }
+.gray-bg {
+  padding: 1px 3px;
+  border-radius: 2px;
+}
+
+.open-clr { color: #4CAF50 }
+.stock-clr { color: #FFEB3B }
+.payment-clr { color: #03A9F4 }
+.close-clr { color: #9E9E9E }
+.white-clr { color: $white }
+.dark-clr { color: $dark }
 // Colors >
 
 // < Override
@@ -87,11 +108,29 @@ $danger: #f86c6b;
 }
 
 .app-header.navbar .navbar-brand {
-  background-size: 100px auto;
+  background-size: 122px auto;
+  background-position: 15px 9px;
 }
 
 .sidebar .nav-title {
   padding: 2rem 1rem 1.25rem;
+}
+
+.app-header.navbar .navbar-brand {
+  background-color: $primary !important;
+  border: none;
+}
+
+.app-header.navbar {
+  border: none;
+}
+
+.sidebar-nav li.nav-item a {
+  font-size: 11px;
+}
+
+.table td {
+  padding: 0.4rem 0.75rem;
 }
 // Override >
 
@@ -120,6 +159,13 @@ $danger: #f86c6b;
 .react-bs-table-bordered {
   box-shadow: 0 0 2px 1px #ddd;
 }
+
+.tr-tdvertical {
+  td {
+    vertical-align: middle
+  }
+}
+
 // enhancers >
 
 // < custom
@@ -134,11 +180,19 @@ $danger: #f86c6b;
   }
 }
 
+.collection {
+  > div {
+    @extend .mb-2, .fx, .fx-ac
+  }
+}
+
 .ico-menu-user {
   width: 35px;
   height: 35px;
-  background-color: rgba(228, 229, 230, 0.5);
+  background-color: white;
   border: { radius: 50em };
+  color: rgb(0, 187, 213);
+  box-shadow: 0 0 3px rgba(11, 161, 182, 0.9);
 }
 // custom >
 
@@ -149,6 +203,34 @@ h2 {
   font-weight: bold;
 }
 
+.image-preview {
+  border: 1px solid $gray-200;
+}
+
+$borderWidth: 40px;
+$borderHeight: 30px;
+$imageWidth: $borderWidth + 10px;
+$imageHeight: $borderHeight + 10px;
+$hAdjustment: ($borderHeight - $imageHeight) / 2;
+
+.sm-inline-image {
+  width: $borderWidth;
+  height: $borderHeight;
+  display: inline-block;
+  overflow: hidden;
+  box-shadow: 0 0 0 1px $gray-200, inset 0 0 5px rgba(0, 0, 0, 0.1);
+  .sm-image-preview {
+    max-width: $imageWidth;
+    height: $imageHeight;
+    position: relative;
+    top: $hAdjustment;
+  }
+}
+
+.radius-2 {
+  border-radius: 2rem;
+}
+
 .b {
   font-weight: bold
 }
@@ -156,13 +238,53 @@ h2 {
 .mb-30 {
   margin-bottom: 30px;
 }
+
+.border-none {
+  border: none;
+}
+
+.shadow {
+  transition: all 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  box-shadow: rgba(0, 0, 0, 0.12) 3px 0 6px, rgba(0, 0, 0, 0.12) 2px 0 4px;
+}
+
+.text-shadow {
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+}
+
+.break-word {
+  word-wrap: break-word;
+  word-break: break-word;
+}
+
+.uppercase {
+  text-transform: uppercase;
+}
+
+.ellipse {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.dis-btn {
+  pointer-events: none;
+  cursor: default;
+  opacity: .86;
+}
+.status-w { width: 105px }
+.formule-w { width: 150px }
 // Common >
 
-// < Products
-
-.product-preview {
-  border: 1px solid $gray-200;
+// < correctifs
+td:focus {
+  outline: none;
 }
+// correctifs >
+
+// < Products
 
 .product-history {
   margin-right: -10px;
@@ -173,8 +295,11 @@ h2 {
   content: "";
   flex: auto;
 }
+
+// Products >
+
 // < Card
-.product-card {
+.item-card {
   &.i-right {
     margin-right: 30px;
   }
@@ -184,15 +309,20 @@ h2 {
   height: 90px;
   background-color: $primary;
   background-clip: border-box;
-  box-shadow: 0 0 0 5px $primary;
+  box-shadow: 0 0 0 5px $primary, rgba(0, 0, 0, 0.12) 0px 1px 6px 5px, rgba(0, 0, 0, 0.12) 0px 1px 4px 5px;
   box-sizing: border-box;
   overflow: hidden;
+  transition: all 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  border-radius: 1px;
   $card-width: 88px;
   $card-height: 88px;
   .img {
     width: $card-width;
     height: $card-height;
-    background-color: $white;
+    border-radius: 5px 0 0 5px;
+    box-shadow: -1px 0 0 2px #fff, inset 0px 0 6px #fff;
     img {
       width: $card-width - 2;
       height: $card-height - 2;
@@ -201,54 +331,67 @@ h2 {
   .txt {
     width: 140px;
     height: $card-height;
+    box-shadow: 1px 0 0 1px #fff;
     .nbr {
       color: white;
     }
     .name {
       color: $gray-100;
-      word-wrap: break-word;
-      word-break: break-word;
+      @extend .break-word;
     }
     .uty {
       color: $gray-200;
     }
   }
   &:hover {
-    box-shadow: 0 0 0 5px $info;
+    box-shadow: 0 0 0 5px $info, rgba(0, 0, 0, 0.12) 0px 1px 6px 5px, rgba(0, 0, 0, 0.12) 0px 1px 4px 5px;
   }
   &.selected {
-    box-shadow: 0 0 0 7px $orange;
+    box-shadow: 0 0 0 7px $orange, rgba(0, 0, 0, 0.12) 0px 1px 6px 7px, rgba(0, 0, 0, 0.12) 0px 1px 4px 7px;
     &:hover {
-      box-shadow: 0 0 0 7px $yellow;
+      box-shadow: 0 0 0 7px $yellow, rgba(0, 0, 0, 0.12) 0px 1px 6px 7px, rgba(0, 0, 0, 0.12) 0px 1px 4px 7px;
     }
   }
 }
 // Card >
-// Products >
-
 // < search
 div.search-list-wrapper {
   position: relative;
   // &.active {
   // }
-  ul.search-list-box {
+  div.search-list-box {
     position: absolute;
-    max-height: 137px;
+    background-color: $white;
+    max-height: 165px;
     z-index: 1;
     overflow-x: auto;
-    box-shadow: 0 1px 1px 0 $light;
-    li:hover {
-      background-color: $light;
+    box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.2);
+    > div {
+      margin-bottom: -1px;
+      border: 1px solid rgba(0, 0, 0, 0.125);
+      @extend .pointer;
+      &:hover {
+        background-color: $light;
+      }
+      > div {
+        @extend .ellipse;
+        padding: 0.3rem 1.25rem;
+        height: 40px;
+        line-height: 30px;
+        width: 340px;
+      }
     }
   }
 }
 // search >
 
-
-// < orders
+// < basket
+// .basket-card {
+// }
 .basket-form {
   .basket-form-unit {
     margin-bottom: 3px;
+    * { font-size: 12px }
     > .input-group {
       margin-bottom: -1px;
       .close-line {
@@ -262,10 +405,114 @@ div.search-list-wrapper {
       box-shadow: inset 0 0 0 1px $gray-200;
     }
   }
+  input:focus {
+    outline: none;
+  }
+  .calcul-ico {
+    padding-left: 10px;
+    &.true { color: $primary }
+    &.false { color: $secondary }
+  }
+  .switch-label {
+    font-size: 14px !important;
+  }
+  .total-auto {
+    color: $primary;
+    font-weight: bold;
+    font-size: 13px;
+  }
+  .total-manual {
+    font-weight: bold;
+    font-size: 13px;
+  }
 }
+
+.basket-card {
+  color: $white;
+  height: auto;
+  padding: 5px 10px;
+  .title, .footer {
+    font-size: 16px;
+  }
+  .title {
+    border-bottom: 1px solid $white;
+    padding-bottom: 5px;
+    text-align: center;
+    @extend .break-word, .text-shadow;
+  }
+  .list {
+    color: $dark;
+    > div {
+      border-bottom: 1px dashed $dark;
+      &:last-child { border-bottom: none }
+      margin-bottom: 1px;
+      padding-bottom: 1px;
+    }
+    .p-name {
+      @extend .ml-2, .uppercase, .break-word;
+      font-size: 10px;
+      position: relative;
+    }
+  }
+  .footer {
+    border-top: 2px solid $white;
+  }
+}
+// basket >
+
+// < orders
 .order-status-groups {
   .status-group {
     margin-bottom: 3px;
   }
 }
 // orders >
+
+// < clients
+// .clients-view {
+
+// }
+
+// clients >
+
+
+// < app bar
+.app-bar {
+  background-color: $primary !important;
+  border-radius: 0px;
+}
+.burger-menu {
+  color: white;
+  font-size: 18px;
+}
+// app bar >
+
+// < sidebar
+// sidebar >
+
+// < table
+.main-table > .react-bs-table {
+  border: 1px solid $gray-300;
+  border-radius: 5px;
+  @extend .shadow;
+}
+// table >
+
+// < operations
+.ops-btns {
+  > div {
+    &.false {
+      pointer-events: none;
+      opacity: .5;
+      i { color: $gray-300 !important; }
+    }
+    min-width: 36px !important;
+    margin-left: 10px;
+    i {
+      color: $white;
+      font-size: 1.3rem;
+      text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+    }
+  }
+}
+// operations >

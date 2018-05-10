@@ -6,7 +6,7 @@ export default class ProductCard extends Component {
 
   static defaultProps = {
     name: '',
-    weight: 280,
+    price: 0,
     image: {
       data: null,
       contentType: ''
@@ -26,18 +26,18 @@ export default class ProductCard extends Component {
   }
 
   render() {
-    const [{name, weight, selected, onClick, _class},{image}] = [this.props,this.state]
+    const [{name, price, selected, onClick, _class},{image}] = [this.props,this.state]
 
     return (
-      <div {...{onClick}} className={`product-card mb-30 fx fx-ac pointer ${_class} ${selected?'selected':''}`} >
+      <div {...{onClick}} className={`item-card mb-30 fx fx-ac pointer ${_class} ${selected?'selected':''}`} >
         <div className='img fx fx-jc fx-ac'>
           <Image src={image} />
         </div>
         <div className='txt pl-2'>
           <div className="fx fx-ac fx-jc h-75 w-100">
             <div className='wgt fx fx-ab'>
-              <span className='nbr b font-5xl'>{weight}</span>
-              <span className='uty font-lg b text-uppercase pl-1'>Kg</span>
+              <span className='nbr b font-3xl'>{price.toFixed(2)}</span>
+              <span className='uty font-lg b text-uppercase pl-1'>DH</span>
             </div>
           </div>
           <div className='name fx fx-as fx-jc h-25 text-uppercase font-xs b'>

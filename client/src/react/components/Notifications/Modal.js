@@ -7,7 +7,7 @@ const THEME_OPS  =  {
                       danger:  { label: 'Supprimer',   action: 'DEL', icon: 'trash' },
                       icon: '', action: '', label: ''
                     }
-    , INIT_MODAL =  { isOpen: false, theme: '', title: '', progress: 0, action: '' }
+    , INIT_MODAL =  { isOpen: false, theme: '', title: '', progress: 0, action: '', noProgress: false }
 
 
 export default class CustomModal extends Component {
@@ -23,8 +23,8 @@ export default class CustomModal extends Component {
     this.setState(INIT_MODAL)
   }
 
-  componentWillReceiveProps({isOpen, theme, title, action}) {
-    this.setState({isOpen, theme, title, action})
+  componentWillReceiveProps({isOpen, theme, title, action, noProgress}) {
+    this.setState({isOpen, theme, title, action, noProgress})
   }
 
   getOp = (op, OPS=THEME_OPS[this.state.theme]) => OPS ? OPS[op] : ''
@@ -35,7 +35,7 @@ export default class CustomModal extends Component {
   }
 
   render() {
-    const [{isOpen, title, theme, progress, action}, {initModal}] = [this.state, this]
+    const [{isOpen, title, theme, progress, action, noProgress}, {initModal}] = [this.state, this]
 
     return (
         <Modal isOpen={isOpen} toggle={() => this.initModal()} className={`modal-${theme}`}>
@@ -54,8 +54,9 @@ export default class CustomModal extends Component {
             </ModalBody>
             <ModalFooter>
               {
-                theme !== 'danger' &&
-                <Progress animated={progress!=100} value={progress} className="w-100">{`${progress>0?progress+'%':''}`}</Progress>
+                !noProgress
+                ? theme !== 'danger' && <Progress animated={progress!=100} value={progress} className="w-100">{`${progress>0?progress+'%':''}`}</Progress>
+                : null
               }
               <Button color={theme} onClick={() => this.setOp('action')}>
                 <i className={'fa fa-'+this.getOp('icon')}></i> {this.getOp('label')}

@@ -28,7 +28,7 @@
 ## Table of content :
   - [Prerequisites](#prerequisites)
   - [Available Scripts](#available-scripts)
-    - [npm run start2](#npm-run-start2)
+    - [npm start:2](#npm-start2)
     - [npm run mongodb](#npm-run-mongodb)
     - [npm run server](#npm-run-server)
     - [npm run server:prod](#npm-run-serverprod)
@@ -53,7 +53,7 @@ Make sure you have :
 
 In the project directory, you can run:
 
-### `npm run start2`
+### `npm start:2`
 
 Runs MongoDB daemon, then Server api and try to connect to the database when `mongod` is ready.
 

@@ -1,22 +1,26 @@
 import React, { Component } from 'react'
 import {connect} from 'react-redux'
 import serialize from 'form-serialize'
-import {saveClient, delClient} from 'ayla-client/redux/actions/api'
+import {getClients, saveClient, delClient} from 'ayla-client/redux/actions/api'
 import {Container, Row, Col, Button,
         Modal, ModalHeader, ModalBody, ModalFooter} from 'reactstrap'
 import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table'
 import ClientForm from './ClientForm'
+import {Image} from 'ayla-client/react/components/Media'
+import RaisedButton from 'material-ui/RaisedButton'
+import moment from 'moment'
 
 const selectRowProp = cb => ({
   mode: 'radio',
   clickToSelect: true,
-  onSelect: cb,
+  bgColor: '#B2EBF2',
+  onSelect: cb
 })
 
 const options = {
   sizePerPageList: [ 10, 100 ],
   sizePerPage: 10,
-  sortName: 'firstname',
+  sortName: 'created_at',
   sortOrder: 'desc',
   noDataText: 'Aucun client enregistré.'
 }
@@ -25,19 +29,19 @@ const options = {
 class Clients extends Component {
 
   state = {
-    modal: false,
-    modalTheme: '',
-    modalAction: '',
-    client: {},
-    selected: false
+    client: { adress: '' },
+    selected: false,
+    isOpen: false,
+    theme: '',
+    action: ''
+  }
+
+  componentWillMount() {
+    this.props.dispatch(getClients())
   }
 
   setModal(isOpen, theme, action) {
-    this.setState({
-      modal: isOpen,
-      modalTheme: theme,
-      modalAction: action
-    })
+    this.setState({ isOpen, theme, action })
   }
 
   onSelectClient = (client, selected) => {
@@ -47,23 +51,24 @@ class Clients extends Component {
   }
 
   saveClient = () => {
-    this.props.dispatch( saveClient(this.state.client) )
-    this.setState({modal: false})
+    let client = { ...this.state.client }
+    if (this.state.theme == 'primary') delete client._id
+    this.props.dispatch( saveClient(client) )
+    this.setState({ isOpen: false })
   }
 
   delClient = () => {
     this.props.dispatch( delClient(this.state.client._id) )
-    this.setState({modal: false, selected: false, client: {}})
+    this.setState({ isOpen: false, selected: false, client: {} })
   }
 
-  clientHandler = () => {
-    let form = document.getElementById('client-form')
-      , data = serialize(form,{ hash: true })
-    this.setState({client: data})
+  clientHandler = nextClient => {
+    let client = { ...this.state.client, ...nextClient }
+    this.setState({ client })
   }
 
   getModalAction() {
-    switch(this.state.modalTheme) {
+    switch(this.state.theme) {
       case 'primary': return <Button color="primary" onClick={this.saveClient}>
                                <i className='fa fa-plus'></i> Ajouter
                              </Button>
@@ -77,62 +82,73 @@ class Clients extends Component {
   }
 
   getClientsActions = () => [
-    <button key='add-cli-board' type='button' className='fx fx-ae px-4 btn btn-primary'
-      onClick={() => this.setModal(true, 'primary', 'Ajouter')}>
-      <i className='fa fa-plus lead'></i>
-    </button>,
-    <button key='edit-cli-board' type='button' className='fx fx-ae px-4 btn btn-warning' {...{disabled: !this.state.selected}}
-      onClick={() => this.setModal(true, 'warning', 'Modifier')}>
-      <i className='fa fa-edit lead'></i>
-    </button>,
-    <button key='del-cli-board' type='button' className='fx fx-ae px-4 btn btn-danger' {...{disabled: !this.state.selected}}
-      onClick={() => this.setModal(true, 'danger', 'Supprimer')}>
-      <i className='fa fa-trash lead'></i>
-    </button>
+    <RaisedButton key='add-cli-board'
+                  onClick={() => this.setModal(true, 'primary', 'Ajouter')}
+                  backgroundColor='#00bcd4'
+                  icon={<i className="fa fa-plus lead" />}
+    />,
+    <RaisedButton key='edit-cli-board'
+                  onClick={() => this.setModal(true, 'warning', 'Modifier')}
+                  className={this.state.selected.toString()}
+                  backgroundColor={this.state.selected?'#FFC107':'#FFD54F'}
+                  icon={<i className='fa fa-edit lead' />}
+    />,
+    <RaisedButton key='del-cli-board'
+                  onClick={() => this.setModal(true, 'danger', 'Supprimer')}
+                  className={this.state.selected.toString()}
+                  backgroundColor={this.state.selected?'#E91E63':'#F06292'}
+                  icon={<i className='fa fa-trash lead' />}
+    />
   ]
 
+  imageFormater = cell => <Image src={cell} width='30' height='30' alt='Image aperçu' className='image-preview radius-2' />
+
+  dateFormater = cell => moment(cell).format('dddd DD MMMM, HH:mm')
+
+  fullNameFormater = (cell, row) => (row.firstname +' '+ row.lastname).trim()
+
   render() {
-    const isAjout     = this.state.modalAction == 'Ajouter'
-        , clientData  = isAjout ? {} : this.state.client
+    const [client, {clientHandler}, {theme, action, isOpen}] = [{ ...this.state.client }, this, this.state]
 
     return (
-      <div className='animated fadeIn'>
+      <div className='animated fadeIn clients-view'>
         <Container>
           <Row className='fx fx-jb'>
             <div>
               <h2 className='flat-burn mb-0'>Tous les clients</h2>
             </div>
-            <div className='fx fx-je fx-rev pt-3'>
+            <div className='fx fx-je fx-rev pt-3 ops-btns'>
               {this.getClientsActions()}
             </div>
           </Row>
           <Row className='pt-5'>
-            <BootstrapTable striped hover
-                maxHeight='376'
+            <BootstrapTable hover bordered={false} condensed
+                maxHeight='398'
                 containerClass='main-table'
                 trClassName='pointer'
                 data={this.props.data}
                 selectRow={selectRowProp(this.onSelectClient)}
                 pagination options={options} >
               <TableHeaderColumn dataField='_id' isKey hidden>#</TableHeaderColumn>
-              <TableHeaderColumn dataField='firstname' dataSort={true}>Prénom</TableHeaderColumn>
-              <TableHeaderColumn dataField='lastname' dataSort={true}>Nom</TableHeaderColumn>
+              <TableHeaderColumn dataField='image' dataFormat={this.imageFormater} thStyle={{width:'64px'}} tdStyle={{padding:'2px 16px', width:'64px'}}>Image</TableHeaderColumn>
+              <TableHeaderColumn dataField='firstname' dataFormat={this.fullNameFormater} dataSort={true}>Nom Complet</TableHeaderColumn>
               <TableHeaderColumn dataField='phone'>Tél</TableHeaderColumn>
               <TableHeaderColumn dataField='adress'>Addresse</TableHeaderColumn>
               <TableHeaderColumn dataField='email'>Email</TableHeaderColumn>
+              <TableHeaderColumn dataField='created_at' dataFormat={this.dateFormater}>{'Date d\'ajout'}</TableHeaderColumn>
             </BootstrapTable>
           </Row>
         </Container>
-        <Modal isOpen={this.state.modal} toggle={() => this.setState({modal: false})} className={`modal-${this.state.modalTheme}`}>
-          <ModalHeader>{this.state.modalAction} un client</ModalHeader>
+        <Modal {...{isOpen}} toggle={() => this.setState({isOpen: false})} className={`modal-${theme}`}>
+          <ModalHeader>{action} un client</ModalHeader>
             <ModalBody>
-              <form id="client-form" className="form-horizontal" onChange={this.clientHandler}>
-                <ClientForm data={clientData} theme={this.state.modalTheme}/>
+              <form id="client-form" className="form-horizontal" >
+                <ClientForm {...{theme, client, clientHandler}} />
               </form>
             </ModalBody>
             <ModalFooter>
               {this.getModalAction()}
-              <Button color="secondary" onClick={() => this.setState({modal: false})}>
+              <Button color="secondary" onClick={() => this.setState({isOpen: false})}>
                 <i className='fa fa-ban'></i> Annuler
               </Button>
             </ModalFooter>

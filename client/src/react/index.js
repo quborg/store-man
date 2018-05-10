@@ -9,8 +9,8 @@ import 'ayla-client/react/styles'
 // Main app with Login
 let Routers = () => <HashRouter>
                       <Switch>
-                        <Route path="/login" name="Login" component={Login}/>
-                        <Route path="/" name="Home" component={Full}/>
+                        <Route path="/login" name="Login" component={Login} />
+                        <Route path="/" name="Home" component={Full} />
                       </Switch>
                     </HashRouter>
 

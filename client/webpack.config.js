@@ -1,15 +1,19 @@
+'use strict';
+
+
+const path    = require('path');
 const webpack = require('webpack');
-const path = require('path');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
-const extractCSS = new ExtractTextPlugin('[name].fonts.css');
+const extractCSS  = new ExtractTextPlugin('[name].fonts.css');
 const extractSCSS = new ExtractTextPlugin('[name].styles.css');
 
-const BUILD_DIR = path.resolve(__dirname, 'build');
-const SRC_DIR = path.resolve(__dirname, 'src');
-const SCSS_DIR = path.resolve(__dirname, 'scss');
+const BUILD_DIR   = path.resolve(__dirname, 'build');
+const SRC_DIR     = path.resolve(__dirname, 'src');
+const HELPER_DIR  = path.resolve(__dirname, 'helper');
+const SCSS_DIR    = path.resolve(__dirname, 'scss');
 
 const HOST = 'localhost';
 const PORT = '8080';
@@ -103,7 +107,8 @@ module.exports = (env = {}) => {
     resolve: {
       alias: {
         'ayla-client': SRC_DIR,
-        'ayla-scss': SCSS_DIR
+        'ayla-scss': SCSS_DIR,
+        'ayla-helper': HELPER_DIR
       }
     },
     plugins: [

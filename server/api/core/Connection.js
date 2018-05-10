@@ -1,3 +1,10 @@
+'use strict'
+
+/**
+ * MONGODB CONNECTION
+ * OPEN STATE EVENT EMITTER
+ */
+
 var mongoose = require('mongoose')
 
 mongoose.Promise = global.Promise

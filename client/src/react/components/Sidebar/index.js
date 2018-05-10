@@ -143,7 +143,7 @@ export default class Sidebar extends Component {
 
     // sidebar-nav root
     return (
-      <div className="sidebar">
+      <div className="sidebar shadow">
         <nav className="sidebar-nav">
           <Nav>
             {navList(nav.items)}

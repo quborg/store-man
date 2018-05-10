@@ -39,11 +39,13 @@
     "font-awesome": "4.7.0",
     "form-serialize": "^0.7.2",
     "history": "4.7.2",
+    "material-ui": "^0.20.0",
     "moment": "^2.22.0",
     "react": "16.2.0",
     "react-bootstrap-table": "^4.3.1",
     "react-chartjs-2": "2.7.0",
     "react-dom": "16.2.0",
+    "react-places-autocomplete": "^7.1.1",
     "react-redux": "^5.0.7",
     "react-router-dom": "4.2.2",
     "react-upload-file": "^2.0.0-beta.6",
@@ -54,7 +56,8 @@
     "redux-promise": "^0.5.3",
     "redux-saga": "^0.16.0",
     "redux-thunk": "^2.2.0",
-    "simple-line-icons": "2.4.1"
+    "simple-line-icons": "2.4.1",
+    "typeface-roboto": "^0.0.54"
   },
   "scripts": {
     "start": "NODE_ENV=development && webpack-dev-server --progress --color --inline --env.dev",

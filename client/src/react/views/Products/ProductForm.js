@@ -5,7 +5,6 @@ import {Row, Col, FormGroup, Input, Label, InputGroup, InputGroupAddon, InputGro
 import {Image} from 'ayla-client/react/components/Media'
 
 
-
 export default class ProductForm extends Component {
 
   static defaultProps = {
@@ -22,14 +21,14 @@ export default class ProductForm extends Component {
   }
 
   componentWillMount() {
-    let { product, theme } = this.props
+    let [product, { theme }] = [{...this.props.product}, this.props]
     const toAdd    = theme == 'primary'
         , toDelete = theme == 'danger'
-    if (toAdd) product = {}
+    if (toAdd) delete product._id
     this.setState({product, toDelete})
   }
 
-  componentWillReceiveProps({action:nextAction, product}) {
+  componentWillReceiveProps({action:nextAction}) {
     if (nextAction) this.actionsStarter(nextAction)
   }
 
@@ -53,25 +52,25 @@ export default class ProductForm extends Component {
     this.props.initModal()
   }
 
-  setProductState = e => {
-    let $Form   = document.getElementById('product-form')
-    var product = Object.assign(this.state.product, serialize($Form, {hash:true}))
-      , file    = e.target.files ? e.target.files[0] : null
+  imageHandler = e => {
+    let file    = e.target.files ? e.target.files[0] : null
       , reader  = new FileReader()
-      ;
 
-    file && file.type.match('image.*')
-    ? (
-        reader.readAsDataURL(file),
-        reader.onload = ev => {
-          product.image = { src: reader.result, name: file.name }
-          this.setState({product})
-          this.props.progress(100)
-        }
-        // reader.onerror = err => {}
-        // reader.onprogress = p => {}
-      )
-    : this.setState({product})
+    if (file && file.type.match('image.*'))
+      reader.readAsDataURL(file),
+      reader.onload = ev => {
+        let image = { src: reader.result, name: file.name }
+        this.productHandler({ image })
+        this.props.progress(100)
+      }
+      // reader.onerror = err => {}
+      // reader.onprogress = p => {}
+
+  }
+
+  productHandler = nextProduct => {
+    let product = { ...this.state.product, ...nextProduct }
+    this.setState({ product })
   }
 
   render() {
@@ -79,17 +78,17 @@ export default class ProductForm extends Component {
 
     return toDelete
     ? <Row className='fx fx-jc'>
-        <h4 className='color-danger pb-2'>Vous êtes sur le point de supprimer le produit suivant :</h4>
+        <h5 className='color-danger pb-2'>Vous êtes sur le point de supprimer le produit suivant :</h5>
         <div className='entity-del'>
-          <div className='b'>
-            {product.name} ( {(product.price/100).toFixed(2)} DH )
-          </div>
           <div>
-            <Image src={product.image} id='product-preview' width='50' height='50' alt='Image aperçu' className='product-preview' />
+            <Image src={product.image} width='50' height='50' alt='Image aperçu' className='image-preview' />
+          </div>
+          <div className='b'>
+            {product.name} ( {product.price.toFixed(2)} DH )
           </div>
         </div>
       </Row>
-    : <form id="product-form" className="form-horizontal" onChange={this.setProductState}>
+    : <form id="product-form" className="form-horizontal">
         <Row className={`form-${this.props.theme}`}>
           <Col xs='12'>
             <Input hidden type='text' name='_id' defaultValue={product._id}/>
@@ -98,7 +97,7 @@ export default class ProductForm extends Component {
                 <Label>Nom :</Label>
               </Col>
               <Col xs='12' md='9'>
-                <Input type='text' name='name' defaultValue={product.name} placeholder='Entrez le nom du produit'/>
+                <Input type='text' name='name' defaultValue={product.name} onChange={e => this.productHandler({name: e.target.value})} placeholder='Entrez le nom du produit'/>
               </Col>
             </FormGroup>
             <FormGroup row className='fx fx-ac'>
@@ -106,8 +105,8 @@ export default class ProductForm extends Component {
                 <Label>Image :</Label>
               </Col>
               <Col xs='12' md='9'>
-                <Image src={product.image} id='product-preview' width='75' height='75' alt='Image aperçu' className='product-preview' />
-                <Input type='file' accept='image/*' name='image' defaultValue={product.image} />
+                <Image src={product.image} width='75' height='75' alt='Image aperçu' className='image-preview' />
+                <Input type='file' accept='image/*' name='image' defaultValue={product.image} onChange={this.imageHandler} />
               </Col>
             </FormGroup>
             <FormGroup row className='fx fx-ac'>
@@ -116,30 +115,8 @@ export default class ProductForm extends Component {
               </Col>
               <Col xs='12' md='9'>
                 <InputGroup>
-                  <InputGroupAddon addonType="prepend"><InputGroupText>DH</InputGroupText></InputGroupAddon>
-                  <Input type='number' name='price' defaultValue={product.price} placeholder='0' />
-                </InputGroup>
-              </Col>
-            </FormGroup>
-            <FormGroup row className='fx fx-ac'>
-              <Col md='3'>
-                <Label>Unité Familiale :</Label>
-              </Col>
-              <Col xs='12' md='9'>
-                <InputGroup>
-                  <InputGroupAddon addonType="prepend"><InputGroupText>KG</InputGroupText></InputGroupAddon>
-                  <Input type='number' name='family_unit' defaultValue={product.family_unit} placeholder='Le poid unitaire dans un panier familiale' />
-                </InputGroup>
-              </Col>
-            </FormGroup>
-            <FormGroup row className='fx fx-ac'>
-              <Col md='3'>
-                <Label>Unité Découverte :</Label>
-              </Col>
-              <Col xs='12' md='9'>
-                <InputGroup>
-                  <InputGroupAddon addonType="prepend"><InputGroupText>KG</InputGroupText></InputGroupAddon>
-                  <Input type='number' name='discovery_unit' defaultValue={product.discovery_unit} placeholder='Le poid unitaire dans un panier découverte' />
+                  <Input type='number' name='price' defaultValue={product.price} onChange={e => this.productHandler({price: e.target.value})} placeholder='.. 0.00Dh' className='text-right' />
+                  <InputGroupAddon addonType="append"><InputGroupText>DH</InputGroupText></InputGroupAddon>
                 </InputGroup>
               </Col>
             </FormGroup>

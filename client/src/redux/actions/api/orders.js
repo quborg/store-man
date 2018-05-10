@@ -1,4 +1,5 @@
 import urls from 'ayla-client/redux/config'
+import {saveBasket} from '.'
 
 const headers = { 'Content-Type': 'application/json' }
     , options = {
@@ -30,9 +31,7 @@ export const getOrders = () => dispatch => {
 }
 
 
-export const saveOrder = data => dispatch => {
-  console.log('save order', data);
-  return;
+export const saveOrder = ({basket, ...data}) => dispatch => {
   dispatch({ type: 'PENDING_ORDER' })
 
   let {_id} = data
@@ -40,10 +39,33 @@ export const saveOrder = data => dispatch => {
     , method = _id ? 'PUT' : 'POST'
     , _options = options.ppt(method, data)
 
-  fetch(url, _options)
-    .then(res  => res.json())
-    .then(data => { dispatch({ type: 'FULFILLED_ORDER' }); dispatch(getOrders()) })
-    .catch(e   => { dispatch({ type:'REJECTED_ORDER', payload: e }) })
+  if (!data.basket_id) {
+    saveOrderTwoCalls()
+  } else {
+    if (_id && data.basket && !data.basket.name) {
+      dispatch(saveBasket(basket))
+      saveOrderOneCall()
+    } else {
+      saveOrderOneCall()
+    }
+  }
+
+  function saveOrderTwoCalls() {
+    dispatch(saveBasket(basket))
+      .then(id => {
+        data      = {...data, basket_id: id}
+        _options  = options.ppt(method, data)
+        saveOrderOneCall()
+      })
+  }
+
+  function saveOrderOneCall() {
+    console.log('order call', _options);
+    fetch(url, _options)
+      .then(res  => res.json())
+      .then(data => { dispatch({ type: 'FULFILLED_ORDER' }); dispatch(getOrders()) })
+      .catch(e   => { dispatch({ type:'REJECTED_ORDER', payload: e }) })
+  }
 }
 
 
