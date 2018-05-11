@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {connect} from 'react-redux'
-import {getBaskets} from 'ayla-client/redux/actions/api'
+import {getBaskets, getProducts} from 'ayla-client/redux/actions/api'
 import BasketCard from './BasketCard'
 import BasketForm from './BasketForm'
 import {Container, Row} from 'reactstrap'
@@ -33,6 +33,7 @@ class Baskets extends Component {
   }
 
   componentWillMount() {
+    this.props.dispatch(getProducts())
     this.props.dispatch(getBaskets())
   }
 

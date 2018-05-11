@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import {connect} from 'react-redux'
 import serialize from 'form-serialize'
-import {getOrders, saveOrder, delOrder, getClients, getProducts, getBaskets} from 'ayla-client/redux/actions/api'
+import {getOrders, newSaveOrder, delOrder, getBaskets, getClients, getProducts, getBags} from 'ayla-client/redux/actions/api'
 import {Container, Row, Col, Button,
         Modal, ModalHeader, ModalBody, ModalFooter} from 'reactstrap'
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table'
@@ -38,9 +38,10 @@ class Orders extends Component {
 
   componentWillMount() {
     this.props.dispatch(getOrders())
+    this.props.dispatch(getBaskets())
     this.props.dispatch(getClients())
     this.props.dispatch(getProducts())
-    this.props.dispatch(getBaskets())
+    this.props.dispatch(getBags())
   }
 
   setModal(theme, action, isOpen=true) {
@@ -54,17 +55,15 @@ class Orders extends Component {
   }
 
   saveOrder = () => {
-    let order = { ...this.state.order }
+    let order = { ...this.state.order, bags:this.props.bags }
     if (this.state.theme == 'primary')
-      try {
-        delete order._id;
-      } catch (e) { console.log(e) }
-    this.props.dispatch( saveOrder(order) )
+      delete order._id;
+    this.props.dispatch( newSaveOrder(order) )
     this.setState({ isOpen: false })
   }
 
   delOrder = () => {
-    this.props.dispatch( delOrder(this.state.order._id) )
+    this.props.dispatch( delOrder(this.state.order, this.props.baskets) )
     this.setState({isOpen: false, selected: false, order: {}})
   }
 
@@ -107,7 +106,7 @@ class Orders extends Component {
     />
   ]
 
-  dateFormater = cell => moment(cell).format('dddd DD MMMM, HH:mm')
+  dateFormater = cell => moment(cell).format('dddd DD MMMM YYYY, HH:mm')
 
   clientFormater = cId => {
     let {firstname, lastname, image} = getCollectionById(this.props.clients, cId)
@@ -190,11 +189,9 @@ class Orders extends Component {
   }
 }
 
-const mapState = ({orders:{data}, clients:{data:clients}, products:{data:products}, baskets:{data:baskets}}, ownProps) => {
-  ownProps = { ...ownProps, data, clients, products, baskets }
+const mapState = ({orders:{data}, clients:{data:clients}, products:{data:products}, baskets:{data:baskets}, bags:{data:bags}}, ownProps) => {
+  ownProps = { ...ownProps, data, clients, products, baskets, bags }
   return ownProps
 }
 
 export default connect(mapState)(Orders)
-
-export WeekOrders from './WeekOrders'

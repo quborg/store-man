@@ -17,6 +17,7 @@ export default class OrderForm extends Component {
     searchList: [],
     basket: {},
     basketName: '',
+    basket_id: '',
     calculator: false,
     totalAutomatic: 0,
     total: 0
@@ -81,7 +82,7 @@ export default class OrderForm extends Component {
   }
 
   basketEditorHandler = (nextProducts, basketName=this.state.basketName, escapeName=false) => {
-    let basket            = { ...this.props.order.basket, ...nextProducts }
+    let basket            = { ...this.props.order.basket, products:[], ...nextProducts }
       , {products,theme}  = this.props
       , {total}           = this.props.order
       , totalAutomatic    = 0
@@ -92,32 +93,26 @@ export default class OrderForm extends Component {
                           return total
                         }, 0)
     }
-    if (this.state.calculator) {
-      total = totalAutomatic
-    }
+    if (escapeName)             total = this.props.order.total || basket.total
+    if (this.state.calculator)  total = totalAutomatic
     if (!escapeName && basketName) {
       basketName = ''
       basket.name = ''
-      if (!this.props.order._id) delete basket._id
+      delete basket._id
     }
     let basket_id = basketName ? basket._id : theme=='warning' ? basket._id : ''
-    // TODO
-    if (escapeName) total = basket.total
-    basket = { ...basket, total }
-    console.log('total', total)
     this.props.orderHandler({basket_id, basket, total})
-    this.setState({ basketName, totalAutomatic, total })
+    this.setState({ basket_id, basketName, totalAutomatic, total })
   }
 
-  toggleCalculator = e => {
-    this.setState({calculator: e.target.checked})
-    if (e.target.checked) this.manualTotalHandler(this.state.totalAutomatic)
+  toggleCalculator = calculator => {
+    this.setState({calculator})
+    if (calculator) this.manualTotalHandler(this.state.totalAutomatic)
   }
 
   manualTotalHandler = total => {
-    let basket = {...this.props.order.basket, total}
-    this.props.orderHandler({basket, total})
-    this.setState({ ...total })
+    this.props.orderHandler({total})
+    this.setState({ total })
   }
 
   render() {
@@ -133,10 +128,18 @@ export default class OrderForm extends Component {
         <div className='entity-del collection'>
           <FormGroup row>
             <Col xs='3'>
+              <Label>ID</Label>
+            </Col>
+            <Col xs='9'>
+              <RaisedButton label={`#${this.props.order._id}`} disabled={true} />
+            </Col>
+          </FormGroup>
+          <FormGroup row>
+            <Col xs='3'>
               <Label>Client</Label>
             </Col>
             <Col xs='9'>
-              <RaisedButton label={this.state.clientName} disabled={true} />
+              <RaisedButton label={this.state.clientName||''} icon={<i className="fa fa-user" />} disabled={true} />
             </Col>
           </FormGroup>
           <FormGroup row>
@@ -152,7 +155,7 @@ export default class OrderForm extends Component {
               <Label>Total</Label>
             </Col>
             <Col xs='9'>
-              <RaisedButton label={this.state.total} disabled={true} />
+              <RaisedButton label={`${this.state.total||0} DH`} disabled={true} />
             </Col>
           </FormGroup>
           <FormGroup row>
@@ -215,7 +218,7 @@ export default class OrderForm extends Component {
               <InputGroupAddon addonType='prepend' style={{width:'220px'}}>
                 <InputGroupText style={{width:'100%'}}>
                   <Label className="switch switch-sm switch-icon switch-pill switch-primary mb-0">
-                    <Input type="checkbox" className="switch-input" defaultChecked={this.state.calculator} onChange={this.toggleCalculator} />
+                    <Input type="checkbox" className="switch-input" defaultChecked={this.state.calculator} onChange={e => this.toggleCalculator(e.target.checked)} />
                     <span className="switch-label" data-on={'\uF1EC'} data-off={'\uF1EC'}></span>
                     <span className="switch-handle"></span>
                   </Label>
@@ -226,8 +229,8 @@ export default class OrderForm extends Component {
               </InputGroupAddon>
               {
                 this.state.calculator
-                ? <Input key='key-automatic-total' type='number' value={this.state.totalAutomatic} disabled className='text-right total-auto' />
-                : <Input key='key-custom-total' type='number' value={this.state.total} onChange={e => this.manualTotalHandler({total: e.target.value})} placeholder={'.. 0Dh'} className='text-right total-manual' />
+                ? <Input key='key-automatic-total' type='number' defaultValue={this.state.totalAutomatic} disabled className='text-right total-auto'/>
+                : <Input key='key-custom-total' type='number' value={this.state.total} onChange={e => this.manualTotalHandler(e.target.value)} placeholder={'.. 0Dh'} className='text-right total-manual' />
               }
               <InputGroupAddon addonType="append"><InputGroupText>DH</InputGroupText></InputGroupAddon>
             </InputGroup>
@@ -265,6 +268,7 @@ export default class OrderForm extends Component {
             </FormGroup>
           </Col>
         </FormGroup>
+        <Input value={this.props.order.created_at} onChange={e => this.props.orderHandler({created_at:e.target.value})} placeholder={'.. 0Dh'} className='text-right total-manual' />
       </Col>
     </Row>
   }

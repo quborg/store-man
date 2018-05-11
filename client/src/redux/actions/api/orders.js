@@ -1,5 +1,7 @@
 import urls from 'ayla-client/redux/config'
-import {saveBasket} from '.'
+import {saveBasket, delBasket} from './baskets'
+import {getCollectionByKeyValue} from 'ayla-helper/ext'
+
 
 const headers = { 'Content-Type': 'application/json' }
     , options = {
@@ -30,37 +32,67 @@ export const getOrders = () => dispatch => {
     .catch(e   => { dispatch({ type:'REJECTED_ORDERS', payload: e }) })
 }
 
-
-export const saveOrder = ({basket, ...data}) => dispatch => {
+export const newSaveOrder = data => dispatch => {
   dispatch({ type: 'PENDING_ORDER' })
+  let bags = []
+    , {basket, bags:storeBags} = data
+  delete data.basket
+  delete data.bags
 
-  let {_id} = data
-    , url = urls.order +'/'+ (_id||'')
-    , method = _id ? 'PUT' : 'POST'
-    , _options = options.ppt(method, data)
+  if (storeBags && storeBags.length) { // desc sort
+    storeBags =  storeBags.sort( ({volume:vol1},{volume:vol2}) => vol2 > vol1 )
+  }
+  // TODO bags calcule not proper
+  if (basket && basket.products) {
+    basket.products.map( ({_id:pid, name:pname, quantity, ...product}) => {
+      let bag = {pid, pname, items: []}
+      if (storeBags && storeBags.length) {
+        storeBags.map( ({_id:bid, volume, name}, i) => {
+          let coeff  = quantity/volume
+            , result = Math.round(quantity/volume)
+          if (result) {
+            bag.items.push({name, bid, quantity:result})
+            quantity = quantity % volume
+          } else {
+            if (storeBags.length==i+1 && coeff>0) { // last loop
+              bag.items.push({name, bid, quantity:1})
+            }
+          }
+        })
+      }
+      bags.push(bag)
+    })
+  }
+  console.log('bags', bags);
 
-  if (!data.basket_id) {
-    saveOrderTwoCalls()
+  if (basket && !basket.name) basket.total = data.total
+  let _id       = data ? data._id : ''
+    , _data     = {...data, bags, basket}
+    , url       = urls.order +'/'+ (_id||'')
+    , method    = _id ? 'PUT' : 'POST'
+    , _options  = options.ppt(method, _data)
+
+  if (basket && basket.name) {
+    saveOrderOneCall()
   } else {
-    if (_id && data.basket && !data.basket.name) {
+    if (basket._id) {
       dispatch(saveBasket(basket))
       saveOrderOneCall()
     } else {
-      saveOrderOneCall()
+      saveOrderTwoCalls()
     }
   }
 
   function saveOrderTwoCalls() {
     dispatch(saveBasket(basket))
       .then(id => {
-        data      = {...data, basket_id: id}
-        _options  = options.ppt(method, data)
+        let __data = {..._data, basket_id: id}
+        _options  = options.ppt(method, __data)
         saveOrderOneCall()
       })
   }
 
   function saveOrderOneCall() {
-    console.log('order call', _options);
     fetch(url, _options)
       .then(res  => res.json())
       .then(data => { dispatch({ type: 'FULFILLED_ORDER' }); dispatch(getOrders()) })
@@ -69,10 +101,16 @@ export const saveOrder = ({basket, ...data}) => dispatch => {
 }
 
 
-export const delOrder = id => dispatch => {
+export const delOrder = ({_id, basket_id, basket}, baskets) => dispatch => {
   dispatch({ type: 'PENDING_ORDER' })
 
-  const url = urls.order +'/'+ id
+  let basketFamily      = getCollectionByKeyValue(baskets, 'name', 'Familiale')
+    , basketDecouverte  = getCollectionByKeyValue(baskets, 'name', 'Decouverte')
+
+  if (basket && basket._id!=basketFamily._id && basket._id!=basketDecouverte._id)
+    dispatch(delBasket(basket_id))
+
+  const url = urls.order +'/'+ _id
   fetch(url, options.del)
     .then(res  => res.json())
     .then(data => { dispatch({ type: 'FULFILLED_ORDER' }); dispatch(getOrders()) })

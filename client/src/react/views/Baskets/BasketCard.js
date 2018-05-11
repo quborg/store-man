@@ -15,7 +15,7 @@ export default class BasketCard extends Component {
     const {name, products, total, onClick, _class, selected} = this.props
     return (
       <div {...{onClick}} className={`item-card basket-card pointer ${_class} ${selected?'selected':''}`} >
-        <div className='title b mb-2'>
+        <div className='title b mb-3'>
           Panier {name}
         </div>
         <div className='list b'>
@@ -25,12 +25,12 @@ export default class BasketCard extends Component {
                                     <Image src={p.image} alt='Image aperçu' className='sm-image-preview' />
                                   </span>
                                   <span className='p-name'>{p.name}</span>
-                                  <span className='ml-auto'><span className="text-shadow">{p.quantity}</span> KG</span>
+                                  <span className='ml-auto text-shadow'>{p.quantity}KG</span>
                                 </div>
             )
           }
         </div>
-        <div className='footer b mt-2 text-right text-shadow'>
+        <div className='footer b mt-3 text-right text-shadow'>
           Total = {total.toFixed(2)} DH
         </div>
       </div>

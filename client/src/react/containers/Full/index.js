@@ -10,7 +10,8 @@ import Clients  from 'ayla-client/react/views/Clients';
 import Products from 'ayla-client/react/views/Products';
 import Bags     from 'ayla-client/react/views/Bags';
 import Baskets  from 'ayla-client/react/views/Baskets';
-import Orders, {WeekOrders} from 'ayla-client/react/views/Orders';
+import Orders   from 'ayla-client/react/views/Orders';
+import WeekOrders from 'ayla-client/react/views/Orders/WeekOrders';
 
 
 

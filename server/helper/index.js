@@ -41,7 +41,7 @@ function saveImage(image, folderName='unnamed') {
     @param String order
     @return sorted arr Array
 */
-function sortBy(arr, key, order) {
+function sortByDate(arr, key, order) {
   switch (key) {
     case 'created_at':
       return arr.sort(function(obj1, obj2) {
@@ -57,5 +57,5 @@ function sortBy(arr, key, order) {
 
 module.exports = {
   saveImage,
-  sortBy
+  sortByDate
 }

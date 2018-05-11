@@ -13,6 +13,7 @@ class BasketEditor extends Component {
   }
 
   state = {
+    basket: [],
     leftBasket: [],
     selectedProducts: [],
     addMode: false
@@ -36,10 +37,10 @@ class BasketEditor extends Component {
                         if (notInBasket) leftProducts.push({ _id, name, image, price, quantity:0 })
                         return leftProducts
                       }, [])
-    this.setState({leftBasket})
+    this.setState({leftBasket, basket})
   }
 
-  basketProductHandler = (selectedProduct, e) => {
+  selectProductHandler = (selectedProduct, e) => {
     let selectedProducts = [...this.state.selectedProducts]
     if (e.target.checked) {
       selectedProducts = [...selectedProducts, selectedProduct]
@@ -71,7 +72,7 @@ class BasketEditor extends Component {
                         if (itemNotInSelection) leftProducts.push(leftItem)
                         return leftProducts
                       }, [])
-    this.setState({leftBasket})
+    this.setState({leftBasket, basket})
     this.props.basketHandler({products: basket})
     this.closeAddMode()
   }
@@ -92,7 +93,7 @@ class BasketEditor extends Component {
                         if (product._id == id) product.quantity = Number(eventQuantity)
                         return product
                       })
-    this.setState({focusBasketId: id})
+    this.setState({basket})
     this.props.basketHandler({products: basket})
   }
 
@@ -104,7 +105,7 @@ class BasketEditor extends Component {
           {
             this.state.leftBasket.map( product =>
               <FormGroup check inline key={product._id}>
-                <input className='form-check-input' type='checkbox' onChange={e => this.basketProductHandler(product,e)} />
+                <input className='form-check-input' type='checkbox' onChange={e => this.selectProductHandler(product,e)} />
                 <label className='form-check-label'>{product.name}</label>
               </FormGroup>
             )
@@ -124,13 +125,13 @@ class BasketEditor extends Component {
     : <div>
         <div className='basket-form-unit'>
           {
-            this.props.basket.map( product =>
+            this.state.basket.map( product =>
               <InputGroup key={'key-basket-item-'+product._id}>
                 <input hidden defaultValue={product._id||''} />
                 <InputGroupAddon addonType='prepend' style={{width:'203px'}}>
                   <InputGroupText style={{width:'100%', padding: '0'}}>
-                    <span className='sm-inline-image'>
-                      <Image src={product.image} alt='Image aperçu' className='sm-image-preview' />
+                    <span className='sm-inline-image fx-1'>
+                      <Image src={product.image} alt='Image aperçu' className='sm-image-preview sm' />
                     </span>
                     <span style={{padding:'0.375rem 0.75rem', width:'118px'}} className='ellipse text-left pl-2'>{product.name}</span>
                     <span className='ml-auto mr-2'>{(product.price||0).toFixed(2)}DH</span>
@@ -138,7 +139,7 @@ class BasketEditor extends Component {
                 </InputGroupAddon>
                 <input  type='number' step='0.1'
                         name='basket[][quantity]'
-                        defaultValue={product.quantity||''}
+                        value={product.quantity||''}
                         onChange={e => this.productHandler(product._id, e.target.value)}
                         placeholder='.. 0Kg'
                         style={{width:'66px'}}

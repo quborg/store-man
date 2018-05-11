@@ -39,21 +39,21 @@ body {
   &.fx-rev {
     flex-direction: row-reverse
   }
-  .fx-1 {
-    flex: 1
-  }
-  .fx-grow-1 {
-    flex-grow: 1
-  }
-  .fx-grow-2 {
-    flex-grow: 2
-  }
-  .fx-grow-3 {
-    flex-grow: 3
-  }
-  .fx-wrap {
-    flex-flow: row wrap;
-  }
+}
+.fx-1 {
+  flex: 1
+}
+.fx-grow-1 {
+  flex-grow: 1
+}
+.fx-grow-2 {
+  flex-grow: 2
+}
+.fx-grow-3 {
+  flex-grow: 3
+}
+.fx-wrap {
+  flex-flow: row wrap;
 }
 // flex >
 
@@ -207,23 +207,25 @@ h2 {
   border: 1px solid $gray-200;
 }
 
-$borderWidth: 40px;
+$borderWidth: 38px;
 $borderHeight: 30px;
 $imageWidth: $borderWidth + 10px;
 $imageHeight: $borderHeight + 10px;
-$hAdjustment: ($borderHeight - $imageHeight) / 2;
+$hAdjustment: ($imageHeight - $borderHeight) / 2;
 
 .sm-inline-image {
   width: $borderWidth;
   height: $borderHeight;
-  display: inline-block;
-  overflow: hidden;
   box-shadow: 0 0 0 1px $gray-200, inset 0 0 5px rgba(0, 0, 0, 0.1);
   .sm-image-preview {
-    max-width: $imageWidth;
-    height: $imageHeight;
+    width: $imageWidth;
+    max-height: $imageHeight;
+    &.sm {
+      width: $imageWidth - 4px;
+      max-height: $imageHeight - 4px;
+    }
     position: relative;
-    top: $hAdjustment;
+    // top: $hAdjustment;
   }
 }
 
@@ -322,10 +324,10 @@ td:focus {
     width: $card-width;
     height: $card-height;
     border-radius: 5px 0 0 5px;
-    box-shadow: -1px 0 0 2px #fff, inset 0px 0 6px #fff;
+    box-shadow: -1px 0 0 1px #fff, inset 0px 0 40px 5px rgba(255, 255, 255, 0.87);
     img {
-      width: $card-width - 2;
-      height: $card-height - 2;
+      max-width: $card-width + 10;
+      height: $card-height + 10;
     }
   }
   .txt {
@@ -428,11 +430,12 @@ div.search-list-wrapper {
 }
 
 .basket-card {
+  width: 350px;
   color: $white;
   height: auto;
   padding: 5px 10px;
   .title, .footer {
-    font-size: 16px;
+    font-size: 20px;
   }
   .title {
     border-bottom: 1px solid $white;
@@ -442,15 +445,19 @@ div.search-list-wrapper {
   }
   .list {
     color: $dark;
+    height: 300px;
+    overflow-y: scroll;
+    padding: 10px;
+    box-shadow: inset 0 0 3px 1px rgba(0, 0, 0, 0.5), inset 0 0 0 1px #00e0ff;
     > div {
       border-bottom: 1px dashed $dark;
       &:last-child { border-bottom: none }
-      margin-bottom: 1px;
-      padding-bottom: 1px;
+      margin-bottom: 3px;
+      padding-bottom: 3px;
     }
     .p-name {
-      @extend .ml-2, .uppercase, .break-word;
-      font-size: 10px;
+      @extend .ml-2, .uppercase, .ellipse;
+      font-size: 12px;
       position: relative;
     }
   }
