@@ -1,4 +1,4 @@
-const HOST = 'localhost'
+const HOST = '10.193.86.186'
     , PORT = process.env.NODE_ENV == 'production' ? '8888' : '3031'
     , BASE = `http://${HOST}:${PORT}`
     , API  = `${BASE}/api`
