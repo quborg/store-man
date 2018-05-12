@@ -2,7 +2,7 @@
 /client/coverage
 /client/build
 
-/server/mongodb/**
+/server/mongodb/*
 
 /**/node_modules
 

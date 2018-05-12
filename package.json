@@ -9,7 +9,7 @@
     "server": "npm start --prefix server",
     "server:prod": "npm start:prod --prefix server",
     "client": "npm start --prefix client",
-    "client:build": "npm start:build --prefix client"
+    "client:build": "npm run build --prefix client"
   },
   "dependencies": {}
 }

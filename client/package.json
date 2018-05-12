@@ -6,6 +6,11 @@
   "copyright": "Copyright 2018 RnDfy",
   "license": "MIT",
   "private": true,
+  "scripts": {
+    "start": "NODE_ENV=development && webpack-dev-server --progress --color --inline --env.dev",
+    "build": "NODE_ENV=production && npm run clean && webpack -p --progress --env.prod",
+    "clean": "rimraf ./build"
+  },
   "devDependencies": {
     "babel-core": "6.26.0",
     "babel-loader": "7.1.2",
@@ -58,14 +63,5 @@
     "redux-thunk": "^2.2.0",
     "simple-line-icons": "2.4.1",
     "typeface-roboto": "^0.0.54"
-  },
-  "scripts": {
-    "start": "NODE_ENV=development && webpack-dev-server --progress --color --inline --env.dev",
-    "start:build": "NODE_ENV=production && npm run clean && webpack -p --progress --env.prod",
-    "clean": "rimraf ./build"
-  },
-  "engines": {
-    "node": ">= 8.9.4",
-    "npm": ">= 5.6.0"
   }
 }

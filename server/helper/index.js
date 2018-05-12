@@ -12,13 +12,14 @@ var paths   = require('config/paths')
     @param String folderName
     @return {String} image path
 */
+// TODO write a script to make folder if not exist
 function saveImage(image, folderName='unnamed') {
   if (image && typeof image !== 'string' && image.src && image.name) {
     let base64Data      = image.src.split('base64,')[1]
       , publicPath      = '/img/'+ folderName
-      , imagePublicPath = publicPath +'/'+ image.name
-      , fullPath        = paths.appPublic + publicPath
-      , imageFullPath   = fullPath +'/'+ image.name
+      , imagePublicPath = '.' + publicPath +'/'+ image.name
+      , modePath        = process.env.NODE_ENV == 'production' ? paths.appBuild : paths.appPublic
+      , imageFullPath   = modePath + publicPath +'/'+ image.name
 
     // mkdirp(fullPath, function (f_err) {
     //   if (f_err) { console.log(err); return '' }
