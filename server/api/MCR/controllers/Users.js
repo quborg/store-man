@@ -10,7 +10,7 @@ module.exports = {
   getAll: function(req, res, next) {
     req.models.user.find(req.query, function(err, users){
       if (err) res.status(err.status||500).json(err);
-      res.status(200).json(helper.sortByDate(result, 'created_at', 'desc'));
+      res.status(200).json(helper.sortByDate(users, 'created_at', 'desc'));
     })
   },
 

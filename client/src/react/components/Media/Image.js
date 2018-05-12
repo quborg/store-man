@@ -1,6 +1,6 @@
 import React from 'react'
 
-const PREVIEW_IMG_SRC = '/img/empty-preview.png'
+const PREVIEW_IMG_SRC = './img/empty-preview.png'
     , srcHandler      = src => src.src || src || PREVIEW_IMG_SRC
 
 

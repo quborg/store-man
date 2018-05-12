@@ -7,7 +7,7 @@
     "mongodb": "pm2 start ecosystem.config.js --only mongo-db",
     "start": "pm2 start ecosystem.config.js --only api-ferme-ayla",
     "start:2": "pm2 start ecosystem.config.js",
-    "start:prod": "pm2 start ecosystem.config.js --only api-ferme-ayla --env production",
+    "prod": "pm2 start ecosystem.config.js --only api-ferme-ayla --env production",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",

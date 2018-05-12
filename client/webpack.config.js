@@ -16,7 +16,7 @@ const HELPER_DIR  = path.resolve(__dirname, 'helper');
 const SCSS_DIR    = path.resolve(__dirname, 'scss');
 
 const HOST = 'localhost';
-const PORT = '8080';
+const PORT = process.env.NODE_ENV == 'production' ? '8080' : '3030';
 
 
 module.exports = (env = {}) => {

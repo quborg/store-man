@@ -1,10 +1,10 @@
 const HOST = 'localhost'
-    , PORT = '3031'
+    , PORT = process.env.NODE_ENV == 'production' ? '8081' : '3031'
     , BASE = `http://${HOST}:${PORT}`
     , API  = `${BASE}/api`
 ;
 
-
+console.log('BASE', BASE);
 export default {
   user    : `${API}/user`,
   client  : `${API}/client`,

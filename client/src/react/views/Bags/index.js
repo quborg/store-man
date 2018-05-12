@@ -44,7 +44,7 @@ class Bags extends Component {
     this.setState({bag})
   }
 
-  resetSelection() {
+  resetSelection = () => {
     this.setState({bag: {}, selected: false})
   }
 

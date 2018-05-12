@@ -135,7 +135,7 @@ class Clients extends Component {
               <TableHeaderColumn dataField='phone'>Tél</TableHeaderColumn>
               <TableHeaderColumn dataField='adress'>Addresse</TableHeaderColumn>
               <TableHeaderColumn dataField='email'>Email</TableHeaderColumn>
-              <TableHeaderColumn dataField='created_at' dataFormat={this.dateFormater}>{'Date d\'ajout'}</TableHeaderColumn>
+              <TableHeaderColumn dataField='created_at' dataFormat={this.dateFormater} dataSort={true}>{'Date d\'ajout'}</TableHeaderColumn>
             </BootstrapTable>
           </Row>
         </Container>

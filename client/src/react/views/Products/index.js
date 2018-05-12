@@ -44,7 +44,7 @@ class Products extends Component {
     this.setState({product})
   }
 
-  resetSelection() {
+  resetSelection = () => {
     this.setState({product: {}, selected: false})
   }
 

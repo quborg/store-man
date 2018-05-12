@@ -85,7 +85,7 @@ export default class OrderForm extends Component {
     let basket            = { ...this.props.order.basket, products:[], ...nextProducts }
       , {products,theme}  = this.props
       , {total}           = this.props.order
-      , totalAutomatic    = 0
+      , totalAutomatic    = 0;
     if (basket.products && basket.products.length) {
       totalAutomatic  = basket.products.reduce(
                         (total, p) => {
@@ -93,14 +93,15 @@ export default class OrderForm extends Component {
                           return total
                         }, 0)
     }
-    if (escapeName)             total = this.props.order.total || basket.total
-    if (this.state.calculator)  total = totalAutomatic
+    if (escapeName)             total = this.props.order.total || basket.total;
+    if (this.state.calculator)  total = totalAutomatic;
     if (!escapeName && basketName) {
       basketName = ''
-      basket.name = ''
+      basket.name = '';
       delete basket._id
     }
-    let basket_id = basketName ? basket._id : theme=='warning' ? basket._id : ''
+    let basket_id = basketName ? basket._id : theme=='warning' ? basket._id : '';
+    console.log('calcul', total, totalAutomatic);
     this.props.orderHandler({basket_id, basket, total})
     this.setState({ basket_id, basketName, totalAutomatic, total })
   }
@@ -229,7 +230,7 @@ export default class OrderForm extends Component {
               </InputGroupAddon>
               {
                 this.state.calculator
-                ? <Input key='key-automatic-total' type='number' defaultValue={this.state.totalAutomatic} disabled className='text-right total-auto'/>
+                ? <Input key='key-automatic-total' type='number' value={this.state.totalAutomatic} onChange={e => {}} disabled className='text-right total-auto'/>
                 : <Input key='key-custom-total' type='number' value={this.state.total} onChange={e => this.manualTotalHandler(e.target.value)} placeholder={'.. 0Dh'} className='text-right total-manual' />
               }
               <InputGroupAddon addonType="append"><InputGroupText>DH</InputGroupText></InputGroupAddon>
