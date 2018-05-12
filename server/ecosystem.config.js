@@ -10,7 +10,7 @@ module.exports = {
             "NODE_ENV": "development",
         },
         "env_production": {
-            "PORT": 8081,
+            "PORT": 8888,
             "NODE_ENV": "production",
         },
         "out_file": "./logs/api.stdout.log",
