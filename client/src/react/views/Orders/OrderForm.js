@@ -268,8 +268,8 @@ export default class OrderForm extends Component {
             </FormGroup>
           </Col>
         </FormGroup>
-        <Input value={this.props.order.created_at} onChange={e => this.props.orderHandler({created_at:e.target.value})} placeholder={'.. 0Dh'} className='text-right total-manual' />
-      </Col>
+        {//<Input value={this.props.order.created_at} onChange={e => this.props.orderHandler({created_at:e.target.value})} placeholder={'.. 0Dh'} className='text-right total-manual' />
+      }</Col>
     </Row>
   }
 
