@@ -10,7 +10,9 @@ var mongoose = require('mongoose')
 mongoose.Promise = global.Promise
 
 
-module.exports = ({db_url, conn_options, ...Server}) => {
+module.exports = Server => {
+
+  var {db_url, conn_options} = Server
 
   mongoose.connect(db_url, conn_options)
     .then(() =>  console.log('connection succesful'))
