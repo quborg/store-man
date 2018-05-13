@@ -97,7 +97,7 @@ export default class BagForm extends Component {
                 <Label>Nom :</Label>
               </Col>
               <Col xs='12' md='9'>
-                <Input type='text' name='name' defaultValue={bag.name} onChange={e => this.bagHandler({name: e.target.value})} placeholder='Entrez le nom du produit'/>
+                <Input type='text' name='name' defaultValue={bag.name} onChange={e => this.bagHandler({name: e.target.value})} placeholder={'Entrez le nom de l\'embalage'}/>
               </Col>
             </FormGroup>
             <FormGroup row className='fx fx-ac'>

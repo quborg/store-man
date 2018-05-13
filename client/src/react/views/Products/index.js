@@ -6,9 +6,10 @@ import ProductForm from './ProductForm'
 import {Container, Row} from 'reactstrap'
 import {Modal} from 'ayla-client/react/components/Notifications'
 import {ButtonControl} from 'ayla-client/react/components/Buttons'
+import {NO_PRODUCT_MSG} from 'ayla-client/react/views/Static/Messages'
+
 
 const DISPLAY         = 'product'
-    , NO_PRODUCT_MSG  = 'Aucun produit enregistré !'
     , CTL             = {
                           primary: { icon: 'plus',  title: `Ajouter un ${DISPLAY}`   },
                           warning: { icon: 'save',  title: `Modifier un ${DISPLAY}`  },

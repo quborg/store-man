@@ -9,6 +9,7 @@ import ClientForm from './ClientForm'
 import {Image} from 'ayla-client/react/components/Media'
 import RaisedButton from 'material-ui/RaisedButton'
 import moment from 'moment'
+import {NO_CLIENTS_MSG} from 'ayla-client/react/views/Static/Messages'
 
 const selectRowProp = cb => ({
   mode: 'radio',
@@ -22,7 +23,7 @@ const options = {
   sizePerPage: 10,
   sortName: 'created_at',
   sortOrder: 'desc',
-  noDataText: 'Aucun client enregistré.'
+  noDataText: NO_CLIENTS_MSG
 }
 
 

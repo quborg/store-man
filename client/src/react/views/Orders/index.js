@@ -10,6 +10,7 @@ import {Image} from 'ayla-client/react/components/Media'
 import RaisedButton from 'material-ui/RaisedButton'
 import moment from 'moment'
 import {getCollectionById} from 'ayla-helper/ext'
+import {NO_ORDERS_MSG} from 'ayla-client/react/views/Static/Messages'
 
 const selectRowProp = cb => ({
   mode: 'radio',
@@ -22,7 +23,7 @@ const options = {
   sizePerPage: 10,
   sortName: 'created_at',
   sortOrder: 'desc',
-  noDataText: 'Aucune commande n\'a été prise.'
+  noDataText: NO_ORDERS_MSG
 }
 
 
