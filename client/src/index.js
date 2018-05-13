@@ -7,7 +7,6 @@ import { configureStore } from 'ayla-client/redux/stores/configure-store'
 import 'ayla-helper/prototypes'
 import 'typeface-roboto'
 
-// google.maps.event.addDomListener(window, 'load', initAutocomplete)
 
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import Main from './react'

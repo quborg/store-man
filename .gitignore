@@ -4,6 +4,8 @@
 
 /server/mongodb/*
 
+/static/html/*
+
 /**/node_modules
 
 /**/.DS_Store

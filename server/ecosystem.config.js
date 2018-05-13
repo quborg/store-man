@@ -1,7 +1,15 @@
 module.exports = {
   apps : [
       {
-        "name": "api-ferme-ayla",
+        "name": "mongo-db",
+        "script": "./services/mongod.sh",
+        "max_restarts": 2,
+        "watch": ["./api/models/"],
+        "out_file": "./logs/mongodb.stdout.log",
+        "error_file": "./logs/mongodb.stderr.log"
+      },
+      {
+        "name": "api-ferme-ayla-dev",
         "script": "./index.js",
         "max_restarts": 2,
         "watch": ["./api/"],
@@ -9,20 +17,19 @@ module.exports = {
             "PORT": 3031,
             "NODE_ENV": "development",
         },
-        "env_production": {
-            "PORT": 8888,
-            "NODE_ENV": "production",
-        },
-        "out_file": "./logs/api.stdout.log",
-        "error_file": "./logs/api.stderr.log"
+        "out_file": "./logs/api-dev.stdout.log",
+        "error_file": "./logs/api-dev.stderr.log"
       },
       {
-        "name": "mongo-db",
-        "script": "./services/mongod.sh",
+        "name": "api-ferme-ayla-prod",
+        "script": "./index.js",
         "max_restarts": 2,
-        "watch": ["./api/models/"],
-        "out_file": "./logs/mongodb.stdout.log",
-        "error_file": "./logs/mongodb.stderr.log"
+        "env": {
+            "PORT": 8081,
+            "NODE_ENV": "production",
+        },
+        "out_file": "./logs/api-prod.stdout.log",
+        "error_file": "./logs/api-prod.stderr.log"
       }
   ]
 }

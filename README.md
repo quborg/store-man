@@ -30,10 +30,12 @@
   - [Available Scripts](#available-scripts)
     - [npm start:2](#npm-start2)
     - [npm run mongodb](#npm-run-mongodb)
-    - [npm run server](#npm-run-server)
+    - [npm run server:dev](#npm-run-serverdev)
     - [npm run server:prod](#npm-run-serverprod)
-    - [npm run client](#npm-run-client)
-    - [npm run client:build](#npm-run-buildclient)
+    - [npm run client:dev](#npm-run-clientdev)
+    - [npm run client:build](#npm-run-clientbuild)
+    - [npm run client:copy](#npm-run-clientcopy)
+    - [npm run static](#npm-run-static)
   - [Configs indications](#configs-indications)
   - [Metrics / Monitoring](#metrics-and-monitoring)
 
@@ -61,7 +63,7 @@ Runs MongoDB daemon, then Server api and try to connect to the database when `mo
 
 Runs MongoDB daemon.
 
-### `npm run server`
+### `npm run server:dev`
 
 Runs the API in **development** mode.
 
@@ -69,7 +71,7 @@ Runs the API in **development** mode.
 
 Runs the API in **production** mode.
 
-### `npm run client`
+### `npm run client:dev`
 
 It runs the React app with `webpack-dev-server`.<br>
 Open up [http://localhost:8080](http://localhost:8080) on the Browser.
@@ -77,6 +79,10 @@ Open up [http://localhost:8080](http://localhost:8080) on the Browser.
 ### `npm run client:build`
 
 Bundles the React app for production in `/client/build` folder.
+
+### `npm run static`
+
+Runs a static server on [Ferme Ayla app](./static/html)
 
 
 ## Configs indications

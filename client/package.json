@@ -9,6 +9,7 @@
   "scripts": {
     "start": "NODE_ENV=development && webpack-dev-server --progress --color --inline --env.dev",
     "build": "NODE_ENV=production && npm run clean && webpack -p --progress --env.prod",
+    "copy": "cp -r ./build/* ../static/html/",
     "clean": "rimraf ./build"
   },
   "devDependencies": {

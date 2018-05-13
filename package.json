@@ -3,13 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "postinstall": "npm install --prefix server && npm install --prefix client",
-    "start:2": "npm run start:2 --prefix server",
+    "postinstall": "npm install --prefix server && npm install --prefix client && npm install --prefix static",
     "mongodb": "npm run mongodb --prefix server",
-    "server": "npm start --prefix server",
+    "server:dev": "npm run dev --prefix server",
     "server:prod": "npm run prod --prefix server",
-    "client": "npm start --prefix client",
-    "client:build": "npm run build --prefix client"
+    "client:dev": "npm start --prefix client",
+    "client:build": "npm run build --prefix client",
+    "client:copy": "npm run copy --prefix client",
+    "static": "npm start --prefix static"
   },
   "dependencies": {}
 }
