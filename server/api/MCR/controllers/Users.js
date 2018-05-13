@@ -16,7 +16,6 @@ module.exports = {
 
   profile: (req, res, next) => {
     if (req.isAuthenticated())
-      res.status(202).json({user:'miloudi'});
       res.status(202).json({user:req.user});
     res.status(401).json({msg:'Unauthorized ! Unauthenticated !!'});
   },
@@ -51,9 +50,9 @@ module.exports = {
 
   logout: function(req, res, next) {
     req.logout();
-    req.session.save(function (err) {
+    req.session.destroy(function (err) {
       if (err) res.status(err.status||500).json(err);
-      res.status(201).json(req.user);
+      res.status(201).json(req.params);
     });
   },
 

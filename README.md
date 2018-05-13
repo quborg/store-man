@@ -34,7 +34,6 @@
     - [npm run server:prod](#npm-run-serverprod)
     - [npm run client:dev](#npm-run-clientdev)
     - [npm run client:build](#npm-run-clientbuild)
-    - [npm run client:copy](#npm-run-clientcopy)
     - [npm run static](#npm-run-static)
   - [Configs indications](#configs-indications)
   - [Metrics / Monitoring](#metrics-and-monitoring)

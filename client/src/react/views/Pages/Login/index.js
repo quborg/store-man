@@ -46,8 +46,8 @@ class Login extends Component {
         , { loggedIn, dispatch }] = [this, this.props]
 
     return loggedIn
-    ? <Redirect from="/" to="/dashboard"/>
-    : <div className="app flex-row align-items-center fixed animated fadeOut">
+    ? <Redirect to="/commandes"/>
+    : <div className="app flex-row align-items-center fixed animated slide">
         <Container>
           <Row className="justify-content-center">
             <Col md="4">
@@ -82,7 +82,7 @@ class Login extends Component {
                       <Col xs="8" className="text-right fx fx-ac fx-je">
                         {
                           this.state.failure &&
-                          <div className="text-danger align-middle h-100" style={{lineHeight:'2.5'}}>
+                          <div className="text-danger font-xs align-middle h-100" style={{lineHeight:'2.5'}}>
                             { FAILURE_MSG }
                           </div>
                         }

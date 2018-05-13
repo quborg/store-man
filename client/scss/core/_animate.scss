@@ -16,7 +16,6 @@
   from {
     opacity: 0;
   }
-
   to {
     opacity: 1;
   }
@@ -24,4 +23,30 @@
 
 .fadeIn {
   animation-name: fadeIn;
+}
+
+@keyframes slideLeft {
+  from {
+    opacity: 0;
+    top: -100px;
+  }
+  to {
+    opacity: .5;
+    top: 0;
+  }
+}
+
+@keyframes fullOpacity {
+  from {
+    opacity: .5;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animated.slide {
+  position: relative;
+  animation-name: slideLeft, fullOpacity;
+  animation-duration: 1s, 3s;
 }

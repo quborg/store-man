@@ -22,20 +22,17 @@ class HeaderDropdown extends Component {
     });
   }
 
-  goto(path) {
-    this.props.dispatch(logout())
-    return <Redirect to="/login"/>
-  }
-
   render() {
-    return <Dropdown nav isOpen={this.state.dropdownOpen} toggle={this.toggle}>
-      <DropdownToggle nav>
-        <i className="ico-menu-user fa fa-user-o fx fx-ac fx-jc font-lg" />
-      </DropdownToggle>
-      <DropdownMenu right>
-        <DropdownItem onClick={() => this.goto('/logout')}><i className="fa fa-lock"></i> Logout</DropdownItem>
-      </DropdownMenu>
-    </Dropdown>
+    return this.state.loggedOut
+    ? <Redirect to="/login"/>
+    : <Dropdown nav isOpen={this.state.dropdownOpen} toggle={this.toggle}>
+        <DropdownToggle nav>
+          <i className="ico-menu-user fa fa-user-o fx fx-ac fx-jc font-lg" />
+        </DropdownToggle>
+        <DropdownMenu right>
+          <DropdownItem onClick={() => this.props.dispatch(logout())}><i className="fa fa-lock"></i> Logout</DropdownItem>
+        </DropdownMenu>
+      </Dropdown>
   }
 }
 

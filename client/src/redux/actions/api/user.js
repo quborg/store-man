@@ -25,6 +25,7 @@ export const login = (username, password) => dispatch => {
         payload: {data, loggedIn: true}
       })
       localStorage.setItem('loggedIn', true)
+      localStorage.setItem('user_id', data._id)
     })
     .catch(e   => {
       dispatch({ type:'REJECTED_USER', payload: e })
@@ -33,18 +34,20 @@ export const login = (username, password) => dispatch => {
 
 
 export const logout = () => dispatch => {
-  // dispatch({ type: 'PENDING_USER' })
-  // let url = urls.user + '/logout'
-  // fetch(url, options.logout)
-  //   .then(res  => res.json())
-  //   .then(data => {
+  dispatch({ type: 'PENDING_USER' })
+  let url = urls.user + '/logout/' + localStorage.getItem('user_id')
+  return fetch(url)
+    .then(res  => res.json())
+    .then(data => {
       dispatch({
-        type: 'FULFILLED_USER',
+        type: 'LOGGED_OUT_USER',
         payload: {loggedIn: false}
       })
       localStorage.setItem('loggedIn', false)
-    // })
-    // .catch(e   => {
-    //   dispatch({ type:'REJECTED_USER', payload: e })
-    // })
+      localStorage.setItem('user_id', '')
+      return true;
+    })
+    .catch(e   => {
+      dispatch({ type:'REJECTED_USER', payload: e })
+    })
 }

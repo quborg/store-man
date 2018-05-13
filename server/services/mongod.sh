@@ -1,3 +1,6 @@
 #!/bin/bash
 
-mongod -dbpath './mongodb'
+dir=mongodb
+
+[ -d $dir ] || mkdir $dir
+mongod -dbpath $dir
