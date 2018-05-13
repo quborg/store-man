@@ -11,7 +11,7 @@ var passport        = require('passport')
   , expressSession  = require('express-session')
   , LocalStrategy   = require('passport-local').Strategy
   , mongoose        = require('mongoose')
-
+  , MongoStore      = require('connect-mongo')(expressSession)
   , Models = {}, Controllers = {}, Routes = {}
 ;
 
@@ -39,7 +39,8 @@ module.exports = Server => {
     .use(expressSession({
       secret: 'nou pagadi zayets !',
       resave: false,
-      saveUninitialized: false
+      saveUninitialized: false,
+      store: new MongoStore({ mongooseConnection: mongoose.connection })
     }))
     .use(passport.initialize())
     .use(passport.session())
