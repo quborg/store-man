@@ -38,7 +38,7 @@ class Full extends Component {
                 <Route path="/paniers" name="Baskets" component={Baskets} />
                 <Route path="/commandes" name="Orders" component={Orders} />
                 <Route path="/commandes-semaine" name="WeekOrders" component={WeekOrders} />
-                <Redirect from="*" to="/commandes" />
+                <Redirect from="*" to="/commandes-semaine" />
               </Switch>
             </Container>
           </main>
