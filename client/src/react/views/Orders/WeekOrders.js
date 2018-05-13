@@ -59,11 +59,10 @@ const mapState = ({orders:{data:orders}, bags:{data:bags}, baskets:{data:baskets
     })
   }
   if (orders.length) { // total summary
-    const firstDay  = moment().day(1).format('X')
-        , lastDay   = moment().day(7).format('X')
+    const firstDay  = moment().day(-6).utcOffset(0).set({hour:0,minute:0,second:0,millisecond:0}).format('X')
+        , lastDay   = moment().day(1).utcOffset(0).set({hour:0,minute:0,second:0,millisecond:0}).format('X')
     orders =  orders.reduce( (orders, order) => {
                 const orderDay = moment(order.created_at).format('X')
-                console.log(orderDay>=firstDay,orderDay<lastDay);
                 if (orderDay>=firstDay && orderDay<lastDay) orders.push(order)
                 return orders
               }, [])
