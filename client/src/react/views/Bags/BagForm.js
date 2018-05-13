@@ -59,7 +59,7 @@ export default class BagForm extends Component {
     if (file && file.type.match('image.*'))
       reader.readAsDataURL(file),
       reader.onload = ev => {
-        let image = { src: reader.result, name: file.name }
+        let image = { src: reader.result, name: encodeURIComponent(file.name) }
         this.bagHandler({ image })
         this.props.progress(100)
       }
