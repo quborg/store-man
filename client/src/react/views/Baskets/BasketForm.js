@@ -104,7 +104,11 @@ export default class BasketForm extends Component {
                 <Label>Nom :</Label>
               </Col>
               <Col xs='12' md='9'>
-                <Input type='text' name='name' defaultValue={basket.name} onChange={e => this.basketHandler({name: e.target.value})} placeholder='Entrez le nom du panier'/>
+                {
+                  this.props.theme == 'primary'
+                  ? <Input type='text' name='name' defaultValue={basket.name} onChange={e => this.basketHandler({name: e.target.value})} placeholder='Entrez le nom du panier'/>
+                  : <Label className='b uppercase dark-clr'>{basket.name}</Label>
+                }
               </Col>
             </FormGroup>
             <FormGroup row className='fx fx-as'>
