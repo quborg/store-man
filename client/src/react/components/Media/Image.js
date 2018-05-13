@@ -5,7 +5,7 @@ const PREVIEW_IMG_SRC = './img/empty-preview.png'
 
 
 
-export const Image = ({src, ...props}) => <img src={srcHandler(src)} {...props} />
+export const Image = ({src, ...props}) => <img src={decodeURIComponent(srcHandler(src))} {...props} />
 
 Image.defaultProps = {
   src: PREVIEW_IMG_SRC
