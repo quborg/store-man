@@ -278,6 +278,18 @@ $imageHeight: $borderHeight + 10px;
 }
 .status-w { width: 105px }
 .formule-w { width: 150px }
+
+.form-error {
+  .invalid-feedback {
+    display: inherit;
+  }
+  input {
+    border-color: $red;
+  }
+  label {
+    color: $red;
+  }
+}
 // Common >
 
 // < correctifs

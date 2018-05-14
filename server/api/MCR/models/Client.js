@@ -1,15 +1,15 @@
 var mongoose   = require('mongoose')
   , UserSchema = mongoose.Schema({
-      firstname : String,
-      lastname  : String,
+      firstname : { type: String, required: true  },
+      lastname  : { type: String, required: true  },
       civility  : { type: String, enum: ['mr', 'mme', 'mlle'] },
-      image     : String,
-      email     : String,
-      phone     : String,
-      nidc      : String,
-      adress    : String,
-      birdday   : String,
-      city      : String,
+      image     : { type: String                  },
+      email     : { type: String                  },
+      phone     : { type: String, required: true  },
+      nidc      : { type: String                  },
+      adress    : { type: String, required: true  },
+      birdday   : { type: String                  },
+      city      : { type: String, required: true  },
       created_at: { type: Date, default: Date.now },
       updated_at: { type: Date, default: Date.now }
     })

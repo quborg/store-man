@@ -1,8 +1,8 @@
 var mongoose    = require('mongoose')
 
   , OrderSchema = new mongoose.Schema({
-                    client_id  : String,
-                    basket_id  : String,
+                    client_id  : { type: String, required: true },
+                    basket_id  : { type: String, required: true },
                     bags       : [{
                                     pid       : String,
                                     items     : [{

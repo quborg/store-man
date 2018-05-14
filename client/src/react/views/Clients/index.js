@@ -10,6 +10,7 @@ import {Image} from 'ayla-client/react/components/Media'
 import RaisedButton from 'material-ui/RaisedButton'
 import moment from 'moment'
 import {NO_CLIENTS_MSG} from 'ayla-client/react/views/Static/Messages'
+import {reg} from 'ayla-client/react/plugins/form-regex'
 
 const selectRowProp = cb => ({
   mode: 'radio',
@@ -26,16 +27,21 @@ const options = {
   noDataText: NO_CLIENTS_MSG
 }
 
+const REQUIRED_KEYS = { firstname:'',lastname:'',phone:'',adress:'',city:'' }
+
 
 class Clients extends Component {
 
   state = {
-    client: { adress: '' },
+    client: REQUIRED_KEYS,
     selected: false,
     isOpen: false,
     theme: '',
-    action: ''
+    action: '',
+    errorsFlag: { ...REQUIRED_KEYS, email: '' },
+    errorRuntime: false
   }
+
 
   componentWillMount() {
     this.props.dispatch(getClients())
@@ -54,8 +60,11 @@ class Clients extends Component {
   saveClient = () => {
     let client = { ...this.state.client }
     if (this.state.theme == 'primary') delete client._id
-    this.props.dispatch( saveClient(client) )
-    this.setState({ isOpen: false })
+    if (this.validateClientFields(client)) {
+      this.props.dispatch( saveClient(client) )
+      this.setState({ isOpen: false, errorRuntime: false })
+    }
+    else this.setState({errorRuntime: true})
   }
 
   delClient = () => {
@@ -63,7 +72,32 @@ class Clients extends Component {
     this.setState({ isOpen: false, selected: false, client: {} })
   }
 
+  validateClientFields = client => {
+    let keys = Object.keys(client)
+      , errorsFlag = { ...this.state.errorsFlag }
+      , flagValid = true
+    if (keys.length) {
+      keys.map( key => {
+        if (client.hasOwnProperty(key) && key in this.state.errorsFlag) {
+          const validate = ex => reg[ex](client[key])
+          let keyIsValid = true
+          switch (key) {
+            case 'email': keyIsValid = validate('email'); break
+            case 'phone': keyIsValid = validate('phone'); break
+            default     : keyIsValid = validate('name');
+          }
+          errorsFlag[key] = keyIsValid ? '' : 'error'
+          !keyIsValid && ( flagValid = false )
+        }
+      })
+    }
+    this.setState({ errorsFlag })
+    return flagValid
+  }
+
   clientHandler = nextClient => {
+    if (nextClient.email && !nextClient.email) delete nextClient.email
+    this.state.errorRuntime && this.validateClientFields(nextClient)
     let client = { ...this.state.client, ...nextClient }
     this.setState({ client })
   }
@@ -109,7 +143,7 @@ class Clients extends Component {
   fullNameFormater = (cell, row) => (row.firstname +' '+ row.lastname).trim()
 
   render() {
-    const [client, {clientHandler}, {theme, action, isOpen}] = [{ ...this.state.client }, this, this.state]
+    const [client, {clientHandler}, {theme, action, isOpen, errorsFlag}] = [{ ...this.state.client }, this, this.state]
 
     return (
       <div className='animated fadeIn clients-view'>
@@ -144,7 +178,7 @@ class Clients extends Component {
           <ModalHeader>{action} un client</ModalHeader>
             <ModalBody>
               <form id="client-form" className="form-horizontal" >
-                <ClientForm {...{theme, client, clientHandler}} />
+                <ClientForm {...{theme, client, clientHandler, errorsFlag}} />
               </form>
             </ModalBody>
             <ModalFooter>

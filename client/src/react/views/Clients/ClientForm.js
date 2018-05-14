@@ -4,8 +4,18 @@ import {Image} from 'ayla-client/react/components/Media'
 import PlacesAutocomplete from 'react-places-autocomplete'
 import RaisedButton from 'material-ui/RaisedButton'
 
+const ERRORS_STACK = {
+  firstname : 'SVP, choisir un prénom correcte !.',
+  lastname  : 'SVP, choisir un nom correcte !.',
+  phone     : 'SVP, choisir un un numero valide !.',
+  email     : 'SVP, choisir un e-mail valide !.',
+  adress    : 'SVP, choisir une adress valide !.',
+  city      : 'SVP, choisir le nom d\'une ville valide !.'
+}
+
 
 export default class ClientForm extends Component {
+
 
   imageHandler = e => {
     let file    = e.target.files ? e.target.files[0] : null
@@ -14,7 +24,7 @@ export default class ClientForm extends Component {
     if (file && file.type.match('image.*'))
       reader.readAsDataURL(file),
       reader.onload = ev => {
-        let image = { src: reader.result, name: encodeURIComponent(file.name) }
+        let image = { src: reader.result, name: file.name }
         this.props.clientHandler({ image })
         // this.props.progress(100)
       }
@@ -112,20 +122,22 @@ export default class ClientForm extends Component {
             </FormGroup>
           </Col>
         </FormGroup>
-        <FormGroup row className='fx fx-ac'>
+        <FormGroup row className={`fx fx-ac form-${this.props.errorsFlag.firstname}`}>
           <Col md="3">
-            <Label>Prénom</Label>
+            <Label>Prénom *</Label>
           </Col>
           <Col xs="12" md="9">
-            <Input type="text" name="firstname" defaultValue={client.firstname} onChange={e => this.props.clientHandler({firstname: e.target.value})} placeholder="Entrez le prénom"/>
+            <Input type="text" name="firstname" className='danger' defaultValue={client.firstname} onChange={e => this.props.clientHandler({firstname: e.target.value})} placeholder="Entrez le prénom .."/>
+            <div className="invalid-feedback">{ERRORS_STACK.firstname}</div>
           </Col>
         </FormGroup>
-        <FormGroup row className='fx fx-ac'>
+        <FormGroup row className={`fx fx-ac form-${this.props.errorsFlag.lastname}`}>
           <Col md="3">
-            <Label>Nom</Label>
+            <Label>Nom *</Label>
           </Col>
           <Col xs="12" md="9">
-            <Input type="text" name="lastname" defaultValue={client.lastname} onChange={e => this.props.clientHandler({lastname: e.target.value})} placeholder="Entrez le nom"/>
+            <Input type="text" name="lastname"  defaultValue={client.lastname} onChange={e => this.props.clientHandler({lastname: e.target.value})} placeholder="Entrez le nom .."/>
+            <div className="invalid-feedback">{ERRORS_STACK.lastname}</div>
           </Col>
         </FormGroup>
         <FormGroup row className='fx fx-ac'>
@@ -137,20 +149,22 @@ export default class ClientForm extends Component {
             <Input type='file' accept='image/*' name='image' defaultValue={client.image} onChange={this.imageHandler} />
           </Col>
         </FormGroup>
-        <FormGroup row className='fx fx-ac'>
+        <FormGroup row className={`fx fx-ac form-${this.props.errorsFlag.email}`}>
           <Col md="3">
             <Label>Email</Label>
           </Col>
           <Col xs="12" md="9">
-            <Input type="email" name="email" defaultValue={client.email} onChange={e => this.props.clientHandler({email: e.target.value})} placeholder="Entrez l'email"/>
+            <Input type="email" name="email" defaultValue={client.email} onChange={e => this.props.clientHandler({email: e.target.value})} placeholder="Entrez l'email .."/>
+            <div className="invalid-feedback">{ERRORS_STACK.email}</div>
           </Col>
         </FormGroup>
-        <FormGroup row className='fx fx-ac'>
+        <FormGroup row className={`fx fx-ac form-${this.props.errorsFlag.phone}`}>
           <Col md="3">
-            <Label>Téléphone</Label>
+            <Label>Téléphone *</Label>
           </Col>
           <Col xs="12" md="9">
-            <Input type="tel" name="phone" defaultValue={client.phone} onChange={e => this.props.clientHandler({phone: e.target.value})} placeholder="Entrez le numero de téléphone"/>
+            <Input type="tel" name="phone"  defaultValue={client.phone} onChange={e => this.props.clientHandler({phone: e.target.value})} placeholder="Entrez le numero de téléphone .."/>
+            <div className="invalid-feedback">{ERRORS_STACK.phone}</div>
           </Col>
         </FormGroup>
         <FormGroup row className='fx fx-ac'>
@@ -158,46 +172,50 @@ export default class ClientForm extends Component {
             <Label>CIN</Label>
           </Col>
           <Col xs="12" md="9">
-            <Input type="text" name="nidc" defaultValue={client.nidc} onChange={e => this.props.clientHandler({nidc: e.target.value})} placeholder="Entrez le CIN"/>
+            <Input type="text" name="nidc" defaultValue={client.nidc} onChange={e => this.props.clientHandler({nidc: e.target.value})} placeholder="Entrez le CIN .."/>
           </Col>
         </FormGroup>
-        <FormGroup row className='fx fx-ac'>
+        <FormGroup row className={`fx fx-ac form-${this.props.errorsFlag.adress}`}>
           <Col md="3">
-            <Label>Adresse</Label>
+            <Label>Adresse *</Label>
           </Col>
           <Col xs="12" md="9">
-            <PlacesAutocomplete
-                value={client.adress}
-                onChange={this.adressHandler}
-                onSelect={this.adressSelector} >
-              {
-                ({ getInputProps, suggestions, getSuggestionItemProps }) => {
-                  return <div>
-                    <input
-                      {...getInputProps({
-                        name: 'adress',
-                        placeholder: 'Entrez l\'addresse ..',
-                        className: 'location-search-input form-control'
-                      })}
-                    />
-                    <div className="autocomplete-dropdown-container">
-                      {suggestions.map(suggestion => {
-                        const className = suggestion.active ? 'suggestion-item--active' : 'suggestion-item';
-                        // inline style for demonstration purpose
-                        const style = suggestion.active
-                                    ? { backgroundColor: '#fafafa', cursor: 'pointer' }
-                                    : { backgroundColor: '#ffffff', cursor: 'pointer' };
-                        return (
-                          <div {...getSuggestionItemProps(suggestion, { className, style })}>
-                            <span>{suggestion.description}</span>
-                          </div>
-                        )
-                      })}
-                    </div>
-                  </div>
-                }
-              }
-            </PlacesAutocomplete>
+            <Input type='text' name='adress' defaultValue={client.adress} onChange={e => this.props.clientHandler({ adress: e.target.value })} placeholder={'Entrez l\'addresse ..'} />
+            <div className="invalid-feedback">{ERRORS_STACK.adress}</div>
+            {
+              // <PlacesAutocomplete
+              //     value={client.adress}
+              //     onChange={this.adressHandler}
+              //     onSelect={this.adressSelector} >
+              //   {
+              //     ({ getInputProps, suggestions, getSuggestionItemProps }) => {
+              //       return <div>
+              //         <input
+              //           {...getInputProps({
+              //             name: 'adress',
+              //             placeholder: 'Entrez l\'addresse ..',
+              //             className: `location-search-input form-control form-${this.props.errorsFlag.adress}`
+              //           })}
+              //         />
+              //         <div className="autocomplete-dropdown-container">
+              //           {suggestions.map(suggestion => {
+              //             const className = suggestion.active ? 'suggestion-item--active' : 'suggestion-item';
+              //             // inline style for demonstration purpose
+              //             const style = suggestion.active
+              //                         ? { backgroundColor: '#fafafa', cursor: 'pointer' }
+              //                         : { backgroundColor: '#ffffff', cursor: 'pointer' };
+              //             return (
+              //               <div {...getSuggestionItemProps(suggestion, { className, style })}>
+              //                 <span>{suggestion.description}</span>
+              //               </div>
+              //             )
+              //           })}
+              //         </div>
+              //       </div>
+              //     }
+              //   }
+              // </PlacesAutocomplete>
+            }
           </Col>
         </FormGroup>
         <FormGroup row className='fx fx-ac'>
@@ -205,15 +223,16 @@ export default class ClientForm extends Component {
             <Label>Date de naissance</Label>
           </Col>
           <Col xs="12" md="9">
-            <Input type="date" name="birdday" defaultValue={client.birdday} onChange={e => this.props.clientHandler({birdday: e.target.value})} placeholder="Entrez la date de naissance"/>
+            <Input type="date" name="birdday" defaultValue={client.birdday} onChange={e => this.props.clientHandler({birdday: e.target.value})} placeholder="Entrez la date de naissance .."/>
           </Col>
         </FormGroup>
-        <FormGroup row className='fx fx-ac'>
+        <FormGroup row className={`fx fx-ac form-${this.props.errorsFlag.city}`}>
           <Col md="3">
-            <Label>Ville</Label>
+            <Label>Ville *</Label>
           </Col>
           <Col xs="12" md="9">
-            <Input type="text" name="city" defaultValue={client.city} onChange={e => this.props.clientHandler({city: e.target.value})} placeholder="Entrez le nom de la ville"/>
+            <Input type="text" name="city"  defaultValue={client.city} onChange={e => this.props.clientHandler({city: e.target.value})} placeholder="Entrez le nom de la ville .."/>
+            <div className="invalid-feedback">{ERRORS_STACK.city}</div>
           </Col>
         </FormGroup>
       </Col>
