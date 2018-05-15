@@ -3,25 +3,30 @@ import serialize from 'form-serialize'
 import {saveProduct, delProduct} from 'ayla-client/redux/actions/api'
 import {Row, Col, FormGroup, Input, Label, InputGroup, InputGroupAddon, InputGroupText} from 'reactstrap'
 import {Image} from 'ayla-client/react/components/Media'
+import validateFields from 'ayla-client/react/plugins/form-validator'
 
+const ERRORS_STACK  = { name : 'SVP, choisir un nom correcte !' }
+    , REQUIRED_KEYS = { name : '' }
 
 export default class ProductForm extends Component {
 
   static defaultProps = {
+    product: REQUIRED_KEYS,
     theme: '',
-    product: {},
     action: '',
     initModal: () => {},
-    progress: () => 0
+    progress: () => 0,
   }
 
   state = {
-    product: {},
-    toDelete: undefined
+    product: REQUIRED_KEYS,
+    toDelete: undefined,
+    errorsFlag: REQUIRED_KEYS,
+    errorRuntime: false
   }
 
   componentWillMount() {
-    let [product, { theme }] = [{...this.props.product}, this.props]
+    let [product, { theme }] = [{...this.state.product, ...this.props.product}, this.props]
     const toAdd    = theme == 'primary'
         , toDelete = theme == 'danger'
     if (toAdd) delete product._id
@@ -42,8 +47,15 @@ export default class ProductForm extends Component {
   }
 
   saveProduct() {
-    this.props.dispatch( saveProduct(this.state.product) )
-    this.props.initModal()
+    let [product, _errorsFlag] = [{...this.state.product}, {...this.state.errorsFlag}]
+    if (this.state.theme == 'primary') delete product._id
+    let {errorsFlag, errorRuntime} = validateFields(product, _errorsFlag)
+    if (!errorRuntime) {
+      this.props.dispatch( saveProduct(product) )
+      this.props.resetSelection()
+      this.props.initModal()
+    }
+    this.setState({ errorsFlag, errorRuntime })
   }
 
   delProduct() {
@@ -59,18 +71,21 @@ export default class ProductForm extends Component {
     if (file && file.type.match('image.*'))
       reader.readAsDataURL(file),
       reader.onload = ev => {
-        let image = { src: reader.result, name: encodeURIComponent(file.name) }
+        let image = { src: reader.result, name: file.name }
         this.productHandler({ image })
         this.props.progress(100)
       }
       // reader.onerror = err => {}
       // reader.onprogress = p => {}
-
   }
 
   productHandler = nextProduct => {
+    let errorsFlag = { ...this.state.errorsFlag }
+    if (this.state.errorRuntime) {
+      errorsFlag = validateFields(nextProduct, errorsFlag).errorsFlag
+    }
     let product = { ...this.state.product, ...nextProduct }
-    this.setState({ product })
+    this.setState({ product, errorsFlag })
   }
 
   render() {
@@ -92,17 +107,18 @@ export default class ProductForm extends Component {
         <Row className={`form-${this.props.theme}`}>
           <Col xs='12'>
             <Input hidden type='text' name='_id' defaultValue={product._id}/>
-            <FormGroup row className='fx fx-ac'>
+            <FormGroup row className={`fx fx-ac form-${this.state.errorsFlag.name}`}>
               <Col md='3'>
-                <Label>Nom :</Label>
+                <Label>Nom <i className='fa fa-star font-xs ml-3 info-clr' title='Champ obligatoire'/></Label>
               </Col>
               <Col xs='12' md='9'>
                 <Input type='text' name='name' defaultValue={product.name} onChange={e => this.productHandler({name: e.target.value})} placeholder='Entrez le nom du produit'/>
+                <div className="invalid-feedback">{ERRORS_STACK.name}</div>
               </Col>
             </FormGroup>
             <FormGroup row className='fx fx-ac'>
               <Col md='3'>
-                <Label>Image :</Label>
+                <Label>Image</Label>
               </Col>
               <Col xs='12' md='9'>
                 <Image src={product.image} width='75' height='75' alt='Image aperçu' className='image-preview' />
@@ -111,11 +127,12 @@ export default class ProductForm extends Component {
             </FormGroup>
             <FormGroup row className='fx fx-ac'>
               <Col md='3'>
-                <Label>Prix par KG :</Label>
+                <Label>Prix par KG</Label>
               </Col>
               <Col xs='12' md='9'>
                 <InputGroup>
-                  <Input type='number' name='price' defaultValue={product.price} onChange={e => this.productHandler({price: e.target.value})} placeholder='.. 0.00Dh' className='text-right' />
+                  <Input type='number' name='price' defaultValue={product.price} min={0} onChange={e => this.productHandler({price: e.target.value})} placeholder='.. 0.00Dh' className='text-right' />
+                  <div className="invalid-feedback">{ERRORS_STACK.price}</div>
                   <InputGroupAddon addonType="append"><InputGroupText>DH</InputGroupText></InputGroupAddon>
                 </InputGroup>
               </Col>

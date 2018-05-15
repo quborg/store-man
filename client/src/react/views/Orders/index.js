@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import {connect} from 'react-redux'
 import serialize from 'form-serialize'
-import {getOrders, newSaveOrder, delOrder, getBaskets, getClients, getProducts, getBags} from 'ayla-client/redux/actions/api'
+import {getOrders, saveOrder, delOrder, getBaskets, getClients, getProducts, getBags} from 'ayla-client/redux/actions/api'
 import {Container, Row, Col, Button,
         Modal, ModalHeader, ModalBody, ModalFooter} from 'reactstrap'
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table'
@@ -10,7 +10,8 @@ import {Image} from 'ayla-client/react/components/Media'
 import RaisedButton from 'material-ui/RaisedButton'
 import moment from 'moment'
 import {getCollectionById} from 'ayla-helper/ext'
-import {NO_ORDERS_MSG} from 'ayla-client/react/views/Static/Messages'
+import {LOAD_ORDERS_MSG} from 'ayla-client/react/views/Static/Messages'
+import validateFields from 'ayla-client/react/plugins/form-validator'
 
 const selectRowProp = cb => ({
   mode: 'radio',
@@ -23,18 +24,22 @@ const options = {
   sizePerPage: 10,
   sortName: 'created_at',
   sortOrder: 'desc',
-  noDataText: NO_ORDERS_MSG
+  noDataText: LOAD_ORDERS_MSG
 }
+
+const REQUIRED_KEYS = { client_id:'',basket:'' }
 
 
 class Orders extends Component {
 
   state = {
-    order: {},
+    order: REQUIRED_KEYS,
     selected: false,
     isOpen: false,
     theme: '',
-    action: ''
+    action: '',
+    errorsFlag: REQUIRED_KEYS,
+    errorRuntime: false
   }
 
   componentWillMount() {
@@ -56,11 +61,16 @@ class Orders extends Component {
   }
 
   saveOrder = () => {
-    let order = { ...this.state.order, bags:this.props.bags }
-    if (this.state.theme == 'primary')
-      delete order._id;
-    this.props.dispatch( newSaveOrder(order) )
-    this.setState({ isOpen: false })
+    let [order, _errorsFlag]  = [{...this.state.order}, {...this.state.errorsFlag}]
+      , isOpen                = true
+      , toAdd                 = this.state.theme == 'primary'
+    if (toAdd) delete order._id
+    let {errorsFlag, errorRuntime} = validateFields(order, _errorsFlag)
+    if (!errorRuntime) {
+      this.props.dispatch( saveOrder(order) )
+      isOpen = false
+    }
+    this.setState({errorRuntime, errorsFlag, isOpen})
   }
 
   delOrder = () => {
@@ -68,9 +78,13 @@ class Orders extends Component {
     this.setState({isOpen: false, selected: false, order: {}})
   }
 
-  orderHandler = (nextOrder) => {
+  orderHandler = nextOrder => {
+    let errorsFlag = { ...this.state.errorsFlag }
+    if (this.state.errorRuntime) {
+      errorsFlag = validateFields(nextOrder, errorsFlag).errorsFlag
+    }
     let order = { ...this.state.order, ...nextOrder }
-    this.setState({ order })
+    this.setState({ order, errorsFlag })
   }
 
   getModalAction() {
@@ -141,7 +155,7 @@ class Orders extends Component {
     const [ order,
             {orderHandler, basketFormater, statusFormater},
             {clients, products, baskets},
-            {theme, action, isOpen} ] = [{ ...this.state.order }, this, this.props, this.state]
+            {theme, action, isOpen, errorsFlag} ] = [{ ...this.state.order }, this, this.props, this.state]
 
     return (
       <div className='animated fadeIn'>
@@ -175,7 +189,7 @@ class Orders extends Component {
           <ModalHeader>{action} une commande</ModalHeader>
             <ModalBody>
               <form id='order-form' className='form-horizontal'>
-                <OrderForm {...{order, clients, products, baskets, theme, orderHandler, basketFormater, statusFormater}} />
+                <OrderForm {...{order, clients, products, baskets, theme, orderHandler, basketFormater, statusFormater, errorsFlag}} />
               </form>
             </ModalBody>
             <ModalFooter>

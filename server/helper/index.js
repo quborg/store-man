@@ -4,6 +4,7 @@
 var paths   = require('config/paths')
   , fs      = require('fs')
   // , mkdirp  = require('mkdirp')
+  // , sharp   = require('sharp')
 
 
 /**
@@ -17,9 +18,10 @@ function saveImage(image, folderName='unnamed') {
   if (image && typeof image !== 'string' && image.src && image.name) {
     let base64Data      = image.src.split('base64,')[1]
       , publicPath      = '/img/'+ folderName
-      , imagePublicPath = '.' + publicPath +'/'+ image.name
-      , modePath        = process.env.NODE_ENV == 'production' ? paths.appBuild : paths.appPublic
+      , imagePublicPath = publicPath +'/'+ image.name
+      , modePath        = process.env.NODE_ENV == 'production' ? paths.appStatic : paths.appPublic
       , imageFullPath   = modePath + publicPath +'/'+ image.name
+
 
     // mkdirp(fullPath, function (f_err) {
     //   if (f_err) { console.log(err); return '' }
@@ -28,6 +30,9 @@ function saveImage(image, folderName='unnamed') {
         console.log(err)
         return ''
       })
+
+      // sharp(imageFullPath).resize(200, 200).toFile(imagePublicPath, function(err, info) { console.log(err, info) })
+
       return imagePublicPath
     // })
   }

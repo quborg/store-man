@@ -9,8 +9,9 @@ import ClientForm from './ClientForm'
 import {Image} from 'ayla-client/react/components/Media'
 import RaisedButton from 'material-ui/RaisedButton'
 import moment from 'moment'
-import {NO_CLIENTS_MSG} from 'ayla-client/react/views/Static/Messages'
-import {reg} from 'ayla-client/react/plugins/form-regex'
+import {LOAD_CLIENTS_MSG} from 'ayla-client/react/views/Static/Messages'
+import validateFields from 'ayla-client/react/plugins/form-validator'
+
 
 const selectRowProp = cb => ({
   mode: 'radio',
@@ -24,7 +25,7 @@ const options = {
   sizePerPage: 10,
   sortName: 'created_at',
   sortOrder: 'desc',
-  noDataText: NO_CLIENTS_MSG
+  noDataText: LOAD_CLIENTS_MSG
 }
 
 const REQUIRED_KEYS = { firstname:'',lastname:'',phone:'',adress:'',city:'' }
@@ -42,7 +43,6 @@ class Clients extends Component {
     errorRuntime: false
   }
 
-
   componentWillMount() {
     this.props.dispatch(getClients())
   }
@@ -58,13 +58,16 @@ class Clients extends Component {
   }
 
   saveClient = () => {
-    let client = { ...this.state.client }
-    if (this.state.theme == 'primary') delete client._id
-    if (this.validateClientFields(client)) {
+    let [client, _errorsFlag] = [{...this.state.client}, {...this.state.errorsFlag}]
+      , isOpen                = true
+      , toAdd                 = this.state.theme == 'primary'
+    if (toAdd) delete client._id
+    let {errorsFlag, errorRuntime} = validateFields(client, _errorsFlag)
+    if (!errorRuntime) {
       this.props.dispatch( saveClient(client) )
-      this.setState({ isOpen: false, errorRuntime: false })
+      isOpen = false
     }
-    else this.setState({errorRuntime: true})
+    this.setState({errorRuntime, errorsFlag, isOpen})
   }
 
   delClient = () => {
@@ -72,34 +75,14 @@ class Clients extends Component {
     this.setState({ isOpen: false, selected: false, client: {} })
   }
 
-  validateClientFields = client => {
-    let keys = Object.keys(client)
-      , errorsFlag = { ...this.state.errorsFlag }
-      , flagValid = true
-    if (keys.length) {
-      keys.map( key => {
-        if (client.hasOwnProperty(key) && key in this.state.errorsFlag) {
-          const validate = ex => reg[ex](client[key])
-          let keyIsValid = true
-          switch (key) {
-            case 'email': keyIsValid = validate('email'); break
-            case 'phone': keyIsValid = validate('phone'); break
-            default     : keyIsValid = validate('name');
-          }
-          errorsFlag[key] = keyIsValid ? '' : 'error'
-          !keyIsValid && ( flagValid = false )
-        }
-      })
-    }
-    this.setState({ errorsFlag })
-    return flagValid
-  }
-
   clientHandler = nextClient => {
+    let errorsFlag = { ...this.state.errorsFlag }
     if (nextClient.email && !nextClient.email) delete nextClient.email
-    this.state.errorRuntime && this.validateClientFields(nextClient)
+    if (this.state.errorRuntime) {
+      errorsFlag = validateFields(nextClient, errorsFlag).errorsFlag
+    }
     let client = { ...this.state.client, ...nextClient }
-    this.setState({ client })
+    this.setState({ client, errorsFlag })
   }
 
   getModalAction() {

@@ -7,10 +7,10 @@ import {Container, Row} from 'reactstrap'
 import {Modal} from 'ayla-client/react/components/Notifications'
 import {ButtonControl} from 'ayla-client/react/components/Buttons'
 import {getCollectionById, getCollectionByKeyValue} from 'ayla-helper/ext'
+import {LOAD_BASKET_MSG} from 'ayla-client/react/views/Static/Messages'
 
 
 const DISPLAY         = 'panier'
-    , NO_BASKET_MSG   = `Aucun ${DISPLAY} enregistré !`
     , CTL             = {
                           primary: { icon: 'plus',  title: `Ajouter un ${DISPLAY}`   },
                           warning: { icon: 'save',  title: `Modifier un ${DISPLAY}`  },
@@ -25,7 +25,7 @@ class Baskets extends Component {
   }
 
   state = {
-    basket: { price: 0 },
+    basket: {},
     selected: false,
     isOpen: false,
     theme: 'primary',
@@ -96,7 +96,7 @@ class Baskets extends Component {
                                                     _class={(i+1)%4?'i-right':''}
                                                     {...{...item, selected: selected&&item._id==basket._id}}
                                                     onClick={() => this.onBagClick(item)} />)
-              : NO_BASKET_MSG
+              : LOAD_BASKET_MSG
             }
           </Row>
         </Container>

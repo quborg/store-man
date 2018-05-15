@@ -1,9 +1,11 @@
 var mongoose   = require('mongoose')
+  , paths      = require('config/paths')
+
   , UserSchema = mongoose.Schema({
       firstname : { type: String, required: true  },
       lastname  : { type: String, required: true  },
-      civility  : { type: String, enum: ['mr', 'mme', 'mlle'] },
-      image     : { type: String                  },
+      civility  : { type: String, enum: ['mr', 'mme', 'mlle']  },
+      image     : { type: String, default : paths.defaultImageURL },
       email     : { type: String                  },
       phone     : { type: String, required: true  },
       nidc      : { type: String                  },

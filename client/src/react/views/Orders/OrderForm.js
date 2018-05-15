@@ -8,6 +8,11 @@ import SelectField from 'material-ui/SelectField'
 import MenuItem from 'material-ui/MenuItem'
 import RaisedButton from 'material-ui/RaisedButton'
 
+const ERRORS_STACK = {
+  client_id : 'SVP, choisir un client !',
+  basket    : 'SVP, choisir au moin un produit !'
+}
+
 
 export default class OrderForm extends Component {
 
@@ -101,7 +106,6 @@ export default class OrderForm extends Component {
       delete basket._id
     }
     let basket_id = basketName ? basket._id : theme=='warning' ? basket._id : '';
-    console.log('calcul', total, totalAutomatic);
     this.props.orderHandler({basket_id, basket, total})
     this.setState({ basket_id, basketName, totalAutomatic, total })
   }
@@ -174,13 +178,14 @@ export default class OrderForm extends Component {
     return <Row className={`form-${this.props.theme}`}>
       <Col xs='12'>
         <Input hidden type='text' name='_id' defaultValue={this.props.order._id}/>
-        <FormGroup row className='fx fx-ac'>
+        <FormGroup row className={`fx fx-ac form-${this.props.errorsFlag.client_id}`}>
           <Col md='3'>
-            <Label>Client</Label>
+            <Label>Client <i className='fa fa-star font-xs ml-3 info-clr' title='Champ obligatoire'/></Label>
           </Col>
           <Col xs='12' md='9'>
             <Input hidden type='text' name='client_id' defaultValue={this.props.order.client_id} />
             <Input type='text' value={this.state.clientName} onChange={this.searchListHandler} placeholder='Nom du client ..' />
+            <div className="invalid-feedback">{ERRORS_STACK.client_id}</div>
             <div className={`search-list-wrapper ${listClass}`}>
               <div className='search-list-box fx fx-col fx-ac'>
                 {
@@ -194,9 +199,9 @@ export default class OrderForm extends Component {
             </div>
           </Col>
         </FormGroup>
-        <FormGroup row className='fx fx-as basket-form'>
+        <FormGroup row className={`fx fx-ac basket-form form-${this.props.errorsFlag.basket}`}>
           <Col md='3'>
-            <Label>Formule</Label>
+            <Label>Formule <i className='fa fa-plus font-xs ml-3 primary-clr pointer-p' title='un ou plusieurs' /></Label>
           </Col>
           <Col md='9'>
             <Input hidden type='text' name='basket_id' defaultValue={this.props.order.basket_id} />
@@ -207,6 +212,7 @@ export default class OrderForm extends Component {
               <MenuItem value='Familiale'  primaryText='Familiale' />
               <MenuItem value='Decouverte' primaryText='Decouverte' />
             </SelectField>
+            <div className="invalid-feedback">{ERRORS_STACK.basket}</div>
             <BasketEditor basket={basketProducts} basketHandler={this.basketEditorHandler} />
           </Col>
         </FormGroup>

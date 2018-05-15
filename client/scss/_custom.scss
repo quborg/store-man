@@ -85,6 +85,9 @@ $danger: #f86c6b;
 .close-clr { color: #9E9E9E }
 .white-clr { color: $white }
 .dark-clr { color: $dark }
+.primary-clr { color: $primary }
+.pink-clr { color: $pink }
+.info-clr { color: $info }
 // Colors >
 
 // < Override
@@ -137,6 +140,9 @@ $danger: #f86c6b;
 // < enhancers
 .pointer {
   cursor: pointer;
+  &-p {
+    cursor: progress;
+  }
 }
 
 .main-table > div {
@@ -340,6 +346,7 @@ td:focus {
     img {
       max-width: $card-width + 10;
       height: $card-height + 10;
+      // border-radius: 13px;
     }
   }
   .txt {

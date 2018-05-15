@@ -1,10 +1,14 @@
 
 /client/coverage
 /client/build
+client/public/img/88
 
-/server/mongodb/*
+/server/mongodb/**
+!/server/mongodb
 
-/static/html/*
+/static/html/**
+!/static/html
+!/static/html/img/empty-preview.png
 
 /**/node_modules
 

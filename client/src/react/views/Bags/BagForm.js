@@ -3,25 +3,30 @@ import serialize from 'form-serialize'
 import {saveBag, delBag} from 'ayla-client/redux/actions/api'
 import {Row, Col, FormGroup, Input, Label, InputGroup, InputGroupAddon, InputGroupText} from 'reactstrap'
 import {Image} from 'ayla-client/react/components/Media'
+import validateFields from 'ayla-client/react/plugins/form-validator'
 
+const ERRORS_STACK  = { name : 'SVP, choisir un nom correcte !' }
+    , REQUIRED_KEYS = { name : '' }
 
 export default class BagForm extends Component {
 
   static defaultProps = {
+    bag: REQUIRED_KEYS,
     theme: '',
-    bag: {},
     action: '',
     initModal: () => {},
     progress: () => 0
   }
 
   state = {
-    bag: {},
-    toDelete: undefined
+    bag: REQUIRED_KEYS,
+    toDelete: undefined,
+    errorsFlag: REQUIRED_KEYS,
+    errorRuntime: false
   }
 
   componentWillMount() {
-    let [bag, { theme }] = [{...this.props.bag}, this.props]
+    let [bag, { theme }] = [{...this.state.bag, ...this.props.bag}, this.props]
     const toAdd    = theme == 'primary'
         , toDelete = theme == 'danger'
     if (toAdd) delete bag._id
@@ -42,8 +47,15 @@ export default class BagForm extends Component {
   }
 
   saveBag() {
-    this.props.dispatch( saveBag(this.state.bag) )
-    this.props.initModal()
+    let [bag, _errorsFlag] = [{...this.state.bag}, {...this.state.errorsFlag}]
+    if (this.state.theme == 'primary') delete bag._id
+    let {errorsFlag, errorRuntime} = validateFields(bag, _errorsFlag)
+    if (!errorRuntime) {
+      this.props.dispatch( saveBag(bag) )
+      this.props.resetSelection()
+      this.props.initModal()
+    }
+    this.setState({ errorsFlag, errorRuntime })
   }
 
   delBag() {
@@ -68,9 +80,13 @@ export default class BagForm extends Component {
 
   }
 
-  bagHandler = nextProduct => {
-    let bag = { ...this.state.bag, ...nextProduct }
-    this.setState({ bag })
+  bagHandler = nextBag => {
+    let errorsFlag = { ...this.state.errorsFlag }
+    if (this.state.errorRuntime) {
+      errorsFlag = validateFields(nextBag, errorsFlag).errorsFlag
+    }
+    let bag = { ...this.state.bag, ...nextBag }
+    this.setState({ bag, errorsFlag })
   }
 
   render() {
@@ -92,17 +108,18 @@ export default class BagForm extends Component {
         <Row className={`form-${this.props.theme}`}>
           <Col xs='12'>
             <Input hidden type='text' name='_id' defaultValue={bag._id}/>
-            <FormGroup row className='fx fx-ac'>
+            <FormGroup row className={`fx fx-ac form-${this.state.errorsFlag.name}`}>
               <Col md='3'>
-                <Label>Nom :</Label>
+                <Label>Nom <i className='fa fa-star font-xs ml-3 info-clr' title='Champ obligatoire'/></Label>
               </Col>
               <Col xs='12' md='9'>
                 <Input type='text' name='name' defaultValue={bag.name} onChange={e => this.bagHandler({name: e.target.value})} placeholder={'Entrez le nom de l\'embalage'}/>
+                <div className="invalid-feedback">{ERRORS_STACK.name}</div>
               </Col>
             </FormGroup>
             <FormGroup row className='fx fx-ac'>
               <Col md='3'>
-                <Label>Image :</Label>
+                <Label>Image</Label>
               </Col>
               <Col xs='12' md='9'>
                 <Image src={bag.image} width='75' height='75' alt='Image aperçu' className='image-preview' />
@@ -111,7 +128,7 @@ export default class BagForm extends Component {
             </FormGroup>
             <FormGroup row className='fx fx-ac'>
               <Col md='3'>
-                <Label>Volume par KG :</Label>
+                <Label>Volume</Label>
               </Col>
               <Col xs='12' md='9'>
                 <InputGroup>

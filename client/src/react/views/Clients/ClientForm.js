@@ -5,12 +5,12 @@ import PlacesAutocomplete from 'react-places-autocomplete'
 import RaisedButton from 'material-ui/RaisedButton'
 
 const ERRORS_STACK = {
-  firstname : 'SVP, choisir un prénom correcte !.',
-  lastname  : 'SVP, choisir un nom correcte !.',
-  phone     : 'SVP, choisir un un numero valide !.',
-  email     : 'SVP, choisir un e-mail valide !.',
-  adress    : 'SVP, choisir une adress valide !.',
-  city      : 'SVP, choisir le nom d\'une ville valide !.'
+  firstname : 'SVP, choisir un prénom correcte !',
+  lastname  : 'SVP, choisir un nom correcte !',
+  phone     : 'SVP, choisir un numero valide !',
+  email     : 'SVP, choisir un e-mail valide !',
+  adress    : 'SVP, choisir une adress valide !',
+  city      : 'SVP, choisir le nom d\'une ville valide !'
 }
 
 
@@ -66,7 +66,7 @@ export default class ClientForm extends Component {
         {
           key=='image'
           ? value
-          : <RaisedButton label={value} disabled={true} />
+          : <RaisedButton label={value||'(vide)'} disabled={true} />
         }
       </Col>
     </FormGroup>
@@ -124,7 +124,7 @@ export default class ClientForm extends Component {
         </FormGroup>
         <FormGroup row className={`fx fx-ac form-${this.props.errorsFlag.firstname}`}>
           <Col md="3">
-            <Label>Prénom *</Label>
+            <Label>Prénom <i className='fa fa-star font-xs ml-3 info-clr' title='Champ obligatoire'/></Label>
           </Col>
           <Col xs="12" md="9">
             <Input type="text" name="firstname" className='danger' defaultValue={client.firstname} onChange={e => this.props.clientHandler({firstname: e.target.value})} placeholder="Entrez le prénom .."/>
@@ -133,7 +133,7 @@ export default class ClientForm extends Component {
         </FormGroup>
         <FormGroup row className={`fx fx-ac form-${this.props.errorsFlag.lastname}`}>
           <Col md="3">
-            <Label>Nom *</Label>
+            <Label>Nom <i className='fa fa-star font-xs ml-3 info-clr' title='Champ obligatoire'/></Label>
           </Col>
           <Col xs="12" md="9">
             <Input type="text" name="lastname"  defaultValue={client.lastname} onChange={e => this.props.clientHandler({lastname: e.target.value})} placeholder="Entrez le nom .."/>
@@ -142,7 +142,7 @@ export default class ClientForm extends Component {
         </FormGroup>
         <FormGroup row className='fx fx-ac'>
           <Col md='3'>
-            <Label>Photo de profile :</Label>
+            <Label>Photo</Label>
           </Col>
           <Col xs='12' md='9'>
             <Image src={client.image} width='75' height='75' alt='Image aperçu' className='image-preview' />
@@ -160,7 +160,7 @@ export default class ClientForm extends Component {
         </FormGroup>
         <FormGroup row className={`fx fx-ac form-${this.props.errorsFlag.phone}`}>
           <Col md="3">
-            <Label>Téléphone *</Label>
+            <Label>Téléphone <i className='fa fa-star font-xs ml-1 info-clr' title='Champ obligatoire'/></Label>
           </Col>
           <Col xs="12" md="9">
             <Input type="tel" name="phone"  defaultValue={client.phone} onChange={e => this.props.clientHandler({phone: e.target.value})} placeholder="Entrez le numero de téléphone .."/>
@@ -177,7 +177,7 @@ export default class ClientForm extends Component {
         </FormGroup>
         <FormGroup row className={`fx fx-ac form-${this.props.errorsFlag.adress}`}>
           <Col md="3">
-            <Label>Adresse *</Label>
+            <Label>Adresse <i className='fa fa-star font-xs ml-3 info-clr' title='Champ obligatoire'/></Label>
           </Col>
           <Col xs="12" md="9">
             <Input type='text' name='adress' defaultValue={client.adress} onChange={e => this.props.clientHandler({ adress: e.target.value })} placeholder={'Entrez l\'addresse ..'} />
@@ -228,7 +228,7 @@ export default class ClientForm extends Component {
         </FormGroup>
         <FormGroup row className={`fx fx-ac form-${this.props.errorsFlag.city}`}>
           <Col md="3">
-            <Label>Ville *</Label>
+            <Label>Ville <i className='fa fa-star font-xs ml-3 info-clr' title='Champ obligatoire'/></Label>
           </Col>
           <Col xs="12" md="9">
             <Input type="text" name="city"  defaultValue={client.city} onChange={e => this.props.clientHandler({city: e.target.value})} placeholder="Entrez le nom de la ville .."/>

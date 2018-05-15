@@ -6,7 +6,7 @@ import ProductForm from './ProductForm'
 import {Container, Row} from 'reactstrap'
 import {Modal} from 'ayla-client/react/components/Notifications'
 import {ButtonControl} from 'ayla-client/react/components/Buttons'
-import {NO_PRODUCT_MSG} from 'ayla-client/react/views/Static/Messages'
+import {LOAD_PRODUCT_MSG} from 'ayla-client/react/views/Static/Messages'
 
 
 const DISPLAY         = 'product'
@@ -24,7 +24,7 @@ class Products extends Component {
   }
 
   state = {
-    product: { price: 0 },
+    product: {},
     selected: false,
     isOpen: false,
     theme: '',
@@ -94,7 +94,7 @@ class Products extends Component {
                                                     _class={(i+1)%4?'i-right':''}
                                                     {...{...item, selected: selected&&item._id==product._id}}
                                                     onClick={() => this.onProductClick(item)} />)
-              : NO_PRODUCT_MSG
+              : LOAD_PRODUCT_MSG
             }
           </Row>
         </Container>

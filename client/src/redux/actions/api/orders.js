@@ -32,7 +32,7 @@ export const getOrders = () => dispatch => {
     .catch(e   => { dispatch({ type:'REJECTED_ORDERS', payload: e }) })
 }
 
-export const newSaveOrder = data => dispatch => {
+export const saveOrder = data => dispatch => {
   dispatch({ type: 'PENDING_ORDER' })
   let bags = []
     , {basket, bags:storeBags} = data

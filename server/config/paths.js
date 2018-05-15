@@ -9,6 +9,7 @@ const path  = require('path')
 
 
 module.exports = {
-  appBuild: resolveApp('client/build'),
-  appPublic: resolveApp('client/public')
+  appStatic: resolveApp('static/html'),
+  appPublic: resolveApp('client/public'),
+  defaultImageURL: './img/empty-preview.png'
 };

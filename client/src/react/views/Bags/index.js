@@ -6,9 +6,9 @@ import BagForm from './BagForm'
 import {Container, Row} from 'reactstrap'
 import {Modal} from 'ayla-client/react/components/Notifications'
 import {ButtonControl} from 'ayla-client/react/components/Buttons'
+import {LOAD_BAG_MSG} from 'ayla-client/react/views/Static/Messages'
 
 const DISPLAY         = 'embalage'
-    , NO_PRODUCT_MSG  = `Aucun ${DISPLAY} enregistré !`
     , CTL             = {
                           primary: { icon: 'plus',  title: `Ajouter un ${DISPLAY}`   },
                           warning: { icon: 'save',  title: `Modifier un ${DISPLAY}`  },
@@ -23,7 +23,7 @@ class Bags extends Component {
   }
 
   state = {
-    bag: { price: 0 },
+    bag: {},
     selected: false,
     isOpen: false,
     theme: '',
@@ -93,7 +93,7 @@ class Bags extends Component {
                                                     _class={(i+1)%4?'i-right':''}
                                                     {...{...item, selected: selected&&item._id==bag._id}}
                                                     onClick={() => this.onBagClick(item)} />)
-              : NO_PRODUCT_MSG
+              : LOAD_BAG_MSG
             }
           </Row>
         </Container>

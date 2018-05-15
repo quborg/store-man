@@ -4,6 +4,10 @@
   // animation-fill-mode: both;
 }
 
+[title] {
+  animation-duration: 0s;
+}
+
 .animated.infinite {
   animation-iteration-count: infinite;
 }
