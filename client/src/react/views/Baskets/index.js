@@ -7,7 +7,7 @@ import {Container, Row} from 'reactstrap'
 import {Modal} from 'ayla-client/react/components/Notifications'
 import {ButtonControl} from 'ayla-client/react/components/Buttons'
 import {getCollectionById, getCollectionByKeyValue} from 'ayla-helper/ext'
-import {LOAD_BASKET_MSG} from 'ayla-client/react/views/Static/Messages'
+import {MSG} from 'ayla-client/react/views/settings'
 
 
 const DISPLAY         = 'panier'
@@ -96,7 +96,7 @@ class Baskets extends Component {
                                                     _class={(i+1)%4?'i-right':''}
                                                     {...{...item, selected: selected&&item._id==basket._id}}
                                                     onClick={() => this.onBagClick(item)} />)
-              : LOAD_BASKET_MSG
+              : MSG.load.basket
             }
           </Row>
         </Container>

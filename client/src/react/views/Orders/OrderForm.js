@@ -7,11 +7,7 @@ import Toggle from 'material-ui/Toggle'
 import SelectField from 'material-ui/SelectField'
 import MenuItem from 'material-ui/MenuItem'
 import RaisedButton from 'material-ui/RaisedButton'
-
-const ERRORS_STACK = {
-  client_id : 'SVP, choisir un client !',
-  basket    : 'SVP, choisir au moin un produit !'
-}
+import {ERRORS_STACK} from 'ayla-client/react/views/settings'
 
 
 export default class OrderForm extends Component {
@@ -45,8 +41,9 @@ export default class OrderForm extends Component {
 
   searchListHandler = e => {
     let searchList  = []
-      , keyword     = e.target.value
+      , keyword     = e.target.value.trimStart()
     if (keyword) {
+      console.log('keyword');
       searchList  = this.props.clients.reduce(
                       (result, client) => {
                         let {firstname, lastname, adress} = client
@@ -190,7 +187,7 @@ export default class OrderForm extends Component {
               <div className='search-list-box fx fx-col fx-ac'>
                 {
                   this.state.searchList.map( client =>
-                    <div key={client._id} onClick={() => this.selectedClient(client)}>
+                    <div key={`search-res-item-${client._id}`} onClick={() => this.selectedClient(client)}>
                       <div>{this.cleanNameAdress(client)}</div>
                     </div>
                   )

@@ -23,19 +23,24 @@ export default class CustomModal extends Component {
     this.setState(INIT_MODAL)
   }
 
-  componentWillReceiveProps({isOpen, theme, title, action, noProgress}) {
-    this.setState({isOpen, theme, title, action, noProgress})
+  componentWillReceiveProps({isOpen, theme, title, noProgress}) {
+    this.setState({isOpen, theme, title, noProgress})
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    let actionIsRevision = nextState.action === 'revision'
+    return actionIsRevision ? false : true
   }
 
   getOp = (op, OPS=THEME_OPS[this.state.theme]) => OPS ? OPS[op] : ''
 
-  setOp (op, OPS=THEME_OPS[this.state.theme]) {
-    !!OPS
-    && this.setState({ [op]: OPS[op] })
+  setAction = (val) => {
+    let op = 'action', OPS= THEME_OPS[this.state.theme]
+    this.setState({ [op]: val||OPS[op] })
   }
 
   render() {
-    const [{isOpen, title, theme, progress, action, noProgress}, {initModal}] = [this.state, this]
+    const [{isOpen, title, theme, progress, action, noProgress}, {initModal, setAction}] = [this.state, this]
 
     return (
         <Modal isOpen={isOpen} toggle={() => this.initModal()} className={`modal-${theme}`}>
@@ -47,7 +52,9 @@ export default class CustomModal extends Component {
                   {
                     action,
                     theme,
-                    initModal, progress: p => this.setState({progress: p})
+                    initModal,
+                    setAction,
+                    progress: p => this.setState({progress: p})
                   }
                 )
               }
@@ -58,7 +65,7 @@ export default class CustomModal extends Component {
                 ? theme !== 'danger' && <Progress animated={progress!=100} value={progress} className="w-100">{`${progress>0?progress+'%':''}`}</Progress>
                 : null
               }
-              <Button color={theme} onClick={() => this.setOp('action')}>
+              <Button color={theme} onClick={() => this.setAction()}>
                 <i className={'fa fa-'+this.getOp('icon')}></i> {this.getOp('label')}
               </Button>
               <Button color="secondary" onClick={() => this.initModal()}>

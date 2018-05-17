@@ -1,37 +1,12 @@
 import React, { Component } from 'react'
 import {Row, Col, FormGroup, Input, Label} from 'reactstrap'
-import {Image} from 'ayla-client/react/components/Media'
+import {Image, ImageFileLoader} from 'ayla-client/react/components/Media'
 import PlacesAutocomplete from 'react-places-autocomplete'
 import RaisedButton from 'material-ui/RaisedButton'
-
-const ERRORS_STACK = {
-  firstname : 'SVP, choisir un prénom correcte !',
-  lastname  : 'SVP, choisir un nom correcte !',
-  phone     : 'SVP, choisir un numero valide !',
-  email     : 'SVP, choisir un e-mail valide !',
-  adress    : 'SVP, choisir une adress valide !',
-  city      : 'SVP, choisir le nom d\'une ville valide !'
-}
+import {ERRORS_STACK} from 'ayla-client/react/views/settings'
 
 
 export default class ClientForm extends Component {
-
-
-  imageHandler = e => {
-    let file    = e.target.files ? e.target.files[0] : null
-      , reader  = new FileReader()
-
-    if (file && file.type.match('image.*'))
-      reader.readAsDataURL(file),
-      reader.onload = ev => {
-        let image = { src: reader.result, name: file.name }
-        this.props.clientHandler({ image })
-        // this.props.progress(100)
-      }
-      // reader.onerror = err => {}
-      // reader.onprogress = p => {}
-
-  }
 
   adressHandler = adress => {
     if (navigator.geolocation) {
@@ -140,13 +115,13 @@ export default class ClientForm extends Component {
             <div className="invalid-feedback">{ERRORS_STACK.lastname}</div>
           </Col>
         </FormGroup>
-        <FormGroup row className='fx fx-ac'>
+        <FormGroup row className={`fx fx-ac form-${this.props.errorsFlag.image}`}>
           <Col md='3'>
             <Label>Photo</Label>
           </Col>
           <Col xs='12' md='9'>
-            <Image src={client.image} width='75' height='75' alt='Image aperçu' className='image-preview' />
-            <Input type='file' accept='image/*' name='image' defaultValue={client.image} onChange={this.imageHandler} />
+            <ImageFileLoader src={client.image} handler={this.props.clientHandler} progress={this.props.progress} />
+            <div className="invalid-feedback">{ERRORS_STACK.image}</div>
           </Col>
         </FormGroup>
         <FormGroup row className={`fx fx-ac form-${this.props.errorsFlag.email}`}>

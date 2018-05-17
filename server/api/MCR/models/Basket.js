@@ -1,5 +1,5 @@
 var mongoose   = require('mongoose')
-  , notEmpty   = function(products) { return products.length ? true : false }
+  , notEmpty   = function(products) { return products.length > 0 ? true : false }
 
   , UserSchema = mongoose.Schema({
       name      : { type: String },

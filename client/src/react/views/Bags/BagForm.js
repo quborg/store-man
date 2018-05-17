@@ -2,11 +2,12 @@ import React, { Component } from 'react'
 import serialize from 'form-serialize'
 import {saveBag, delBag} from 'ayla-client/redux/actions/api'
 import {Row, Col, FormGroup, Input, Label, InputGroup, InputGroupAddon, InputGroupText} from 'reactstrap'
-import {Image} from 'ayla-client/react/components/Media'
+import {Image, ImageFileLoader} from 'ayla-client/react/components/Media'
 import validateFields from 'ayla-client/react/plugins/form-validator'
+import {ERRORS_STACK} from 'ayla-client/react/views/settings'
 
-const ERRORS_STACK  = { name : 'SVP, choisir un nom correcte !' }
-    , REQUIRED_KEYS = { name : '' }
+const REQUIRED_KEYS = { name : '' }
+
 
 export default class BagForm extends Component {
 
@@ -21,7 +22,7 @@ export default class BagForm extends Component {
   state = {
     bag: REQUIRED_KEYS,
     toDelete: undefined,
-    errorsFlag: REQUIRED_KEYS,
+    errorsFlag: { ...REQUIRED_KEYS, image:'' },
     errorRuntime: false
   }
 
@@ -64,22 +65,6 @@ export default class BagForm extends Component {
     this.props.initModal()
   }
 
-  imageHandler = e => {
-    let file    = e.target.files ? e.target.files[0] : null
-      , reader  = new FileReader()
-
-    if (file && file.type.match('image.*'))
-      reader.readAsDataURL(file),
-      reader.onload = ev => {
-        let image = { src: reader.result, name: file.name }
-        this.bagHandler({ image })
-        this.props.progress(100)
-      }
-      // reader.onerror = err => {}
-      // reader.onprogress = p => {}
-
-  }
-
   bagHandler = nextBag => {
     let errorsFlag = { ...this.state.errorsFlag }
     if (this.state.errorRuntime) {
@@ -117,13 +102,13 @@ export default class BagForm extends Component {
                 <div className="invalid-feedback">{ERRORS_STACK.name}</div>
               </Col>
             </FormGroup>
-            <FormGroup row className='fx fx-ac'>
+            <FormGroup row className={`fx fx-ac form-${this.state.errorsFlag.image}`}>
               <Col md='3'>
                 <Label>Image</Label>
               </Col>
               <Col xs='12' md='9'>
-                <Image src={bag.image} width='75' height='75' alt='Image aperçu' className='image-preview' />
-                <Input type='file' accept='image/*' name='image' defaultValue={bag.image} onChange={this.imageHandler} />
+                <ImageFileLoader src={bag.image} handler={this.bagHandler} progress={this.props.progress}/>
+                <div className="invalid-feedback">{ERRORS_STACK.image}</div>
               </Col>
             </FormGroup>
             <FormGroup row className='fx fx-ac'>

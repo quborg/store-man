@@ -1,7 +1,10 @@
 
 /client/coverage
 /client/build
-client/public/img/88
+/client/public/img/products
+/client/public/img/clients
+/client/public/img/bags
+/client/public/img/unnamed
 
 /server/mongodb/**
 !/server/mongodb

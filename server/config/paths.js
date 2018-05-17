@@ -11,5 +11,5 @@ const path  = require('path')
 module.exports = {
   appStatic: resolveApp('static/html'),
   appPublic: resolveApp('client/public'),
-  defaultImageURL: './img/empty-preview.png'
+  defaultImageURL: '/img/empty-preview.png'
 };

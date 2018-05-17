@@ -9,9 +9,10 @@ import ClientForm from './ClientForm'
 import {Image} from 'ayla-client/react/components/Media'
 import RaisedButton from 'material-ui/RaisedButton'
 import moment from 'moment'
-import {LOAD_CLIENTS_MSG} from 'ayla-client/react/views/Static/Messages'
+import {MSG} from 'ayla-client/react/views/settings'
 import validateFields from 'ayla-client/react/plugins/form-validator'
 
+const DISPLAY = 'client'
 
 const selectRowProp = cb => ({
   mode: 'radio',
@@ -25,7 +26,7 @@ const options = {
   sizePerPage: 10,
   sortName: 'created_at',
   sortOrder: 'desc',
-  noDataText: LOAD_CLIENTS_MSG
+  noDataText: MSG.load.client
 }
 
 const REQUIRED_KEYS = { firstname:'',lastname:'',phone:'',adress:'',city:'' }
@@ -39,7 +40,7 @@ class Clients extends Component {
     isOpen: false,
     theme: '',
     action: '',
-    errorsFlag: { ...REQUIRED_KEYS, email: '' },
+    errorsFlag: { ...REQUIRED_KEYS, email: '', image: '' },
     errorRuntime: false
   }
 
@@ -76,6 +77,7 @@ class Clients extends Component {
   }
 
   clientHandler = nextClient => {
+    console.log('nextClient', nextClient);
     let errorsFlag = { ...this.state.errorsFlag }
     if (nextClient.email && !nextClient.email) delete nextClient.email
     if (this.state.errorRuntime) {
@@ -148,12 +150,12 @@ class Clients extends Component {
                 selectRow={selectRowProp(this.onSelectClient)}
                 pagination options={options} >
               <TableHeaderColumn dataField='_id' isKey hidden>#</TableHeaderColumn>
+              <TableHeaderColumn dataField='created_at' dataFormat={this.dateFormater} dataSort={true}>{'Date d\'ajout'}</TableHeaderColumn>
               <TableHeaderColumn dataField='image' dataFormat={this.imageFormater} thStyle={{width:'64px'}} tdStyle={{padding:'2px 16px', width:'64px'}}>Image</TableHeaderColumn>
               <TableHeaderColumn dataField='firstname' dataFormat={this.fullNameFormater} dataSort={true}>Nom Complet</TableHeaderColumn>
               <TableHeaderColumn dataField='phone'>Tél</TableHeaderColumn>
               <TableHeaderColumn dataField='adress'>Addresse</TableHeaderColumn>
               <TableHeaderColumn dataField='email'>Email</TableHeaderColumn>
-              <TableHeaderColumn dataField='created_at' dataFormat={this.dateFormater} dataSort={true}>{'Date d\'ajout'}</TableHeaderColumn>
             </BootstrapTable>
           </Row>
         </Container>

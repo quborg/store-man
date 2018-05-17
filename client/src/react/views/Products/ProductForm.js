@@ -1,14 +1,15 @@
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
 import serialize from 'form-serialize'
 import {saveProduct, delProduct} from 'ayla-client/redux/actions/api'
 import {Row, Col, FormGroup, Input, Label, InputGroup, InputGroupAddon, InputGroupText} from 'reactstrap'
-import {Image} from 'ayla-client/react/components/Media'
+import {Image, ImageFileLoader} from 'ayla-client/react/components/Media'
 import validateFields from 'ayla-client/react/plugins/form-validator'
+import {ERRORS_STACK} from 'ayla-client/react/views/settings'
 
-const ERRORS_STACK  = { name : 'SVP, choisir un nom correcte !' }
-    , REQUIRED_KEYS = { name : '' }
+const REQUIRED_KEYS = { name : '' }
 
-export default class ProductForm extends Component {
+
+export default class ProductForm extends PureComponent {
 
   static defaultProps = {
     product: REQUIRED_KEYS,
@@ -21,7 +22,7 @@ export default class ProductForm extends Component {
   state = {
     product: REQUIRED_KEYS,
     toDelete: undefined,
-    errorsFlag: REQUIRED_KEYS,
+    errorsFlag: { ...REQUIRED_KEYS, image:'' },
     errorRuntime: false
   }
 
@@ -34,11 +35,10 @@ export default class ProductForm extends Component {
   }
 
   componentWillReceiveProps({action:nextAction}) {
-    if (nextAction) this.actionsStarter(nextAction)
+    if (nextAction && nextAction !== 'revision') this.actionsStarter(nextAction)
   }
 
   actionsStarter = action => {
-    this.setState({action})
     switch (action) {
       case 'NEW': this.saveProduct()  ;break
       case 'PUT': this.saveProduct()  ;break
@@ -54,7 +54,7 @@ export default class ProductForm extends Component {
       this.props.dispatch( saveProduct(product) )
       this.props.resetSelection()
       this.props.initModal()
-    }
+    } else this.props.setAction('revision')
     this.setState({ errorsFlag, errorRuntime })
   }
 
@@ -64,27 +64,12 @@ export default class ProductForm extends Component {
     this.props.initModal()
   }
 
-  imageHandler = e => {
-    let file    = e.target.files ? e.target.files[0] : null
-      , reader  = new FileReader()
-
-    if (file && file.type.match('image.*'))
-      reader.readAsDataURL(file),
-      reader.onload = ev => {
-        let image = { src: reader.result, name: file.name }
-        this.productHandler({ image })
-        this.props.progress(100)
-      }
-      // reader.onerror = err => {}
-      // reader.onprogress = p => {}
-  }
-
   productHandler = nextProduct => {
     let errorsFlag = { ...this.state.errorsFlag }
-    if (this.state.errorRuntime) {
-      errorsFlag = validateFields(nextProduct, errorsFlag).errorsFlag
-    }
     let product = { ...this.state.product, ...nextProduct }
+    if (this.state.errorRuntime) {
+      errorsFlag = validateFields(product, errorsFlag).errorsFlag
+    }
     this.setState({ product, errorsFlag })
   }
 
@@ -112,17 +97,17 @@ export default class ProductForm extends Component {
                 <Label>Nom <i className='fa fa-star font-xs ml-3 info-clr' title='Champ obligatoire'/></Label>
               </Col>
               <Col xs='12' md='9'>
-                <Input type='text' name='name' defaultValue={product.name} onChange={e => this.productHandler({name: e.target.value})} placeholder='Entrez le nom du produit'/>
+                <Input type='text' name='name' defaultValue={product.name} onChange={e => this.productHandler({name: e.target.value})} placeholder='Entrez le nom du produit ..'/>
                 <div className="invalid-feedback">{ERRORS_STACK.name}</div>
               </Col>
             </FormGroup>
-            <FormGroup row className='fx fx-ac'>
+            <FormGroup row className={`fx fx-ac form-${this.state.errorsFlag.image}`}>
               <Col md='3'>
-                <Label>Image</Label>
+                <Label>Image <i className='fa fa-star font-xs ml-3 info-clr' title='Champ obligatoire'/></Label>
               </Col>
               <Col xs='12' md='9'>
-                <Image src={product.image} width='75' height='75' alt='Image aperçu' className='image-preview' />
-                <Input type='file' accept='image/*' name='image' defaultValue={product.image} onChange={this.imageHandler} />
+                <ImageFileLoader src={product.image} handler={this.productHandler} progress={this.props.progress}/>
+                <div className="invalid-feedback">{ERRORS_STACK.image}</div>
               </Col>
             </FormGroup>
             <FormGroup row className='fx fx-ac'>
@@ -132,7 +117,6 @@ export default class ProductForm extends Component {
               <Col xs='12' md='9'>
                 <InputGroup>
                   <Input type='number' name='price' defaultValue={product.price} min={0} onChange={e => this.productHandler({price: e.target.value})} placeholder='.. 0.00Dh' className='text-right' />
-                  <div className="invalid-feedback">{ERRORS_STACK.price}</div>
                   <InputGroupAddon addonType="append"><InputGroupText>DH</InputGroupText></InputGroupAddon>
                 </InputGroup>
               </Col>

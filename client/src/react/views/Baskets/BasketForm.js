@@ -6,9 +6,10 @@ import {getCollectionById} from 'ayla-helper/ext'
 import {BasketEditor} from 'ayla-client/react/components/Widgets'
 import Toggle from 'material-ui/Toggle'
 import validateFields from 'ayla-client/react/plugins/form-validator'
+import {ERRORS_STACK} from 'ayla-client/react/views/settings'
 
-const ERRORS_STACK  = { products : 'SVP, choisir au moin un produit !' }
-    , REQUIRED_KEYS = { products : [] }
+
+const REQUIRED_KEYS = { products : [] }
 
 export default class BasketForm extends Component {
 

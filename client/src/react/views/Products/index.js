@@ -6,7 +6,7 @@ import ProductForm from './ProductForm'
 import {Container, Row} from 'reactstrap'
 import {Modal} from 'ayla-client/react/components/Notifications'
 import {ButtonControl} from 'ayla-client/react/components/Buttons'
-import {LOAD_PRODUCT_MSG} from 'ayla-client/react/views/Static/Messages'
+import {MSG} from 'ayla-client/react/views/settings'
 
 
 const DISPLAY         = 'product'
@@ -38,7 +38,7 @@ class Products extends Component {
   onProductClick(product, isTheSame=product._id==this.state.product._id) {
     isTheSame
     ? this.resetSelection()
-    : this.setState({product,     selected: true})
+    : this.setState({product, selected: true})
   }
 
   productFormHandler(product) {
@@ -94,7 +94,7 @@ class Products extends Component {
                                                     _class={(i+1)%4?'i-right':''}
                                                     {...{...item, selected: selected&&item._id==product._id}}
                                                     onClick={() => this.onProductClick(item)} />)
-              : LOAD_PRODUCT_MSG
+              : MSG.load.product
             }
           </Row>
         </Container>

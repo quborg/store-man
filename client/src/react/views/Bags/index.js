@@ -6,7 +6,7 @@ import BagForm from './BagForm'
 import {Container, Row} from 'reactstrap'
 import {Modal} from 'ayla-client/react/components/Notifications'
 import {ButtonControl} from 'ayla-client/react/components/Buttons'
-import {LOAD_BAG_MSG} from 'ayla-client/react/views/Static/Messages'
+import {MSG} from 'ayla-client/react/views/settings'
 
 const DISPLAY         = 'embalage'
     , CTL             = {
@@ -93,7 +93,7 @@ class Bags extends Component {
                                                     _class={(i+1)%4?'i-right':''}
                                                     {...{...item, selected: selected&&item._id==bag._id}}
                                                     onClick={() => this.onBagClick(item)} />)
-              : LOAD_BAG_MSG
+              : MSG.load.bag
             }
           </Row>
         </Container>

@@ -10,8 +10,10 @@ import {Image} from 'ayla-client/react/components/Media'
 import RaisedButton from 'material-ui/RaisedButton'
 import moment from 'moment'
 import {getCollectionById} from 'ayla-helper/ext'
-import {LOAD_ORDERS_MSG} from 'ayla-client/react/views/Static/Messages'
+import {MSG} from 'ayla-client/react/views/settings'
 import validateFields from 'ayla-client/react/plugins/form-validator'
+
+const DISPLAY = 'order'
 
 const selectRowProp = cb => ({
   mode: 'radio',
@@ -24,7 +26,7 @@ const options = {
   sizePerPage: 10,
   sortName: 'created_at',
   sortOrder: 'desc',
-  noDataText: LOAD_ORDERS_MSG
+  noDataText: MSG.load.order
 }
 
 const REQUIRED_KEYS = { client_id:'',basket:'' }
