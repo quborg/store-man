@@ -5,15 +5,10 @@ import BagCard from './BagCard'
 import BagForm from './BagForm'
 import {Container, Row} from 'reactstrap'
 import {Modal} from 'ayla-client/react/components/Notifications'
-import {ButtonControl} from 'ayla-client/react/components/Buttons'
+import {ButtonsControl} from 'ayla-client/react/components/Buttons'
 import {MSG} from 'ayla-client/react/views/settings'
 
 const DISPLAY         = 'embalage'
-    , CTL             = {
-                          primary: { icon: 'plus',  title: `Ajouter un ${DISPLAY}`   },
-                          warning: { icon: 'save',  title: `Modifier un ${DISPLAY}`  },
-                          danger:  { icon: 'trash', title: `Supprimer un ${DISPLAY}` }
-                        }
 
 
 class Bags extends Component {
@@ -27,52 +22,38 @@ class Bags extends Component {
     selected: false,
     isOpen: false,
     theme: '',
-    title: ''
+    display: DISPLAY
   }
 
   componentWillMount() {
     this.props.dispatch(getBags())
   }
 
-  onBagClick(bag, isTheSame=bag._id==this.state.bag._id) {
+  onSelectBag(bag, isTheSame=bag._id==this.state.bag._id) {
     isTheSame
     ? this.resetSelection()
-    : this.setState({bag,     selected: true})
+    : this.setState({bag, selected: true})
   }
 
-  bagFormHandler(bag) {
-    this.setState({bag})
+  resetSelection  = () => {
+    this.setState({ bag: {}, selected: false })
   }
 
-  resetSelection = () => {
-    this.setState({bag: {}, selected: false})
+  openModal       = theme => {
+    this.setState({ isOpen: true, theme })
   }
 
-  openModal = (theme, title, isOpen=true) => {
-    this.setState({ isOpen, theme, title })
+  closeModal      = () => {
+    this.setState({ isOpen: false })
   }
-
-  closeModal = () => {
-    this.setState({isOpen:false})
-  }
-
-  boardControls = selected =>
-    Object.keys(CTL).map( theme => {
-      let ctl = CTL[theme]
-        , disabled = !selected && !ctl.title.match('^Ajouter')
-      return <ButtonControl {...{disabled, theme, ...ctl}}
-                            onClick={this.openModal}
-                            key={`${ctl.icon}-${DISPLAY}-board`} />
-    }
-  )
 
   render() {
     const [
-            {isOpen, theme, title, bag, selected},
+            {isOpen, theme, display, bag, selected},
             {data, dispatch},
-            {closeModal, resetSelection}
+            {closeModal, openModal, resetSelection}
           ] = [this.state, this.props, this]
-        , modalProps  = {isOpen, theme, title, modalWillClose: closeModal}
+        , modalProps  = {isOpen, theme, display, modalWillClose: closeModal}
         , bagProps    = {dispatch, bag, resetSelection}
 
     return (
@@ -83,16 +64,16 @@ class Bags extends Component {
               <h2 className='flat-burn mb-0'>Tous les embalages</h2>
             </div>
             <div className='fx fx-je fx-rev pt-3 ops-btns'>
-              {this.boardControls(selected)}
+              <ButtonsControl {...{selected, openModal}} />
             </div>
           </Row>
-          <Row className={'pt-5 bag-history fx fx-wrap fx-' + (data.length>3 ?'jb':'ja')}>
+          <Row className='pt-5 items-history fx fx-wrap'>
             {
               data.length
               ? data.map((item, i) => <BagCard  key={'key-bag-card-'+item._id}
                                                     _class={(i+1)%4?'i-right':''}
                                                     {...{...item, selected: selected&&item._id==bag._id}}
-                                                    onClick={() => this.onBagClick(item)} />)
+                                                    onClick={() => this.onSelectBag(item)} />)
               : MSG.load.bag
             }
           </Row>

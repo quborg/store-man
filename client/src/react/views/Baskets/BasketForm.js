@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import serialize from 'form-serialize'
+
 import {saveBasket, delBasket} from 'ayla-client/redux/actions/api'
 import {Row, Col, FormGroup, Input, Label, InputGroup, InputGroupAddon, InputGroupText} from 'reactstrap'
 import {getCollectionById} from 'ayla-helper/ext'
@@ -16,7 +16,7 @@ export default class BasketForm extends Component {
   static defaultProps = {
     basket: {},
     theme: '',
-    action: '',
+    setAction: () => {},
     initModal: () => {}
   }
 
@@ -39,7 +39,7 @@ export default class BasketForm extends Component {
   }
 
   componentWillReceiveProps({action:nextAction, basket}) {
-    if (nextAction) this.actionsStarter(nextAction)
+    if (nextAction && nextAction !== 'revision') this.actionsStarter(nextAction)
   }
 
   actionsStarter = action => {
@@ -53,13 +53,14 @@ export default class BasketForm extends Component {
 
   saveBasket() {
     let [basket, _errorsFlag] = [{...this.state.basket}, {...this.state.errorsFlag}]
-    if (this.state.theme == 'primary') delete basket._id
+      , toAdd                 = this.state.theme == 'primary'
+    if (toAdd) delete basket._id
     let {errorsFlag, errorRuntime} = validateFields(basket, _errorsFlag)
     if (!errorRuntime) {
       this.props.dispatch( saveBasket(basket) )
       this.props.resetSelection()
       this.props.initModal()
-    }
+    } else this.props.setAction('revision')
     this.setState({ errorsFlag, errorRuntime })
   }
 
@@ -70,10 +71,9 @@ export default class BasketForm extends Component {
   }
 
   basketHandler = nextBasket => {
-    let basket          = { ...this.state.basket, ...nextBasket }
-      , {products}      = this.props
-      , totalAutomatic  = 0
-      , errorsFlag      = { ...this.state.errorsFlag }
+    let [basket, {products}]  = [{ ...this.state.basket, ...nextBasket }, this.props]
+      , errorsFlag            = { ...this.state.errorsFlag }
+      , totalAutomatic        = 0
     if (basket.products && basket.products.length) {
       totalAutomatic  = basket.products.reduce(
         (total, p) => {
@@ -81,13 +81,18 @@ export default class BasketForm extends Component {
           return total
         }, 0)
     }
-    if (this.state.errorRuntime) errorsFlag = validateFields(nextBasket, errorsFlag).errorsFlag
     if (this.state.calculator) basket = { ...basket, total: totalAutomatic }
+    if (this.state.errorRuntime) errorsFlag = validateFields(nextBasket, errorsFlag).errorsFlag
     this.setState({ basket, totalAutomatic, errorsFlag })
   }
 
-  toggleCalculator = e => {
-    this.setState({calculator: e.target.checked})
+  toggleCalculator = calculator => {
+    this.setState({calculator})
+    if (calculator) this.manualTotalHandler(this.state.totalAutomatic)
+  }
+
+  manualTotalHandler = total => {
+    this.basketHandler({total})
   }
 
   render() {
@@ -144,7 +149,7 @@ export default class BasketForm extends Component {
                   <InputGroupAddon addonType='prepend' style={{width:'220px'}}>
                     <InputGroupText style={{width:'100%'}}>
                       <Label className="switch switch-sm switch-icon switch-pill switch-primary mb-0">
-                        <Input type="checkbox" className="switch-input" defaultChecked={calculator} onChange={this.toggleCalculator} />
+                        <Input type="checkbox" className="switch-input" defaultChecked={calculator} onChange={e => this.toggleCalculator(e.target.checked)} />
                         <span className="switch-label" data-on={'\uF1EC'} data-off={'\uF1EC'}></span>
                         <span className="switch-handle"></span>
                       </Label>
@@ -155,8 +160,8 @@ export default class BasketForm extends Component {
                   </InputGroupAddon>
                   {
                     calculator
-                    ? <Input key='key-automatic-total' type='number' min={0} value={totalAutomatic} disabled className='text-right total-auto' />
-                    : <Input key='key-custom-total' type='number' min={0} defaultValue={basket.total} onChange={e => this.basketHandler({total: e.target.value})} placeholder={'.. 0Dh'} className='text-right total-manual' />
+                    ? <Input key='key-automatic-total' type='number' min={0} value={totalAutomatic} onChange={e=>{}} disabled className='text-right total-auto' />
+                    : <Input key='key-custom-total' type='number' min={0} value={basket.total} onChange={e => this.manualTotalHandler(e.target.value)} placeholder={'.. 0Dh'} className='text-right total-manual' />
                   }
                   <InputGroupAddon addonType="append"><InputGroupText>DH</InputGroupText></InputGroupAddon>
                 </InputGroup>

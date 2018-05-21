@@ -33,7 +33,7 @@ class WeekOrders extends Component {
               <h2 className='flat-burn mb-0'>Produits de la semaine</h2>
             </div>
           </Row>
-          <Row className={'pt-5 product-history fx fx-wrap fx-' + (data.length>3 ?'jb':'ja')}>
+          <Row className={'pt-5 items-history fx fx-wrap'}>
             {
               data.length
               ? data.map((item, i) => <WeekOrdersCard key={'key-prod-card-'+item._id} {...{...item}} _class={(i+1)%4?'i-right':''}/>)

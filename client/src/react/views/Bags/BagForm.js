@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import serialize from 'form-serialize'
+
 import {saveBag, delBag} from 'ayla-client/redux/actions/api'
 import {Row, Col, FormGroup, Input, Label, InputGroup, InputGroupAddon, InputGroupText} from 'reactstrap'
 import {Image, ImageFileLoader} from 'ayla-client/react/components/Media'
@@ -14,7 +14,7 @@ export default class BagForm extends Component {
   static defaultProps = {
     bag: REQUIRED_KEYS,
     theme: '',
-    action: '',
+    setAction: () => {},
     initModal: () => {},
     progress: () => 0
   }

@@ -3,8 +3,6 @@
 
 var paths   = require('config/paths')
   , fs      = require('fs')
-  // , mkdirp  = require('mkdirp')
-  // , sharp   = require('sharp')
 
 
 /**
@@ -22,19 +20,11 @@ function saveImage(image, folderName='unnamed') {
       , modePath        = process.env.NODE_ENV == 'production' ? paths.appStatic : paths.appPublic
       , imageFullPath   = modePath + publicPath +'/'+ image.name
 
+    fs.writeFile(imageFullPath, base64Data, 'base64', function(err) {
+      console.log(err)
+    })
 
-    // mkdirp(fullPath, function (f_err) {
-    //   if (f_err) { console.log(err); return '' }
-
-      fs.writeFile(imageFullPath, base64Data, 'base64', function(err) {
-        console.log(err)
-        return ''
-      })
-
-      // sharp(imageFullPath).resize(200, 200).toFile(imagePublicPath, function(err, info) { console.log(err, info) })
-
-      return imagePublicPath
-    // })
+    return imagePublicPath
   }
   return image
 }

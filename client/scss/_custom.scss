@@ -88,9 +88,18 @@ $danger: #f86c6b;
 .primary-clr { color: $primary }
 .pink-clr { color: $pink }
 .info-clr { color: $info }
+
+.test-bg { background-color: rgba(0, 0, 0, 0.1) }
 // Colors >
 
 // < Override
+
+@media (min-width: 1200px) {
+  .container {
+    max-width: 100%;
+  }
+}
+
 .btn-info {
   color: white;
 }
@@ -170,6 +179,10 @@ $danger: #f86c6b;
   td {
     vertical-align: middle
   }
+}
+
+.form-test {
+  @extend .test-bg;
 }
 
 // enhancers >
@@ -296,6 +309,16 @@ $imageHeight: $borderHeight + 10px;
     color: $red;
   }
 }
+
+.items-history {
+  margin-right: -10px;
+  margin-left: -10px;
+}
+
+.items-history:after {
+  content: "";
+  flex: auto;
+}
 // Common >
 
 // < correctifs
@@ -303,20 +326,6 @@ td:focus {
   outline: none;
 }
 // correctifs >
-
-// < Products
-
-.product-history {
-  margin-right: -10px;
-  margin-left: -10px;
-}
-
-.product-history:after {
-  content: "";
-  flex: auto;
-}
-
-// Products >
 
 // < Card
 .item-card {

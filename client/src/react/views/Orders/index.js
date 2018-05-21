@@ -1,17 +1,16 @@
 import React, { Component } from 'react'
 import {connect} from 'react-redux'
-import serialize from 'form-serialize'
-import {getOrders, saveOrder, delOrder, getBaskets, getClients, getProducts, getBags} from 'ayla-client/redux/actions/api'
-import {Container, Row, Col, Button,
-        Modal, ModalHeader, ModalBody, ModalFooter} from 'reactstrap'
-import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table'
+import {getOrders, getBaskets, getClients, getProducts, getBags} from 'ayla-client/redux/actions/api'
+import {Container, Row, Col, Button} from 'reactstrap'
+import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table'
+import {Modal} from 'ayla-client/react/components/Notifications'
+import {ButtonsControl} from 'ayla-client/react/components/Buttons'
 import OrderForm from './OrderForm'
 import {Image} from 'ayla-client/react/components/Media'
 import RaisedButton from 'material-ui/RaisedButton'
 import moment from 'moment'
 import {getCollectionById} from 'ayla-helper/ext'
 import {MSG} from 'ayla-client/react/views/settings'
-import validateFields from 'ayla-client/react/plugins/form-validator'
 
 const DISPLAY = 'order'
 
@@ -29,19 +28,14 @@ const options = {
   noDataText: MSG.load.order
 }
 
-const REQUIRED_KEYS = { client_id:'',basket:'' }
-
-
 class Orders extends Component {
 
   state = {
-    order: REQUIRED_KEYS,
+    order: {},
     selected: false,
     isOpen: false,
     theme: '',
-    action: '',
-    errorsFlag: REQUIRED_KEYS,
-    errorRuntime: false
+    display: DISPLAY
   }
 
   componentWillMount() {
@@ -52,76 +46,23 @@ class Orders extends Component {
     this.props.dispatch(getBags())
   }
 
-  setModal(theme, action, isOpen=true) {
-    this.setState({ isOpen, theme, action })
-  }
-
   onSelectOrder = (order, selected) => {
     selected
     ? this.setState({order, selected})
     : this.setState({order: {}, selected})
   }
 
-  saveOrder = () => {
-    let [order, _errorsFlag]  = [{...this.state.order}, {...this.state.errorsFlag}]
-      , isOpen                = true
-      , toAdd                 = this.state.theme == 'primary'
-    if (toAdd) delete order._id
-    let {errorsFlag, errorRuntime} = validateFields(order, _errorsFlag)
-    if (!errorRuntime) {
-      this.props.dispatch( saveOrder(order) )
-      isOpen = false
-    }
-    this.setState({errorRuntime, errorsFlag, isOpen})
+  resetSelection  = () => {
+    this.setState({ product: {}, selected: false })
   }
 
-  delOrder = () => {
-    this.props.dispatch( delOrder(this.state.order, this.props.baskets) )
-    this.setState({isOpen: false, selected: false, order: {}})
+  openModal  = (theme) => {
+    this.setState({ isOpen: true, theme })
   }
 
-  orderHandler = nextOrder => {
-    let errorsFlag = { ...this.state.errorsFlag }
-    if (this.state.errorRuntime) {
-      errorsFlag = validateFields(nextOrder, errorsFlag).errorsFlag
-    }
-    let order = { ...this.state.order, ...nextOrder }
-    this.setState({ order, errorsFlag })
+  closeModal = () => {
+    this.setState({isOpen:false})
   }
-
-  getModalAction() {
-    switch(this.state.theme) {
-      case 'primary': return <Button color='primary' onClick={this.saveOrder}>
-                               <i className='fa fa-plus'></i> Ajouter
-                             </Button>
-      case 'warning': return <Button color='warning' onClick={this.saveOrder}>
-                               <i className='fa fa-save'></i> Sauvegarder
-                             </Button>
-      case 'danger': return  <Button color='danger' onClick={this.delOrder}>
-                               <i className='fa fa-trash'></i> Supprimer
-                             </Button>
-    }
-  }
-
-  getOrdersActions = () => [
-    <RaisedButton key='add-ord-board'
-                  onClick={() => this.setModal('primary', 'Ajouter')}
-                  backgroundColor='#00bcd4'
-                  icon={<i className="fa fa-plus lead" />}
-    />,
-    <RaisedButton key='edit-ord-board'
-                  onClick={() => this.setModal('warning', 'Modifier')}
-                  className={this.state.selected.toString()}
-                  backgroundColor={this.state.selected?'#FFC107':'#FFD54F'}
-                  icon={<i className='fa fa-edit lead' />}
-    />,
-    <RaisedButton key='del-ord-board'
-                  onClick={() => this.setModal('danger', 'Supprimer')}
-                  className={this.state.selected.toString()}
-                  backgroundColor={this.state.selected?'#E91E63':'#F06292'}
-                  icon={<i className='fa fa-trash lead' />}
-    />
-  ]
 
   dateFormater = cell => moment(cell).format('dddd DD MMMM YYYY, HH:mm')
 
@@ -154,10 +95,13 @@ class Orders extends Component {
   }
 
   render() {
-    const [ order,
-            {orderHandler, basketFormater, statusFormater},
-            {clients, products, baskets},
-            {theme, action, isOpen, errorsFlag} ] = [{ ...this.state.order }, this, this.props, this.state]
+    const [
+            {isOpen, theme, display, order, selected},
+            {data, clients, products, baskets, dispatch},
+            {closeModal, openModal, resetSelection, basketFormater, statusFormater}
+          ] = [this.state, this.props, this]
+        , modalProps     = {isOpen, theme, display, modalWillClose:closeModal}
+        , orderFormProps = {order, clients, products, baskets, dispatch, resetSelection}
 
     return (
       <div className='animated fadeIn'>
@@ -167,7 +111,7 @@ class Orders extends Component {
               <h2 className='flat-burn mb-0'>Toutes les commandes</h2>
             </div>
             <div className='fx fx-je fx-rev pt-3 ops-btns'>
-              {this.getOrdersActions()}
+              <ButtonsControl {...{selected, openModal}} />
             </div>
           </Row>
           <Row className='pt-5'>
@@ -175,7 +119,7 @@ class Orders extends Component {
                 maxHeight='398'
                 containerClass='main-table'
                 trClassName='pointer tr-tdvertical'
-                data={this.props.data}
+                {...{data}}
                 selectRow={selectRowProp(this.onSelectOrder)}
                 pagination options={options} >
               <TableHeaderColumn dataField='_id' isKey hidden>#</TableHeaderColumn>
@@ -187,27 +131,16 @@ class Orders extends Component {
             </BootstrapTable>
           </Row>
         </Container>
-        <Modal {...{isOpen}} toggle={() => this.setState({isOpen: false})} className={`modal-${theme}`}>
-          <ModalHeader>{action} une commande</ModalHeader>
-            <ModalBody>
-              <form id='order-form' className='form-horizontal'>
-                <OrderForm {...{order, clients, products, baskets, theme, orderHandler, basketFormater, statusFormater, errorsFlag}} />
-              </form>
-            </ModalBody>
-            <ModalFooter>
-              {this.getModalAction()}
-              <Button color='secondary' onClick={() => this.setState({isOpen: false})}>
-                <i className='fa fa-ban'></i> Annuler
-              </Button>
-            </ModalFooter>
+        <Modal {...modalProps}>
+          <OrderForm {...orderFormProps} />
         </Modal>
       </div>
     )
   }
 }
 
-const mapState = ({orders:{data}, clients:{data:clients}, products:{data:products}, baskets:{data:baskets}, bags:{data:bags}}, ownProps) => {
-  ownProps = { ...ownProps, data, clients, products, baskets, bags }
+const mapState = ({orders:{data}, clients:{data:clients}, products:{data:products}, baskets:{data:baskets}}, ownProps) => {
+  ownProps = { ...ownProps, data, clients, products, baskets }
   return ownProps
 }
 

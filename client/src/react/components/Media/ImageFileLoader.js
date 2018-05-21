@@ -21,12 +21,10 @@ export default class ImageFileLoader extends Component {
     if (file) {
       if (file.type.match('image\/(jpg|png|jpeg)')) {
         reader.readAsDataURL(file)
-        reader.onload = ev => {
+        reader.onload = e => {
           image = { src: reader.result, name: file.name }
           this.props.handler({ [keyName]: image })
           this.props.progress(100)
-          // reader.onerror = err => {}
-          // reader.onprogress = p => {}
         }
       }
       else { this.props.handler({ [keyName]: 'error-file-type' }) }

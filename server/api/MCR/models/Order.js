@@ -9,7 +9,7 @@ var mongoose    = require('mongoose')
                                                   bid       : String,
                                                   quantity  : Number
                                                 }]
-                                  }],
+                                 }],
                     total      : { type: Number, default: 0 },
                     status     : { type: String, default: 'open', enum: ['open','stock','payment','close'] },
                     created_at : { type: Date, default: Date.now },

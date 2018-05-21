@@ -7,17 +7,34 @@ const colors = {
   danger : x => x ? '#E91E63' : '#F06292'
 }
 
-export const ButtonControl = ({icon, theme, title, onClick, disabled}) =>
-  <RaisedButton onClick={() => onClick(theme, title)}
-                className={(!disabled).toString()}
-                backgroundColor={colors[theme](disabled)}
-                icon={<i className={`fa fa-${icon} lead`} />}
-  />
-;
+const icons = {
+  primary: 'plus',
+  warning: 'save',
+  danger : 'trash'
+}
 
-ButtonControl.defaultProps = {
-  icon: '',
-  theme: '',
-  title: '',
-  onClick: e => {}
+const themes = ['primary', 'warning', 'danger']
+
+
+export const ButtonsControl = ({selected, openModal, display}) => themes.map( theme => {
+                                let toAdd    = theme == 'primary'
+                                  , toUpdate = theme == 'warning'
+                                  , disabled;
+                                display == 'panier'
+                                ? (disabled = selected ? !toUpdate : true)
+                                : (disabled = !selected && !toAdd)
+                                return  <RaisedButton
+                                          key={`${theme}-boa-ctl`}
+                                          onClick={() => openModal(theme)}
+                                          className={(!disabled).toString()}
+                                          backgroundColor={colors[theme](disabled)}
+                                          icon={<i className={`fa fa-${icons[theme]} lead`} />}
+                                        />
+                              })
+
+
+ButtonsControl.defaultProps = {
+  selected: false,
+  display: '',
+  openModal: () => {}
 }

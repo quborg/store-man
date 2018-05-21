@@ -5,17 +5,12 @@ import BasketCard from './BasketCard'
 import BasketForm from './BasketForm'
 import {Container, Row} from 'reactstrap'
 import {Modal} from 'ayla-client/react/components/Notifications'
-import {ButtonControl} from 'ayla-client/react/components/Buttons'
+import {ButtonsControl} from 'ayla-client/react/components/Buttons'
 import {getCollectionById, getCollectionByKeyValue} from 'ayla-helper/ext'
 import {MSG} from 'ayla-client/react/views/settings'
 
 
 const DISPLAY         = 'panier'
-    , CTL             = {
-                          primary: { icon: 'plus',  title: `Ajouter un ${DISPLAY}`   },
-                          warning: { icon: 'save',  title: `Modifier un ${DISPLAY}`  },
-                          danger:  { icon: 'trash', title: `Supprimer un ${DISPLAY}` }
-                        }
 
 
 class Baskets extends Component {
@@ -28,8 +23,8 @@ class Baskets extends Component {
     basket: {},
     selected: false,
     isOpen: false,
-    theme: 'primary',
-    title: `Ajouter un ${DISPLAY}`
+    theme: '',
+    display: DISPLAY
   }
 
   componentWillMount() {
@@ -37,45 +32,31 @@ class Baskets extends Component {
     this.props.dispatch(getBaskets())
   }
 
-  onBagClick(basket, isTheSame=basket._id==this.state.basket._id) {
+  onSelectBasket(basket, isTheSame=basket._id==this.state.basket._id) {
     isTheSame
     ? this.resetSelection()
     : this.setState({basket, selected: true})
   }
 
-  basketFormHandler(basket) {
-    this.setState({basket})
-  }
-
-  resetSelection = () => {
+  resetSelection  = () => {
     this.setState({basket: {}, selected: false})
   }
 
-  openModal = (theme, title, isOpen=true) => {
-    this.setState({ isOpen, theme, title })
+  openModal       = theme => {
+    this.setState({ isOpen:true, theme })
   }
 
-  closeModal = () => {
+  closeModal      = () => {
     this.setState({isOpen:false})
   }
 
-  boardControls = selected =>
-    Object.keys(CTL).map( theme => {
-      let ctl = CTL[theme]
-        , disabled = selected ? !ctl.title.match('^Modifier') : true
-      return <ButtonControl {...{disabled, theme, ...ctl}}
-                            onClick={this.openModal}
-                            key={`${ctl.icon}-${DISPLAY}-board`} />
-    }
-  )
-
   render() {
     const [
-            {isOpen, theme, title, basket, selected},
+            {isOpen, theme, display, basket, selected},
             {data, products, dispatch},
-            {closeModal, resetSelection}
+            {closeModal, openModal, resetSelection}
           ] = [this.state, this.props, this]
-        , modalProps  = {isOpen, theme, title, modalWillClose: closeModal, noProgress: true}
+        , modalProps  = {isOpen, theme, display, modalWillClose:closeModal, noProgress:true}
         , basketProps = {dispatch, basket, products, resetSelection}
 
     return (
@@ -86,16 +67,16 @@ class Baskets extends Component {
               <h2 className='flat-burn mb-0'>Tous les paniers</h2>
             </div>
             <div className='fx fx-je fx-rev pt-3 ops-btns'>
-              {this.boardControls(selected)}
+              <ButtonsControl {...{selected, openModal, display}} />
             </div>
           </Row>
-          <Row className={'pt-5 basket-history fx fx-wrap fx-' + (data.length>3 ?'jb':'ja')}>
+          <Row className='pt-5 fx fx-wrap fx-ja'>
             {
               data.length
               ? data.map((item, i) => <BasketCard  key={'key-basket-card-'+item._id}
                                                     _class={(i+1)%4?'i-right':''}
                                                     {...{...item, selected: selected&&item._id==basket._id}}
-                                                    onClick={() => this.onBagClick(item)} />)
+                                                    onClick={() => this.onSelectBasket(item)} />)
               : MSG.load.basket
             }
           </Row>

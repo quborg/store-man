@@ -7,7 +7,7 @@ const THEME_OPS  =  {
                       danger:  { label: 'Supprimer',   action: 'DEL', icon: 'trash' },
                       icon: '', action: '', label: ''
                     }
-    , INIT_MODAL =  { isOpen: false, theme: '', title: '', progress: 0, action: '', noProgress: false }
+    , INIT_MODAL =  { isOpen:false, theme:'', label:'', display:'', progress:0, action:'', noProgress:false }
 
 
 export default class CustomModal extends Component {
@@ -23,8 +23,9 @@ export default class CustomModal extends Component {
     this.setState(INIT_MODAL)
   }
 
-  componentWillReceiveProps({isOpen, theme, title, noProgress}) {
-    this.setState({isOpen, theme, title, noProgress})
+  componentWillReceiveProps({isOpen, theme, display, noProgress}) {
+    let {label} = THEME_OPS[theme] || THEME_OPS
+    this.setState({isOpen, theme, label, display, noProgress})
   }
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -40,11 +41,14 @@ export default class CustomModal extends Component {
   }
 
   render() {
-    const [{isOpen, title, theme, progress, action, noProgress}, {initModal, setAction}] = [this.state, this]
+    const [
+            {isOpen, label, display, theme, progress, action, noProgress},
+            {initModal, setAction}
+          ] = [this.state, this]
 
     return (
         <Modal isOpen={isOpen} toggle={() => this.initModal()} className={`modal-${theme}`}>
-          <ModalHeader>{title}</ModalHeader>
+          <ModalHeader>{`${label} ${display}`}</ModalHeader>
             <ModalBody>
               {
                 React.cloneElement(

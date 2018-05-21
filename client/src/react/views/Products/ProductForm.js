@@ -1,5 +1,4 @@
-import React, { PureComponent } from 'react'
-import serialize from 'form-serialize'
+import React, { Component } from 'react'
 import {saveProduct, delProduct} from 'ayla-client/redux/actions/api'
 import {Row, Col, FormGroup, Input, Label, InputGroup, InputGroupAddon, InputGroupText} from 'reactstrap'
 import {Image, ImageFileLoader} from 'ayla-client/react/components/Media'
@@ -9,12 +8,12 @@ import {ERRORS_STACK} from 'ayla-client/react/views/settings'
 const REQUIRED_KEYS = { name : '' }
 
 
-export default class ProductForm extends PureComponent {
+export default class ProductForm extends Component {
 
   static defaultProps = {
     product: REQUIRED_KEYS,
     theme: '',
-    action: '',
+    setAction: () => {},
     initModal: () => {},
     progress: () => 0,
   }

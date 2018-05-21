@@ -1,16 +1,14 @@
 import React, { Component } from 'react'
 import {connect} from 'react-redux'
-import serialize from 'form-serialize'
-import {getClients, saveClient, delClient} from 'ayla-client/redux/actions/api'
-import {Container, Row, Col, Button,
-        Modal, ModalHeader, ModalBody, ModalFooter} from 'reactstrap'
+import {getClients} from 'ayla-client/redux/actions/api'
+import {Container, Row, Col, Button} from 'reactstrap'
 import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table'
+import {Modal} from 'ayla-client/react/components/Notifications'
+import {ButtonsControl} from 'ayla-client/react/components/Buttons'
 import ClientForm from './ClientForm'
 import {Image} from 'ayla-client/react/components/Media'
-import RaisedButton from 'material-ui/RaisedButton'
 import moment from 'moment'
 import {MSG} from 'ayla-client/react/views/settings'
-import validateFields from 'ayla-client/react/plugins/form-validator'
 
 const DISPLAY = 'client'
 
@@ -29,27 +27,23 @@ const options = {
   noDataText: MSG.load.client
 }
 
-const REQUIRED_KEYS = { firstname:'',lastname:'',phone:'',adress:'',city:'' }
-
 
 class Clients extends Component {
 
+  static defaultProps = {
+    data: []
+  }
+
   state = {
-    client: REQUIRED_KEYS,
+    client: {},
     selected: false,
     isOpen: false,
     theme: '',
-    action: '',
-    errorsFlag: { ...REQUIRED_KEYS, email: '', image: '' },
-    errorRuntime: false
+    display: DISPLAY
   }
 
   componentWillMount() {
     this.props.dispatch(getClients())
-  }
-
-  setModal(isOpen, theme, action) {
-    this.setState({ isOpen, theme, action })
   }
 
   onSelectClient = (client, selected) => {
@@ -58,68 +52,17 @@ class Clients extends Component {
     : this.setState({client: {}, selected})
   }
 
-  saveClient = () => {
-    let [client, _errorsFlag] = [{...this.state.client}, {...this.state.errorsFlag}]
-      , isOpen                = true
-      , toAdd                 = this.state.theme == 'primary'
-    if (toAdd) delete client._id
-    let {errorsFlag, errorRuntime} = validateFields(client, _errorsFlag)
-    if (!errorRuntime) {
-      this.props.dispatch( saveClient(client) )
-      isOpen = false
-    }
-    this.setState({errorRuntime, errorsFlag, isOpen})
+  resetSelection  = () => {
+    this.setState({ product: {}, selected: false })
   }
 
-  delClient = () => {
-    this.props.dispatch( delClient(this.state.client._id) )
-    this.setState({ isOpen: false, selected: false, client: {} })
+  openModal  = (theme) => {
+    this.setState({ isOpen: true, theme })
   }
 
-  clientHandler = nextClient => {
-    console.log('nextClient', nextClient);
-    let errorsFlag = { ...this.state.errorsFlag }
-    if (nextClient.email && !nextClient.email) delete nextClient.email
-    if (this.state.errorRuntime) {
-      errorsFlag = validateFields(nextClient, errorsFlag).errorsFlag
-    }
-    let client = { ...this.state.client, ...nextClient }
-    this.setState({ client, errorsFlag })
+  closeModal = () => {
+    this.setState({isOpen:false})
   }
-
-  getModalAction() {
-    switch(this.state.theme) {
-      case 'primary': return <Button color="primary" onClick={this.saveClient}>
-                               <i className='fa fa-plus'></i> Ajouter
-                             </Button>
-      case 'warning': return <Button color="warning" onClick={this.saveClient}>
-                               <i className='fa fa-save'></i> Sauvegarder
-                             </Button>
-      case 'danger':  return <Button color="danger" onClick={this.delClient}>
-                               <i className='fa fa-trash'></i> Supprimer
-                             </Button>
-    }
-  }
-
-  getClientsActions = () => [
-    <RaisedButton key='add-cli-board'
-                  onClick={() => this.setModal(true, 'primary', 'Ajouter')}
-                  backgroundColor='#00bcd4'
-                  icon={<i className="fa fa-plus lead" />}
-    />,
-    <RaisedButton key='edit-cli-board'
-                  onClick={() => this.setModal(true, 'warning', 'Modifier')}
-                  className={this.state.selected.toString()}
-                  backgroundColor={this.state.selected?'#FFC107':'#FFD54F'}
-                  icon={<i className='fa fa-edit lead' />}
-    />,
-    <RaisedButton key='del-cli-board'
-                  onClick={() => this.setModal(true, 'danger', 'Supprimer')}
-                  className={this.state.selected.toString()}
-                  backgroundColor={this.state.selected?'#E91E63':'#F06292'}
-                  icon={<i className='fa fa-trash lead' />}
-    />
-  ]
 
   imageFormater = cell => <Image src={cell} width='30' height='30' alt='Image aperçu' className='image-preview radius-2' />
 
@@ -128,7 +71,13 @@ class Clients extends Component {
   fullNameFormater = (cell, row) => (row.firstname +' '+ row.lastname).trim()
 
   render() {
-    const [client, {clientHandler}, {theme, action, isOpen, errorsFlag}] = [{ ...this.state.client }, this, this.state]
+    const [
+            {isOpen, theme, display, client, selected},
+            {data, dispatch},
+            {closeModal, openModal, resetSelection}
+          ] = [this.state, this.props, this]
+        , modalProps      = {isOpen, theme, display, modalWillClose:closeModal}
+        , clientFormProps = {client, dispatch, resetSelection}
 
     return (
       <div className='animated fadeIn clients-view'>
@@ -138,7 +87,7 @@ class Clients extends Component {
               <h2 className='flat-burn mb-0'>Tous les clients</h2>
             </div>
             <div className='fx fx-je fx-rev pt-3 ops-btns'>
-              {this.getClientsActions()}
+              <ButtonsControl {...{selected, openModal}} />
             </div>
           </Row>
           <Row className='pt-5'>
@@ -146,7 +95,7 @@ class Clients extends Component {
                 maxHeight='398'
                 containerClass='main-table'
                 trClassName='pointer'
-                data={this.props.data}
+                {...{data}}
                 selectRow={selectRowProp(this.onSelectClient)}
                 pagination options={options} >
               <TableHeaderColumn dataField='_id' isKey hidden>#</TableHeaderColumn>
@@ -159,19 +108,8 @@ class Clients extends Component {
             </BootstrapTable>
           </Row>
         </Container>
-        <Modal {...{isOpen}} toggle={() => this.setState({isOpen: false})} className={`modal-${theme}`}>
-          <ModalHeader>{action} un client</ModalHeader>
-            <ModalBody>
-              <form id="client-form" className="form-horizontal" >
-                <ClientForm {...{theme, client, clientHandler, errorsFlag}} />
-              </form>
-            </ModalBody>
-            <ModalFooter>
-              {this.getModalAction()}
-              <Button color="secondary" onClick={() => this.setState({isOpen: false})}>
-                <i className='fa fa-ban'></i> Annuler
-              </Button>
-            </ModalFooter>
+        <Modal {...modalProps}>
+          <ClientForm {...clientFormProps} />
         </Modal>
       </div>
     )
