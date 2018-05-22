@@ -24,7 +24,7 @@ class WeekOrders extends Component {
 
   render() {
     const {data} = this.props
-    console.log('props data', data);
+
     return (
       <div className='animated fadeIn'>
         <Container>
@@ -59,10 +59,10 @@ const mapState = ({orders:{data:orders}, bags:{data:bags}, baskets:{data:baskets
     })
   }
   if (orders.length) { // total summary
-    const firstDay  = moment().day(-6).utcOffset(0).set({hour:0,minute:0,second:0,millisecond:0}).format('X')
-        , lastDay   = moment().day(1).utcOffset(0).set({hour:0,minute:0,second:0,millisecond:0}).format('X')
+    const firstDay  = moment().day(0).utcOffset(0).set({hour:0,minute:0,second:0,millisecond:0})
+        , lastDay   = moment().day(7).utcOffset(0).set({hour:0,minute:0,second:0,millisecond:0})
     orders =  orders.reduce( (orders, order) => {
-                const orderDay = moment(order.created_at).format('X')
+                const orderDay = moment(order.created_at)
                 if (orderDay>=firstDay && orderDay<lastDay) orders.push(order)
                 return orders
               }, [])
@@ -92,7 +92,7 @@ const mapState = ({orders:{data:orders}, bags:{data:bags}, baskets:{data:baskets
         })
       }
     })
-    console.log('tags', tags);
+    // console.log('tags', tags);
   }
   if (data.length) { // add bags from orders & total quantities
     data =  data.map( ({_id, ...product}) => {
@@ -100,7 +100,7 @@ const mapState = ({orders:{data:orders}, bags:{data:bags}, baskets:{data:baskets
             })
   }
 
-  console.log('data', data);
+  // console.log('data', data);
   ownProps = {...ownProps, data}
   return ownProps
 }
