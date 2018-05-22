@@ -7,10 +7,11 @@ import multi    from 'redux-multi'
 import thunk    from 'redux-thunk'
 import {Saga}   from 'ayla-client/redux/middlewares'
 import Reducers from 'ayla-client/redux/reducers'
+import { loadingBarMiddleware } from 'ayla-client/react/plugins/loadingBar'
 
 
 const sagaMiddleware   = createSagaMiddleware()
-    , middlewares      = [ thunk, multi, promise, sagaMiddleware ]
+    , middlewares      = [ thunk, multi, promise, sagaMiddleware, loadingBarMiddleware() ]
     , composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
 
 
