@@ -2,7 +2,7 @@ var mongoose   = require('mongoose')
   , notEmpty   = function(products) { return products.length > 0 ? true : false }
 
   , UserSchema = mongoose.Schema({
-      name      : { type: String, unique: true },
+      name      : { type: String },
       products  : { type: [{
                             _id       : { type: String, required: true },
                             quantity  : { type: Number, default: 0 }
