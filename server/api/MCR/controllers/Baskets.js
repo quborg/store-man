@@ -31,7 +31,7 @@ module.exports = {
 
   update: function(req, res, next) {
     let id   = req.params.id
-      , data = _.merge({}, req.body);
+      , data = _.merge({}, req.body, req.params);
 
     if (!id) res.status(400).json({msg:'No id provided.'});
     delete data._id

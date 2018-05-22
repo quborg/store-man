@@ -7,7 +7,7 @@ var mongoose   = require('mongoose')
                             _id       : { type: String, required: true },
                             quantity  : { type: Number, default: 0 }
                           }],
-                    required: true,
+                    // required: true,
                     validate: [notEmpty, 'Please add at least one product in the basket'] },
       total     : { type: Number, default: 0 },
       created_at: { type: Date,   default: Date.now },
