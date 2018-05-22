@@ -17,7 +17,7 @@ function* fullfillStore(dispatch) {
     yield dispatch(getBags())
     yield dispatch(getBaskets())
     yield dispatch(getOrders())
-    yield put({type: "FULLFILLED_STORE"})
+    yield put({type: "FULFILLED_STORE"})
   }
   catch (e) {
     yield put({type: "REJECTED_STORE", payload: e});

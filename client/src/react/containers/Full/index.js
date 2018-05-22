@@ -13,6 +13,7 @@ import Baskets  from 'ayla-client/react/views/Baskets';
 import Orders   from 'ayla-client/react/views/Orders';
 import WeekOrders from 'ayla-client/react/views/Orders/WeekOrders';
 
+import LoadingBar from 'ayla-client/react/plugins/loadingBar'
 
 
 class Full extends Component {
@@ -26,6 +27,7 @@ class Full extends Component {
     return !this.props.loggedIn
     ? <Redirect to="/login" />
     : <div className="app">
+        <LoadingBar className="loading-bar" scope='default'/>
         <Header />
         <div className="app-body">
           <Sidebar />

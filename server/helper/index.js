@@ -19,7 +19,7 @@ function saveImage(image, folderName='unnamed') {
       , imagePublicPath = publicPath +'/'+ image.name
       , modePath        = process.env.NODE_ENV == 'production' ? paths.appStatic : paths.appPublic
       , imageFullPath   = modePath + publicPath +'/'+ image.name
-    console.log('img path', imageFullPath);
+
     fs.writeFile(imageFullPath, base64Data, 'base64', function(err) {
       console.log(err)
     })

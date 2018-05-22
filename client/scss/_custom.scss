@@ -327,6 +327,15 @@ td:focus {
 }
 // correctifs >
 
+// < loading bar
+.loading-bar {
+  background-color: $pink;
+  height: 3px;
+  z-index: 9999;
+  position: absolute;
+}
+// loading bar >
+
 // < Card
 .item-card {
   &.i-right {

@@ -4,7 +4,7 @@ import {Image, PREVIEW_IMG_SRC} from 'ayla-client/react/components/Media'
 import ImageCompressor from 'image-compressor.js';
 
 const options = {
-  quality: .6,
+  quality: .8,
   maxWidth: 200,
   maxHeight: 200
 }
@@ -30,9 +30,9 @@ export default class ImageFileLoader extends Component {
       if (file.type.match('image\/(jpg|png|jpeg)')) {
         new ImageCompressor(file, {
           ...options,
-          beforeDraw: (ctx, canvas) => {
-            // canvas.width = 200
-            // canvas.height = 200
+          beforeDraw: (ctx, cvs) => {
+            ctx.fillStyle = 'transparent'
+            ctx.fillRect(0, 0, cvs.width, cvs.height)
           },
           success: result => {
             reader.readAsDataURL(result)
@@ -41,9 +41,8 @@ export default class ImageFileLoader extends Component {
               this.props.handler({ [keyName]: image })
               this.props.progress(100)
             }
-            console.log('Upload success', result)
           },
-          error: e => {
+          error: err => {
             console.log('ERROR ImageCompressor() :', err)
             this.props.handler({ [keyName]: 'error-file-type' })
           },
