@@ -23,7 +23,8 @@ export default class BasketForm extends Component {
   state = {
     basket: REQUIRED_KEYS,
     calculator: false,
-    toDelete: undefined,
+    // toDelete: undefined,
+    isInfo: undefined,
     totalAutomatic: 0,
     errorsFlag: REQUIRED_KEYS,
     errorRuntime: false
@@ -32,14 +33,15 @@ export default class BasketForm extends Component {
   componentWillMount() {
     let [basket, { theme }] = [{...this.state.basket, ...this.props.basket}, this.props]
     const toAdd    = theme == 'primary'
-        , toDelete = theme == 'danger'
+        // , toDelete = theme == 'danger'
+        , isInfo   = theme == 'info'
     if (toAdd) delete basket._id
-    this.setState({toDelete})
+    this.setState({isInfo})
     this.basketHandler(basket)
   }
 
   componentWillReceiveProps({action:nextAction, basket}) {
-    if (nextAction && nextAction !== 'revision') this.actionsStarter(nextAction)
+    if (nextAction && nextAction !== 'REV') this.actionsStarter(nextAction)
   }
 
   actionsStarter = action => {
@@ -60,7 +62,7 @@ export default class BasketForm extends Component {
       this.props.dispatch( saveBasket(basket) )
       this.props.resetSelection()
       this.props.initModal()
-    } else this.props.setAction('revision')
+    } else this.props.setAction('REV')
     this.setState({ errorsFlag, errorRuntime })
   }
 
@@ -96,25 +98,31 @@ export default class BasketForm extends Component {
   }
 
   render() {
-    let [{basket, toDelete, calculator, totalAutomatic}, {products}] = [this.state, this.props]
+    let [{basket, isInfo, calculator, totalAutomatic}, {products}] = [this.state, this.props]
 
-    return toDelete
-    ? <Row className='fx fx-jc'>
-        <h5 className='color-danger pb-2'>Vous êtes sur le point de supprimer le panier suivant :</h5>
-        <div className='entity-del'>
-          <div className='b'>
-            Panier {basket.name} ( {basket.total.toFixed(2)} DH )
-          </div>
-          <div>
-            {
-              basket.products.map( p => {
-                let name = getCollectionById(products, p._id).name
-                return <div key={`basket-prod-danger-${p._id}`}>{name} {p.quantity}Kg</div>
-              } )
-            }
-          </div>
-        </div>
-      </Row>
+    return isInfo
+    ? <FormGroup row>
+        <Col xs='12' className='entity-header'>
+          <h3 className='fx fx-jc fx-ac mb-3'>
+            <b>Panier {basket.name}<span className='ml-5 mr-1'> {basket.total.toFixed(2)} DH</span></b>
+          </h3>
+        </Col>
+        <Col xs='4'>
+          <b>Liste des produits</b>
+        </Col>
+        <Col xs='8'>
+          {
+            basket.products.map( p => {
+              let name = getCollectionById(products, p._id).name
+              return <div key={`basket-prod-danger-${p._id}`} className='fx fx-jb'>
+                <span className='w-100'>{name}</span>
+                <span className='ellipse'>.................................................</span>
+                <span><b className='mr-1'>{p.quantity}</b>kg</span>
+              </div>
+            } )
+          }
+        </Col>
+      </FormGroup>
     : <form className='form-horizontal basket-form'>
         <Row className={`form-${this.props.theme}`}>
           <Col xs='12'>

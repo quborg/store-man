@@ -101,7 +101,7 @@ class Orders extends Component {
             {closeModal, openModal, resetSelection, basketFormater, statusFormater}
           ] = [this.state, this.props, this]
         , modalProps     = {isOpen, theme, display, modalWillClose:closeModal}
-        , orderFormProps = {order, clients, products, baskets, dispatch, resetSelection}
+        , orderFormProps = {order, clients, products, baskets, dispatch, resetSelection, basketFormater, statusFormater}
 
     return (
       <div className='animated fadeIn'>

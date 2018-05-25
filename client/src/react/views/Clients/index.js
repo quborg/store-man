@@ -53,7 +53,7 @@ class Clients extends Component {
   }
 
   resetSelection  = () => {
-    this.setState({ product: {}, selected: false })
+    this.setState({ client: {}, selected: false })
   }
 
   openModal  = (theme) => {

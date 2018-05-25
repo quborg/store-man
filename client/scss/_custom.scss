@@ -58,8 +58,6 @@ body {
 // flex >
 
 // < Colors
-$danger: #f86c6b;
-
 .flat-burn {
   color: rgba(51, 68, 76, 0.6);
   text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5);
@@ -187,20 +185,10 @@ $danger: #f86c6b;
 // enhancers >
 
 // < custom
-.entity-del {
-  width: 80%;
-  margin: 0 auto;
-  padding: 5px;
-  border: {
-    color: $danger;
-    width: 2px;
-    style: solid;
-  }
-}
 
 .collection {
   > div {
-    @extend .mb-2, .fx, .fx-ac
+    @extend .fx, .fx-ac
   }
 }
 
@@ -222,7 +210,7 @@ h2 {
 }
 
 .image-preview {
-  border: 1px solid $gray-200;
+  box-shadow: 0 0 0 1px $gray-200;
 }
 
 $borderWidth: 38px;
@@ -511,12 +499,12 @@ div.search-list-wrapper {
 }
 // orders >
 
-// < clients
-// .clients-view {
-
-// }
-
-// clients >
+// < Form
+.entity-header {
+  border-bottom: 1px solid $gray-300;
+  @extend .pb-3, .mb-4;
+}
+// Form >
 
 
 // < app bar
@@ -546,8 +534,8 @@ div.search-list-wrapper {
   > div {
     &.false {
       pointer-events: none;
-      opacity: .5;
-      i { color: $gray-300 !important; }
+      opacity: .3;
+      i { color: rgba(255,255,255,.86) !important; }
     }
     min-width: 36px !important;
     margin-left: 10px;

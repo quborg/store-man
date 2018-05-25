@@ -22,6 +22,7 @@ export default class BagForm extends Component {
   state = {
     bag: REQUIRED_KEYS,
     toDelete: undefined,
+    isInfo: undefined,
     errorsFlag: { ...REQUIRED_KEYS, image:'' },
     errorRuntime: false
   }
@@ -30,8 +31,9 @@ export default class BagForm extends Component {
     let [bag, { theme }] = [{...this.state.bag, ...this.props.bag}, this.props]
     const toAdd    = theme == 'primary'
         , toDelete = theme == 'danger'
+        , isInfo   = theme == 'info'
     if (toAdd) delete bag._id
-    this.setState({bag, toDelete})
+    this.setState({bag, toDelete, isInfo})
   }
 
   componentWillReceiveProps({action:nextAction}) {
@@ -75,21 +77,22 @@ export default class BagForm extends Component {
   }
 
   render() {
-    let { bag, toDelete } = this.state
+    let { bag, toDelete, isInfo } = this.state
 
-    return toDelete
-    ? <Row className='fx fx-jc'>
-        <h5 className='color-danger pb-2'>{'Vous êtes sur le point de supprimer l\'embalege suivant :'}</h5>
-        <div className='entity-del'>
-          <div>
-            <Image src={bag.image} width='50' height='50' alt='Image aperçu' className='image-preview' />
-          </div>
-          <div className='b'>
-            {bag.name} ( {bag.volume} KG )
-          </div>
-        </div>
-      </Row>
-    : <form id="bag-form" className="form-horizontal" >
+    if (toDelete || isInfo) {
+      return <FormGroup row className='fx fx-jc'>
+        {toDelete && <h5 className='color-danger pb-2'>{'Vous êtes sur le point de supprimer l\'embalege suivant :'}</h5>}
+        <Col xs='3'>
+          <Image src={bag.image} width='75' height='75' alt='Image aperçu' />
+        </Col>
+        <Col xs='9'>
+          <h3><Label>{bag.name}</Label></h3>
+          <div className='fx fx-ab'>Capacité : <b className='font-xl ml-2 mr-1'>{bag.volume}</b> KG</div>
+        </Col>
+      </FormGroup>
+    }
+
+    return <form className="form-horizontal" >
         <Row className={`form-${this.props.theme}`}>
           <Col xs='12'>
             <Input hidden type='text' name='_id' defaultValue={bag._id}/>

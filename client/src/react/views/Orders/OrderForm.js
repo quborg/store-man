@@ -26,6 +26,7 @@ export default class OrderForm extends Component {
   state = {
     order: { ...REQUIRED_KEYS },
     toDelete: undefined,
+    isInfo: undefined,
     errorsFlag: { ...REQUIRED_KEYS, email:'', image:'' },
     errorRuntime: false,
     clientName: '',
@@ -42,6 +43,7 @@ export default class OrderForm extends Component {
     let [order, {baskets, clients, theme}] = [{...this.state.order, ...this.props.order}, this.props]
       , toAdd       = theme == 'primary'
       , toDelete    = theme == 'danger'
+      , isInfo      = theme == 'info'
       , clientName  = ''
       , basket      = {}
     if (toAdd) delete order._id
@@ -52,11 +54,11 @@ export default class OrderForm extends Component {
       this.setState({clientName})
     }
     order = { ...order, basket }
-    this.setState({order}, this.basketEditorHandler(order.basket, order.basket.name, 'mount'))
+    this.setState({order, toDelete, isInfo}, this.basketEditorHandler(order.basket, order.basket.name, 'mount'))
   }
 
   componentWillReceiveProps({action:nextAction}) {
-    if (nextAction && nextAction !== 'revision') this.actionsStarter(nextAction)
+    if (nextAction && nextAction !== 'REV') this.actionsStarter(nextAction)
   }
 
   actionsStarter = action => {
@@ -76,7 +78,7 @@ export default class OrderForm extends Component {
       this.props.dispatch( saveOrder(order) )
       this.props.resetSelection()
       this.props.initModal()
-    } else this.props.setAction('revision')
+    } else this.props.setAction('REV')
     this.setState({errorsFlag, errorRuntime})
   }
 
@@ -179,15 +181,15 @@ export default class OrderForm extends Component {
   }
 
   render() {
-    const arr                 = []
-        , [{order}, {basket}] = [this.state, this.state.order]
-        , basketProducts      = basket && basket.products && basket.products.length
-                                ? basket.products : arr
+    const [{order, toDelete, isInfo}, {basket}] = [this.state, this.state.order]
+        , arr            = []
+        , basketProducts = basket && basket.products && basket.products.length
+                           ? basket.products : arr
 
-    if (this.props.theme == 'danger') {
+    if (toDelete || isInfo) {
       return <Row className='fx fx-jc'>
-        <h5 className='color-danger pb-2'>Vous êtes sur le point de supprimer la Commande suivante :</h5>
-        <div className='entity-del collection'>
+        {toDelete && <h5 className='color-danger pb-2'>Vous êtes sur le point de supprimer la Commande suivante :</h5>}
+        <div className='collection'>
           <FormGroup row>
             <Col xs='3'>
               <Label>ID</Label>
@@ -209,7 +211,7 @@ export default class OrderForm extends Component {
               <Label>Formule</Label>
             </Col>
             <Col xs='9'>
-              {this.props.basketFormater(this.state.basketName)}
+              {this.props.basketFormater(this.state.order.basket_id)}
             </Col>
           </FormGroup>
           <FormGroup row>

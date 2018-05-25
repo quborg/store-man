@@ -2,9 +2,10 @@ import React, { Component } from 'react';
 import  { Progress, Modal, ModalHeader, ModalBody, ModalFooter, Button } from 'reactstrap'
 
 const THEME_OPS  =  {
-                      primary: { label: 'Ajouter',     action: 'NEW', icon: 'plus'  },
-                      warning: { label: 'Sauvegarder', action: 'PUT', icon: 'save'  },
-                      danger:  { label: 'Supprimer',   action: 'DEL', icon: 'trash' },
+                      primary: { label: 'Ajouter',     action: 'NEW', icon: 'plus',  operation: 'Ajouter'           },
+                      warning: { label: 'Sauvegarder', action: 'PUT', icon: 'save',  operation: 'Sauvegarder'       },
+                      danger:  { label: 'Supprimer',   action: 'DEL', icon: 'trash', operation: 'Supprimer'         },
+                      info:    { label: 'Info',        action: 'INF', icon: 'check', operation: 'Fermer la fenêtre' },
                       icon: '', action: '', label: ''
                     }
     , INIT_MODAL =  { isOpen:false, theme:'', label:'', display:'', progress:0, action:'', noProgress:false }
@@ -29,7 +30,9 @@ export default class CustomModal extends Component {
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    let actionIsRevision = nextState.action === 'revision'
+    let actionIsRevision = nextState.action === 'REV'
+      , actionIsInfo     = nextState.action === 'INF'
+    actionIsInfo && this.initModal()
     return actionIsRevision ? false : true
   }
 
@@ -45,6 +48,8 @@ export default class CustomModal extends Component {
             {isOpen, label, display, theme, progress, action, noProgress},
             {initModal, setAction}
           ] = [this.state, this]
+        , isInfo   = theme == 'info'
+        , toDelete = theme == 'danger'
 
     return (
         <Modal isOpen={isOpen} toggle={() => this.initModal()} className={`modal-${theme}`}>
@@ -66,15 +71,17 @@ export default class CustomModal extends Component {
             <ModalFooter>
               {
                 !noProgress
-                ? theme !== 'danger' && <Progress animated={progress!=100} value={progress} className="w-100">{`${progress>0?progress+'%':''}`}</Progress>
+                ? !toDelete && !isInfo && <Progress animated={progress!=100} value={progress} className="w-100">{`${progress>0?progress+'%':''}`}</Progress>
                 : null
               }
               <Button color={theme} onClick={() => this.setAction()}>
-                <i className={'fa fa-'+this.getOp('icon')}></i> {this.getOp('label')}
+                <i className={'fa fa-'+this.getOp('icon')}></i> {this.getOp('operation')}
               </Button>
-              <Button color="secondary" onClick={() => this.initModal()}>
-                <i className='fa fa-ban'></i> Annuler
-              </Button>
+              {
+                !isInfo && <Button color="secondary" onClick={() => this.initModal()}>
+                  <i className='fa fa-ban'></i> Annuler
+                </Button>
+              }
             </ModalFooter>
         </Modal>
     )

@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import moment from 'moment'
 import {saveClient, delClient} from 'ayla-client/redux/actions/api'
 import {Row, Col, FormGroup, Input, Label} from 'reactstrap'
 import {Image, ImageFileLoader} from 'ayla-client/react/components/Media'
@@ -23,6 +24,7 @@ export default class ClientForm extends Component {
   state = {
     client: REQUIRED_KEYS,
     toDelete: undefined,
+    isInfo: undefined,
     errorsFlag: { ...REQUIRED_KEYS, email:'', image:'' },
     errorRuntime: false
   }
@@ -31,12 +33,13 @@ export default class ClientForm extends Component {
     let [client, { theme }] = [{...this.state.client, ...this.props.client}, this.props]
     const toAdd    = theme == 'primary'
         , toDelete = theme == 'danger'
+        , isInfo   = theme == 'info'
     if (toAdd) delete client._id
-    this.setState({client, toDelete})
+    this.setState({client, toDelete, isInfo})
   }
 
   componentWillReceiveProps({action:nextAction}) {
-    if (nextAction && nextAction !== 'revision') this.actionsStarter(nextAction)
+    if (nextAction && nextAction !== 'REV') this.actionsStarter(nextAction)
   }
 
   actionsStarter = action => {
@@ -55,7 +58,7 @@ export default class ClientForm extends Component {
       this.props.dispatch( saveClient(client) )
       this.props.resetSelection()
       this.props.initModal()
-    } else this.props.setAction('revision')
+    } else this.props.setAction('REV')
     this.setState({ errorsFlag, errorRuntime })
   }
 
@@ -98,47 +101,59 @@ export default class ClientForm extends Component {
     this.clientHandler({ adress })
   }
 
-  formGroupLabelButton = (key, value) => {
-    const dico = {firstname:'Prénom',lastname:'Nom',image:'Image',email:'E-mail',phone:'Téléphone',nidc:'CIN',adress:'Addresse',city:'Ville'}
-    return <FormGroup row key={`del-cli-form-${key}`}>
-      <Col xs='3'>
-        <Label>{dico[key]}</Label>
-      </Col>
-      <Col xs='9'>
-        {
-          key=='image'
-          ? value
-          : <RaisedButton label={value||'(vide)'} disabled={true} />
-        }
-      </Col>
-    </FormGroup>
+  clientTitle = ({civility, firstname, lastname} = this.state.client) => [
+    civility?civility.toCapitalize()+' ':'',
+    firstname?firstname+' ':'',
+    lastname||''
+  ]
+
+
+  formGroupEntityRender() {
+    const {client}  = this.state
+        , DICO      = {
+                        phone:'Téléphone',
+                        email:'E-mail',
+                        adress:'Addresse',
+                        city:'Ville',
+                        birdday:'Date de naissance',
+                        nidc:'CIN'
+                      }
+    return [
+      <FormGroup key='dico-form-head' row className='entity-header'>
+        <Col xs='3'>
+          <Image src={client.image} width='75' height='75' alt='Image aperçu' className='image-preview' />
+        </Col>
+        <Col xs='9' className='collection'>
+          <h3><Label>{this.clientTitle()}</Label></h3>
+          <div>Créer le {moment(client.created_at).format('dddd DD MMMM YYYY à HH:mm')}</div>
+        </Col>
+      </FormGroup>,
+      Object.keys(DICO).map( key =>
+        <FormGroup row key={`dico-form-${key}`}>
+          <Col xs='3'>
+            <Label>{DICO[key]}</Label>
+          </Col>
+          <Col xs='9'>
+            {client[key]||'(vide)'}
+          </Col>
+        </FormGroup>
+      )
+    ]
   }
 
   render() {
-    let {client, toDelete}  = this.state
+    let {client, toDelete, isInfo}  = this.state
 
-    if (toDelete) {
-      let keys =  Object.keys(client).reduce((keys, key) => {
-        let safeKey = ['__v','updated_at','created_at','_id','civility','birdday'].indexOf(key) === -1
-        safeKey && keys.push(key)
-        return keys
-      }, [])
-
+    if (toDelete || isInfo) {
       return <Row className='fx fx-jc'>
-        <h5 className='color-danger pb-2'>Vous êtes sur le point de supprimer le client suivant :</h5>
-        <div className='entity-del collection'>
-          {
-            keys.map( key =>
-              key == 'image'
-              ? this.formGroupLabelButton(key, <Image src={client.image} width='50' height='50' alt='Image aperçu' className='image-preview' />)
-              : this.formGroupLabelButton(key, client[key])
-            )
-          }
-        </div>
+        {toDelete && <h5 className='color-danger pb-2'>Vous êtes sur le point de supprimer le client suivant :</h5>}
+        <Col>
+          { this.formGroupEntityRender() }
+        </Col>
       </Row>
     }
 
-    return <form id='client-form' className='form-horizontal' >
+    return <form className='form-horizontal' >
       <Row className={`form-${this.props.theme}`}>
         <Col xs='12'>
           <Input hidden type='text' name='_id' defaultValue={client._id}/>
