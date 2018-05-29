@@ -1,7 +1,11 @@
 import urls from 'ayla-client/redux/config'
-import {saveBasket, delBasket} from './baskets'
+import {saveBasket, arcBasket, delBasket} from './baskets'
 import {getCollectionByKeyValue} from 'ayla-helper/ext'
 
+
+let   baskets           = []
+const basketFamily      = getCollectionByKeyValue(baskets, 'name', 'Familiale')
+    , basketDecouverte  = getCollectionByKeyValue(baskets, 'name', 'Decouverte')
 
 const headers = { 'Content-Type': 'application/json' }
     , options = {
@@ -16,7 +20,15 @@ const headers = { 'Content-Type': 'application/json' }
         }
       }
 
+function saveOrderOneCall(url, options) {
+  fetch(url, options)
+    .then(res  => res.json())
+    .then(data => { dispatch({ type: 'FULFILLED_ORDER' }); dispatch(getOrders()) })
+    .catch(e   => { dispatch({ type:'REJECTED_ORDER', payload: e }) })
+}
 
+
+/**/
 export const getOrders = () => dispatch => {
   dispatch({ type: 'PENDING_ORDERS' })
 
@@ -32,7 +44,9 @@ export const getOrders = () => dispatch => {
     .catch(e   => { dispatch({ type:'REJECTED_ORDERS', payload: e }) })
 }
 
-export const saveOrder = data => dispatch => {
+
+/**/
+export const saveOrder = (data, archive) => dispatch => {
   dispatch({ type: 'PENDING_ORDER' })
   let bags = []
     , {basket, bags:storeBags} = data
@@ -63,9 +77,9 @@ export const saveOrder = data => dispatch => {
       bags.push(bag)
     })
   }
-  console.log('bags', bags);
 
   if (basket && !basket.name) basket.total = data.total
+
   let _id       = data ? data._id : ''
     , _data     = {...data, bags, basket}
     , url       = urls.order +'/'+ (_id||'')
@@ -73,11 +87,11 @@ export const saveOrder = data => dispatch => {
     , _options  = options.ppt(method, _data)
 
   if (basket && basket.name) {
-    saveOrderOneCall()
+    saveOrderOneCall(url, _options)
   } else {
     if (basket._id) {
       dispatch(saveBasket(basket))
-      saveOrderOneCall()
+      saveOrderOneCall(url, _options)
     } else {
       saveOrderTwoCalls()
     }
@@ -88,26 +102,38 @@ export const saveOrder = data => dispatch => {
       .then(id => {
         let __data = {..._data, basket_id: id}
         _options  = options.ppt(method, __data)
-        saveOrderOneCall()
+        saveOrderOneCall(url, _options)
       })
   }
 
-  function saveOrderOneCall() {
-    fetch(url, _options)
-      .then(res  => res.json())
-      .then(data => { dispatch({ type: 'FULFILLED_ORDER' }); dispatch(getOrders()) })
-      .catch(e   => { dispatch({ type:'REJECTED_ORDER', payload: e }) })
-  }
 }
 
 
-export const delOrder = ({_id, basket_id, basket}, baskets) => dispatch => {
+/**/
+export const arcOrder = ({_id, basket_id}, _baskets) => dispatch => {
   dispatch({ type: 'PENDING_ORDER' })
 
-  let basketFamily      = getCollectionByKeyValue(baskets, 'name', 'Familiale')
-    , basketDecouverte  = getCollectionByKeyValue(baskets, 'name', 'Decouverte')
+  let data      = {_id, archived: true}
+    , url       = urls.order +'/'+ _id
+    , method    = 'PUT'
+    , _options  = options.ppt(method, data)
 
-  if (basket && basket._id!=basketFamily._id && basket._id!=basketDecouverte._id)
+  baskets = _baskets
+  if (basket_id!=basketFamily._id && basket_id!=basketDecouverte._id)
+    dispatch( arcBasket(basket_id) )
+      .then(id => { if (id) saveOrderOneCall(url, _options) })
+  else
+    saveOrderOneCall(url, _options)
+
+}
+
+
+/**/
+export const delOrder = ({_id, basket_id}, _baskets) => dispatch => {
+  dispatch({ type: 'PENDING_ORDER' })
+
+  baskets = _baskets
+  if (basket_id!=basketFamily._id && basket_id!=basketDecouverte._id)
     dispatch(delBasket(basket_id))
 
   const url = urls.order +'/'+ _id

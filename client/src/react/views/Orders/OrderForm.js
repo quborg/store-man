@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import {saveOrder, delOrder} from 'ayla-client/redux/actions/api'
+import {saveOrder, arcOrder} from 'ayla-client/redux/actions/api'
 import {Row, Col, FormGroup, Input, Label, InputGroup, InputGroupAddon, InputGroupText} from 'reactstrap'
 import {Image} from 'ayla-client/react/components/Media'
 import {getCollectionById, getCollectionByKeyValue} from 'ayla-helper/ext'
@@ -7,7 +7,7 @@ import {BasketEditor} from 'ayla-client/react/components/Widgets'
 import SelectField from 'material-ui/SelectField'
 import MenuItem from 'material-ui/MenuItem'
 import RaisedButton from 'material-ui/RaisedButton'
-import {ERRORS_STACK} from 'ayla-client/react/views/settings'
+import {ERRORS_STACK, MSG} from 'ayla-client/react/views/settings'
 import validateFields from 'ayla-client/react/plugins/form-validator'
 
 const REQUIRED_KEYS = { client_id:'',basket:{} }
@@ -25,8 +25,8 @@ export default class OrderForm extends Component {
 
   state = {
     order: { ...REQUIRED_KEYS },
-    toDelete: undefined,
-    isInfo: undefined,
+    toDel: undefined,
+    toInfo: undefined,
     errorsFlag: { ...REQUIRED_KEYS, email:'', image:'' },
     errorRuntime: false,
     clientName: '',
@@ -42,8 +42,8 @@ export default class OrderForm extends Component {
   componentWillMount() {
     let [order, {baskets, clients, theme}] = [{...this.state.order, ...this.props.order}, this.props]
       , toAdd       = theme == 'primary'
-      , toDelete    = theme == 'danger'
-      , isInfo      = theme == 'info'
+      , toDel    = theme == 'danger'
+      , toInfo      = theme == 'info'
       , clientName  = ''
       , basket      = {}
     if (toAdd) delete order._id
@@ -54,7 +54,7 @@ export default class OrderForm extends Component {
       this.setState({clientName})
     }
     order = { ...order, basket }
-    this.setState({order, toDelete, isInfo}, this.basketEditorHandler(order.basket, order.basket.name, 'mount'))
+    this.setState({order, toDel, toInfo}, this.basketEditorHandler(order.basket, order.basket.name, 'mount'))
   }
 
   componentWillReceiveProps({action:nextAction}) {
@@ -65,7 +65,7 @@ export default class OrderForm extends Component {
     switch (action) {
       case 'NEW': this.saveOrder()  ;break
       case 'PUT': this.saveOrder()  ;break
-      case 'DEL': this.delOrder()   ;break
+      case 'ARC': this.arcOrder()   ;break
     }
   }
 
@@ -82,8 +82,13 @@ export default class OrderForm extends Component {
     this.setState({errorsFlag, errorRuntime})
   }
 
+  arcOrder = () => {
+    this.props.dispatch( arcOrder(this.state.order) )
+    this.props.initModal()
+  }
+
   delOrder = () => {
-    this.props.dispatch( delOrder(this.state.order, this.props.baskets) )
+    this.props.dispatch( delOrder(this.state.order) )
     this.props.resetSelection()
     this.props.initModal()
   }
@@ -181,15 +186,15 @@ export default class OrderForm extends Component {
   }
 
   render() {
-    const [{order, toDelete, isInfo}, {basket}] = [this.state, this.state.order]
+    const [{order, toDel, toInfo}, {basket}] = [this.state, this.state.order]
         , arr            = []
         , basketProducts = basket && basket.products && basket.products.length
                            ? basket.products : arr
 
-    if (toDelete || isInfo) {
+    if (toDel || toInfo) {
       return <Row className='fx fx-jc'>
-        {toDelete && <h5 className='color-danger pb-2'>Vous êtes sur le point de supprimer la Commande suivante :</h5>}
-        <div className='collection'>
+        {toDel && <h5 className='danger-clr pb-2'>{MSG.archive.order}</h5>}
+        <Col xs='12' className='collection'>
           <FormGroup row>
             <Col xs='3'>
               <Label>ID</Label>
@@ -230,7 +235,7 @@ export default class OrderForm extends Component {
               {this.props.statusFormater(this.state.order.status)}
             </Col>
           </FormGroup>
-        </div>
+        </Col>
       </Row>
     }
 

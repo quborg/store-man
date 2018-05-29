@@ -12,6 +12,7 @@ var mongoose    = require('mongoose')
                                  }],
                     total      : { type: Number, default: 0 },
                     status     : { type: String, default: 'open', enum: ['open','stock','payment','close'] },
+                    archived   : { type: Boolean,default: false },
                     created_at : { type: Date, default: Date.now },
                     updated_at : { type: Date, default: Date.now }
                   })

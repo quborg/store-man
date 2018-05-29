@@ -44,6 +44,13 @@ export const saveProduct = data => dispatch => {
     .catch(e   => { dispatch({ type:'REJECTED_PRODUCT', payload: e }) })
 }
 
+export const arcProduct = _id => dispatch => {
+
+  const data = {_id, archived: true}
+  dispatch( saveProduct(data) )
+
+}
+
 export const delProduct = id => dispatch => {
   dispatch({ type: 'PENDING_PRODUCT' });
 

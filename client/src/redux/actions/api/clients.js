@@ -44,6 +44,22 @@ export const saveClient = data => dispatch => {
     .catch(e   => { dispatch({ type:'REJECTED_CLIENT', payload: e }) })
 }
 
+
+export const arcClient = _id => dispatch => {
+
+  const data = {_id, archived: true}
+  dispatch( saveClient(data) )
+
+}
+
+export const unaClient = _id => dispatch => {
+
+  const data = {_id, archived: false}
+  dispatch( saveClient(data) )
+
+}
+
+
 export const delClient = id => dispatch => {
   dispatch({ type: 'PENDING_CLIENT' })
 

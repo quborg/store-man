@@ -21,7 +21,7 @@ export default class BagCard extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if(nextProps.image.src)
+    if(nextProps.image && nextProps.image.src)
       this.setState({image: nextProps.image})
   }
 

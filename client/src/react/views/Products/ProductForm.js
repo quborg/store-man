@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
-import {saveProduct, delProduct} from 'ayla-client/redux/actions/api'
+import {saveProduct, arcProduct} from 'ayla-client/redux/actions/api'
 import {Row, Col, FormGroup, Input, Label, InputGroup, InputGroupAddon, InputGroupText} from 'reactstrap'
 import {Image, ImageFileLoader} from 'ayla-client/react/components/Media'
 import validateFields from 'ayla-client/react/plugins/form-validator'
-import {ERRORS_STACK} from 'ayla-client/react/views/settings'
+import {ERRORS_STACK, MSG} from 'ayla-client/react/views/settings'
 
 const REQUIRED_KEYS = { name : '' }
 
@@ -20,8 +20,8 @@ export default class ProductForm extends Component {
 
   state = {
     product: REQUIRED_KEYS,
-    toDelete: undefined,
-    isInfo: undefined,
+    toDel: undefined,
+    toInfo: undefined,
     errorsFlag: { ...REQUIRED_KEYS, image:'' },
     errorRuntime: false
   }
@@ -29,10 +29,10 @@ export default class ProductForm extends Component {
   componentWillMount() {
     let [product, { theme }] = [{...this.state.product, ...this.props.product}, this.props]
     const toAdd    = theme == 'primary'
-        , toDelete = theme == 'danger'
-        , isInfo   = theme == 'info'
+        , toDel = theme == 'danger'
+        , toInfo   = theme == 'info'
     if (toAdd) delete product._id
-    this.setState({product, toDelete, isInfo})
+    this.setState({product, toDel, toInfo})
   }
 
   componentWillReceiveProps({action:nextAction}) {
@@ -43,7 +43,7 @@ export default class ProductForm extends Component {
     switch (action) {
       case 'NEW': this.saveProduct()  ;break
       case 'PUT': this.saveProduct()  ;break
-      case 'DEL': this.delProduct()   ;break
+      case 'ARC': this.arcProduct()   ;break
     }
   }
 
@@ -57,6 +57,11 @@ export default class ProductForm extends Component {
       this.props.initModal()
     } else this.props.setAction('REV')
     this.setState({ errorsFlag, errorRuntime })
+  }
+
+  arcProduct() {
+    this.props.dispatch( arcProduct(this.state.product._id) )
+    this.props.initModal()
   }
 
   delProduct() {
@@ -75,11 +80,11 @@ export default class ProductForm extends Component {
   }
 
   render() {
-    let { product, toDelete, isInfo } = this.state
+    let { product, toDel, toInfo } = this.state
 
-    if (toDelete || isInfo) {
+    if (toDel || toInfo) {
       return <FormGroup row className='fx fx-jc'>
-        {toDelete && <h5 className='color-danger pb-2'>Vous êtes sur le point de supprimer le produit suivant :</h5>}
+        {toDel && <h5 className='danger-clr pb-2'>{MSG.archive.product}</h5>}
         <Col xs='3'>
           <Image src={product.image} width='75' height='75' alt='Image aperçu' />
         </Col>

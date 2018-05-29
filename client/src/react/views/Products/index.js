@@ -63,9 +63,7 @@ class Products extends Component {
             <div>
               <h2 className='flat-burn mb-0'>Tous les produits</h2>
             </div>
-            <div className='fx fx-je fx-rev pt-3 ops-btns'>
-              <ButtonsControl {...{selected, openModal}} />
-            </div>
+            <ButtonsControl {...{selected, openModal}} />
           </Row>
           <Row className='pt-5 items-history fx fx-wrap fx-ja'>
             {

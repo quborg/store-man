@@ -12,6 +12,7 @@ var mongoose   = require('mongoose')
       adress    : { type: String, required: true  },
       birdday   : { type: String                  },
       city      : { type: String, required: true  },
+      archived  : { type: Boolean,default : false },
       created_at: { type: Date, default: Date.now },
       updated_at: { type: Date, default: Date.now }
     })

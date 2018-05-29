@@ -5,7 +5,7 @@ var mongoose = require('mongoose')
       username  : { type: String, required: true, unique: true, trim: true },
       fullname  : { type: String, required: true, trim: true },
       email     : { type: String, required: true, trim: true },
-      password  : { type: String },
+      password  : { type: String                  },
       created_at: { type: Date, default: Date.now },
       updated_at: { type: Date, default: Date.now }
     })

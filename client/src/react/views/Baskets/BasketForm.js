@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 
-import {saveBasket, delBasket} from 'ayla-client/redux/actions/api'
+import {saveBasket, arcBasket} from 'ayla-client/redux/actions/api'
 import {Row, Col, FormGroup, Input, Label, InputGroup, InputGroupAddon, InputGroupText} from 'reactstrap'
 import {getCollectionById} from 'ayla-helper/ext'
 import {BasketEditor} from 'ayla-client/react/components/Widgets'
@@ -23,8 +23,8 @@ export default class BasketForm extends Component {
   state = {
     basket: REQUIRED_KEYS,
     calculator: false,
-    // toDelete: undefined,
-    isInfo: undefined,
+    // toDel: undefined,
+    toInfo: undefined,
     totalAutomatic: 0,
     errorsFlag: REQUIRED_KEYS,
     errorRuntime: false
@@ -33,10 +33,10 @@ export default class BasketForm extends Component {
   componentWillMount() {
     let [basket, { theme }] = [{...this.state.basket, ...this.props.basket}, this.props]
     const toAdd    = theme == 'primary'
-        // , toDelete = theme == 'danger'
-        , isInfo   = theme == 'info'
+        // , toDel = theme == 'danger'
+        , toInfo   = theme == 'info'
     if (toAdd) delete basket._id
-    this.setState({isInfo})
+    this.setState({toInfo})
     this.basketHandler(basket)
   }
 
@@ -49,7 +49,7 @@ export default class BasketForm extends Component {
     switch (action) {
       case 'NEW': this.saveBasket()  ;break
       case 'PUT': this.saveBasket()  ;break
-      case 'DEL': this.delBasket()   ;break
+      case 'ARC': this.arcBasket()   ;break
     }
   }
 
@@ -64,6 +64,11 @@ export default class BasketForm extends Component {
       this.props.initModal()
     } else this.props.setAction('REV')
     this.setState({ errorsFlag, errorRuntime })
+  }
+
+  arcBasket() {
+    this.props.dispatch( arcBasket(this.state.basket._id) )
+    this.props.initModal()
   }
 
   delBasket() {
@@ -98,9 +103,9 @@ export default class BasketForm extends Component {
   }
 
   render() {
-    let [{basket, isInfo, calculator, totalAutomatic}, {products}] = [this.state, this.props]
+    let [{basket, toInfo, calculator, totalAutomatic}, {products}] = [this.state, this.props]
 
-    return isInfo
+    return toInfo
     ? <FormGroup row>
         <Col xs='12' className='entity-header'>
           <h3 className='fx fx-jc fx-ac mb-3'>
@@ -114,9 +119,9 @@ export default class BasketForm extends Component {
           {
             basket.products.map( p => {
               let name = getCollectionById(products, p._id).name
-              return <div key={`basket-prod-danger-${p._id}`} className='fx fx-jb'>
+              return <div key={`basket-prod-danger-${p._id}`} className='fx'>
                 <span className='w-100'>{name}</span>
-                <span className='ellipse'>.................................................</span>
+                <span className='ellipse'>............................................</span>
                 <span><b className='mr-1'>{p.quantity}</b>kg</span>
               </div>
             } )

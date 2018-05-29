@@ -66,9 +66,7 @@ class Baskets extends Component {
             <div>
               <h2 className='flat-burn mb-0'>Tous les paniers</h2>
             </div>
-            <div className='fx fx-je fx-rev pt-3 ops-btns'>
-              <ButtonsControl {...{selected, openModal, display}} />
-            </div>
+            <ButtonsControl {...{selected, openModal, display}} />
           </Row>
           <Row className='pt-5 fx fx-wrap fx-ja'>
             {

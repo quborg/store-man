@@ -36,7 +36,7 @@ module.exports = {
       , body = _.merge({}, req.body);
 
     if (!id) res.status(400).json({msg:'No id provided.'});
-    body.image = helper.saveImage(body.image, 'clients');
+    if (body.image) body.image = helper.saveImage(body.image, 'clients');
     delete body._id;
 
     req.models.client.findByIdAndUpdate(id, body, function(err, result) {

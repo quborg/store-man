@@ -64,9 +64,6 @@ body {
   font-size: 22px;
 }
 
-.color-danger {
-  color: $danger;
-}
 
 .open-bg { background-color: #4CAF50; @extend .gray-bg }
 .stock-bg { background-color: #FFEB3B; @extend .gray-bg }
@@ -77,16 +74,18 @@ body {
   border-radius: 2px;
 }
 
+.primary-clr { color: $primary }
+.secondary-clr, .arc-clr { color: $secondary }
+.danger-clr, .del-clr { color: $danger }
+.info-clr { color: $info }
 .open-clr { color: #4CAF50 }
 .stock-clr { color: #FFEB3B }
 .payment-clr { color: #03A9F4 }
 .close-clr { color: #9E9E9E }
 .white-clr { color: $white }
 .dark-clr { color: $dark }
-.primary-clr { color: $primary }
 .pink-clr { color: $pink }
-.info-clr { color: $info }
-
+.sep-clr { color: rgba(41, 54, 61, 0.15); text-shadow: 0 1px 0px rgba(255, 255, 255, 0.75); }
 .test-bg { background-color: rgba(0, 0, 0, 0.1) }
 // Colors >
 
@@ -202,7 +201,11 @@ body {
 }
 // custom >
 
-// < Common
+// < common
+button:focus {
+  outline: none
+}
+
 h2 {
   border-bottom: 1px solid;
   padding-bottom: 10px;
@@ -306,7 +309,7 @@ $imageHeight: $borderHeight + 10px;
   content: "";
   flex: auto;
 }
-// Common >
+// common >
 
 // < correctifs
 td:focus {
@@ -349,8 +352,8 @@ td:focus {
     border-radius: 5px 0 0 5px;
     box-shadow: -1px 0 0 1px #fff, inset 0px 0 40px 5px rgba(255, 255, 255, 0.87);
     img {
-      max-width: $card-width + 10;
-      height: $card-height + 10;
+      width: $card-width + 10;
+      max-height: $card-height + 10;
       // border-radius: 13px;
     }
   }
@@ -531,18 +534,55 @@ div.search-list-wrapper {
 
 // < operations
 .ops-btns {
-  > div {
-    &.false {
-      pointer-events: none;
-      opacity: .3;
-      i { color: rgba(255,255,255,.86) !important; }
-    }
+  > div.op-btn {
     min-width: 36px !important;
     margin-left: 10px;
+    &.false {
+      pointer-events: none;
+      opacity: .5;
+      box-shadow: 0 0 !important;
+      i {
+        color: rgba(170,170,170,1) !important;
+        text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5);
+      }
+    }
     i {
       color: $white;
       font-size: 1.3rem;
       text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+    }
+  }
+  .sepa {
+    margin-left: 7px;
+    margin-right: 2px;
+  }
+  .btn-toggle {
+    > div {
+      @extend .fx, .fx-col;
+      label {
+        color: rgba(0,0,0,.5) !important;
+        margin: 0;
+        margin-left: 5px !important;
+        font-weight: bold;
+        @extend .font-xs;
+      }
+      > div {
+        width: 50px !important;
+        margin-left: 5px !important;
+        padding: 4px 5px 6px 2px !important;
+        > div:first-child {
+          height: 8px !important;
+        }
+        > div:last-child {
+          top: 0px !important;
+          left: 10px;
+          width: 16px !important;
+          height: 16px !important;
+        }
+      }
+    }
+    &.active {
+      label { color: rgba(51, 105, 30, 0.76) !important } 
     }
   }
 }

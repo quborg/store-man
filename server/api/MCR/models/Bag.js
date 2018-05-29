@@ -5,6 +5,7 @@ var mongoose   = require('mongoose')
       name      : { type: String, required: true                  },
       image     : { type: String, default : paths.defaultImageURL },
       volume    : { type: Number, default : 0                     },
+      archived  : { type: Boolean,default : false                 },
       created_at: { type: Date,   default : Date.now              },
       updated_at: { type: Date,   default : Date.now              }
     })

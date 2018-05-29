@@ -5,6 +5,10 @@ import ImageCompressor from 'image-compressor.js';
 
 const options = {
   quality: .8,
+  width: 200,
+  height: 200,
+  minWidth: 200,
+  minHeight: 200,
   maxWidth: 200,
   maxHeight: 200
 }

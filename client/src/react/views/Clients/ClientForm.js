@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
 import moment from 'moment'
-import {saveClient, delClient} from 'ayla-client/redux/actions/api'
+import {saveClient, delClient, arcClient, unaClient} from 'ayla-client/redux/actions/api'
 import {Row, Col, FormGroup, Input, Label} from 'reactstrap'
 import {Image, ImageFileLoader} from 'ayla-client/react/components/Media'
 import PlacesAutocomplete from 'react-places-autocomplete'
 import RaisedButton from 'material-ui/RaisedButton'
-import {ERRORS_STACK} from 'ayla-client/react/views/settings'
+import {ERRORS_STACK, MSG} from 'ayla-client/react/views/settings'
 import validateFields from 'ayla-client/react/plugins/form-validator'
 
 const REQUIRED_KEYS = { firstname:'',lastname:'',phone:'',adress:'',city:'' }
@@ -23,19 +23,23 @@ export default class ClientForm extends Component {
 
   state = {
     client: REQUIRED_KEYS,
-    toDelete: undefined,
-    isInfo: undefined,
+    toArch: undefined,
+    toUnar: undefined,
+    toDel: undefined,
+    toInfo: undefined,
     errorsFlag: { ...REQUIRED_KEYS, email:'', image:'' },
     errorRuntime: false
   }
 
   componentWillMount() {
     let [client, { theme }] = [{...this.state.client, ...this.props.client}, this.props]
-    const toAdd    = theme == 'primary'
-        , toDelete = theme == 'danger'
-        , isInfo   = theme == 'info'
+    const toAdd  = theme == 'primary'
+        , toArch = theme == 'secondary'
+        , toUnar = theme == 'success'
+        , toDel  = theme == 'danger'
+        , toInfo = theme == 'info'
     if (toAdd) delete client._id
-    this.setState({client, toDelete, isInfo})
+    this.setState({client, toDel, toInfo, toArch, toUnar})
   }
 
   componentWillReceiveProps({action:nextAction}) {
@@ -46,6 +50,8 @@ export default class ClientForm extends Component {
     switch (action) {
       case 'NEW': this.saveClient()  ;break
       case 'PUT': this.saveClient()  ;break
+      case 'ARC': this.arcClient()   ;break
+      case 'UNA': this.unaClient()   ;break
       case 'DEL': this.delClient()   ;break
     }
   }
@@ -62,6 +68,16 @@ export default class ClientForm extends Component {
     this.setState({ errorsFlag, errorRuntime })
   }
 
+  arcClient = () => {
+    this.props.dispatch( arcClient(this.state.client._id) )
+    this.props.initModal()
+  }
+
+  unaClient = () => {
+    this.props.dispatch( unaClient(this.state.client._id) )
+    this.props.initModal()
+  }
+
   delClient = () => {
     this.props.dispatch( delClient(this.state.client._id) )
     this.props.resetSelection()
@@ -71,7 +87,6 @@ export default class ClientForm extends Component {
   clientHandler = nextClient => {
     let errorsFlag = { ...this.state.errorsFlag }
     let client = { ...this.state.client, ...nextClient }
-    // if (nextClient.email && !nextClient.email) delete nextClient.email
     if (this.state.errorRuntime) {
       errorsFlag = validateFields(nextClient, errorsFlag).errorsFlag
     }
@@ -128,7 +143,7 @@ export default class ClientForm extends Component {
           <div>Créer le {moment(client.created_at).format('dddd DD MMMM YYYY à HH:mm')}</div>
         </Col>
       </FormGroup>,
-      Object.keys(DICO).map( key =>
+      ...Object.keys(DICO).map( key =>
         <FormGroup row key={`dico-form-${key}`}>
           <Col xs='3'>
             <Label>{DICO[key]}</Label>
@@ -142,12 +157,13 @@ export default class ClientForm extends Component {
   }
 
   render() {
-    let {client, toDelete, isInfo}  = this.state
+    let {client, toArch, toDel, toInfo, toUnar}  = this.state
+      , msgKey = toArch ? 'arc' : toDel ? 'del' : toUnar ? 'una' : null
 
-    if (toDelete || isInfo) {
+    if (toDel || toInfo || toArch || toUnar) {
       return <Row className='fx fx-jc'>
-        {toDelete && <h5 className='color-danger pb-2'>Vous êtes sur le point de supprimer le client suivant :</h5>}
-        <Col>
+        {msgKey && <h5 className={`${msgKey}-clr pb-2`}>{MSG[msgKey].client}</h5>}
+        <Col xs='12'>
           { this.formGroupEntityRender() }
         </Col>
       </Row>

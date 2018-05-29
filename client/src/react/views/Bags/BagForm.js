@@ -1,10 +1,9 @@
 import React, { Component } from 'react'
-
-import {saveBag, delBag} from 'ayla-client/redux/actions/api'
+import {saveBag, arcBag} from 'ayla-client/redux/actions/api'
 import {Row, Col, FormGroup, Input, Label, InputGroup, InputGroupAddon, InputGroupText} from 'reactstrap'
 import {Image, ImageFileLoader} from 'ayla-client/react/components/Media'
 import validateFields from 'ayla-client/react/plugins/form-validator'
-import {ERRORS_STACK} from 'ayla-client/react/views/settings'
+import {ERRORS_STACK, MSG} from 'ayla-client/react/views/settings'
 
 const REQUIRED_KEYS = { name : '' }
 
@@ -21,8 +20,8 @@ export default class BagForm extends Component {
 
   state = {
     bag: REQUIRED_KEYS,
-    toDelete: undefined,
-    isInfo: undefined,
+    toDel: undefined,
+    toInfo: undefined,
     errorsFlag: { ...REQUIRED_KEYS, image:'' },
     errorRuntime: false
   }
@@ -30,10 +29,10 @@ export default class BagForm extends Component {
   componentWillMount() {
     let [bag, { theme }] = [{...this.state.bag, ...this.props.bag}, this.props]
     const toAdd    = theme == 'primary'
-        , toDelete = theme == 'danger'
-        , isInfo   = theme == 'info'
+        , toDel = theme == 'danger'
+        , toInfo   = theme == 'info'
     if (toAdd) delete bag._id
-    this.setState({bag, toDelete, isInfo})
+    this.setState({bag, toDel, toInfo})
   }
 
   componentWillReceiveProps({action:nextAction}) {
@@ -45,7 +44,7 @@ export default class BagForm extends Component {
     switch (action) {
       case 'NEW': this.saveBag()  ;break
       case 'PUT': this.saveBag()  ;break
-      case 'DEL': this.delBag()   ;break
+      case 'ARC': this.arcBag()   ;break
     }
   }
 
@@ -59,6 +58,11 @@ export default class BagForm extends Component {
       this.props.initModal()
     }
     this.setState({ errorsFlag, errorRuntime })
+  }
+
+  arcBag() {
+    this.props.dispatch( arcBag(this.state.bag._id) )
+    this.props.initModal()
   }
 
   delBag() {
@@ -77,11 +81,11 @@ export default class BagForm extends Component {
   }
 
   render() {
-    let { bag, toDelete, isInfo } = this.state
+    let { bag, toDel, toInfo } = this.state
 
-    if (toDelete || isInfo) {
+    if (toDel || toInfo) {
       return <FormGroup row className='fx fx-jc'>
-        {toDelete && <h5 className='color-danger pb-2'>{'Vous êtes sur le point de supprimer l\'embalege suivant :'}</h5>}
+        {toDel && <h5 className='danger-clr pb-2'>{MSG.archive.bag}</h5>}
         <Col xs='3'>
           <Image src={bag.image} width='75' height='75' alt='Image aperçu' />
         </Col>
