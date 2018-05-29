@@ -136,7 +136,7 @@ export default class ClientForm extends Component {
     return [
       <FormGroup key='dico-form-head' row className='entity-header'>
         <Col xs='3'>
-          <Image src={client.image} width='75' height='75' alt='Image aperçu' className='image-preview' />
+          <Image src={client.image} width='75' height='75' alt='Image aperçu'/>
         </Col>
         <Col xs='9' className='collection'>
           <h3><Label>{this.clientTitle()}</Label></h3>

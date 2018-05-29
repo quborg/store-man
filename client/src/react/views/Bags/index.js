@@ -57,7 +57,7 @@ class Bags extends Component {
         , bagProps    = {dispatch, bag, resetSelection}
 
     return (
-      <div className='animated fadeIn'>
+      <div className='animated slide'>
         <Container>
           <Row className='fx fx-jb'>
             <div>

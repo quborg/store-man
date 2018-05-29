@@ -89,7 +89,7 @@ class Clients extends Component {
         , {archived}      = client
 
     return (
-      <div className='animated fadeIn clients-view'>
+      <div className='animated slide clients-view'>
         <Container>
           <Row className='fx fx-jb'>
             <div>

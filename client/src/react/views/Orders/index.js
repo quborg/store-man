@@ -104,7 +104,7 @@ class Orders extends Component {
         , orderFormProps = {order, clients, products, baskets, dispatch, resetSelection, basketFormater, statusFormater}
 
     return (
-      <div className='animated fadeIn'>
+      <div className='animated slide'>
         <Container>
           <Row className='fx fx-jb'>
             <div>

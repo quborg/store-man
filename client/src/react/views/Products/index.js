@@ -57,7 +57,7 @@ class Products extends Component {
         , productFormProps  = {dispatch, product, resetSelection}
 
     return (
-      <div className='animated fadeIn'>
+      <div className='animated slide'>
         <Container>
           <Row className='fx fx-jb'>
             <div>
