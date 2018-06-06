@@ -14,7 +14,7 @@ const REQUIRED_KEYS = { firstname:'',lastname:'',phone:'',adress:'',city:'' }
 export default class ClientForm extends Component {
 
   static defaultProps = {
-    client: REQUIRED_KEYS,
+    item: REQUIRED_KEYS,
     theme: '',
     setAction: () => {},
     initModal: () => {},
@@ -22,7 +22,7 @@ export default class ClientForm extends Component {
   }
 
   state = {
-    client: REQUIRED_KEYS,
+    item: REQUIRED_KEYS,
     toArch: undefined,
     toUnar: undefined,
     toDel: undefined,
@@ -32,14 +32,14 @@ export default class ClientForm extends Component {
   }
 
   componentWillMount() {
-    let [client, { theme }] = [{...this.state.client, ...this.props.client}, this.props]
+    let [item, { theme }] = [{...this.state.item, ...this.props.item}, this.props]
     const toAdd  = theme == 'primary'
         , toArch = theme == 'secondary'
         , toUnar = theme == 'success'
         , toDel  = theme == 'danger'
         , toInfo = theme == 'info'
-    if (toAdd) delete client._id
-    this.setState({client, toDel, toInfo, toArch, toUnar})
+    if (toAdd) delete item._id
+    this.setState({item, toDel, toInfo, toArch, toUnar})
   }
 
   componentWillReceiveProps({action:nextAction}) {
@@ -48,49 +48,52 @@ export default class ClientForm extends Component {
 
   actionsStarter = action => {
     switch (action) {
-      case 'NEW': this.saveClient()  ;break
-      case 'PUT': this.saveClient()  ;break
-      case 'ARC': this.arcClient()   ;break
-      case 'UNA': this.unaClient()   ;break
-      case 'DEL': this.delClient()   ;break
+      case 'NEW': this.saveItem()  ;break
+      case 'PUT': this.saveItem()  ;break
+      case 'ARC': this.arcItem()   ;break
+      case 'UNA': this.unaItem()   ;break
+      case 'DEL': this.delItem()   ;break
     }
   }
 
-  saveClient = () => {
-    let [client, _errorsFlag] = [{...this.state.client}, {...this.state.errorsFlag}]
-    if (this.props.theme == 'primary') delete client._id
-    let {errorsFlag, errorRuntime} = validateFields(client, _errorsFlag)
+  saveItem = () => {
+    let [item, _errorsFlag] = [{...this.state.item}, {...this.state.errorsFlag}]
+      , toAdd                 = this.props.theme == 'primary'
+    if (toAdd) delete item._id
+    let {errorsFlag, errorRuntime} = validateFields(item, _errorsFlag)
     if (!errorRuntime) {
-      this.props.dispatch( saveClient(client) )
+      this.props.dispatch( saveClient(item) )
       this.props.resetSelection()
       this.props.initModal()
     } else this.props.setAction('REV')
     this.setState({ errorsFlag, errorRuntime })
   }
 
-  arcClient = () => {
-    this.props.dispatch( arcClient(this.state.client._id) )
-    this.props.initModal()
-  }
-
-  unaClient = () => {
-    this.props.dispatch( unaClient(this.state.client._id) )
-    this.props.initModal()
-  }
-
-  delClient = () => {
-    this.props.dispatch( delClient(this.state.client._id) )
+  arcItem = () => {
+    this.props.dispatch( arcClient(this.state.item._id) )
     this.props.resetSelection()
     this.props.initModal()
   }
 
-  clientHandler = nextClient => {
-    let errorsFlag = { ...this.state.errorsFlag }
-    let client = { ...this.state.client, ...nextClient }
+  unaItem = () => {
+    this.props.dispatch( unaClient(this.state.item._id) )
+    this.props.resetSelection()
+    this.props.initModal()
+  }
+
+  delItem = () => {
+    this.props.dispatch( delClient(this.state.item._id) )
+    this.props.resetSelection()
+    this.props.initModal()
+  }
+
+  itemHandler = nextItem => {
+    let item       = { ...this.state.item, ...nextItem }
+      , errorsFlag = { ...this.state.errorsFlag }
     if (this.state.errorRuntime) {
-      errorsFlag = validateFields(nextClient, errorsFlag).errorsFlag
+      errorsFlag = validateFields(nextItem, errorsFlag).errorsFlag
     }
-    this.setState({ client, errorsFlag })
+    this.setState({ item, errorsFlag })
   }
 
   adressHandler = adress => {
@@ -108,15 +111,15 @@ export default class ClientForm extends Component {
       //   autocomplete.setBounds(circle.getBounds());
       // });
     }
-    this.clientHandler({ adress })
+    this.itemHandler({ adress })
   }
 
   adressSelector = adress => {
     console.log('adress selector', adress)
-    this.clientHandler({ adress })
+    this.itemHandler({ adress })
   }
 
-  clientTitle = ({civility, firstname, lastname} = this.state.client) => [
+  itemTitle = ({civility, firstname, lastname} = this.state.item) => [
     civility?civility.toCapitalize()+' ':'',
     firstname?firstname+' ':'',
     lastname||''
@@ -124,7 +127,7 @@ export default class ClientForm extends Component {
 
 
   formGroupEntityRender() {
-    const {client}  = this.state
+    const {item}  = this.state
         , DICO      = {
                         phone:'Téléphone',
                         email:'E-mail',
@@ -136,11 +139,11 @@ export default class ClientForm extends Component {
     return [
       <FormGroup key='dico-form-head' row className='entity-header'>
         <Col xs='3'>
-          <Image src={client.image} width='75' height='75' alt='Image aperçu'/>
+          <Image src={item.image} width='75' height='75' alt='Image aperçu'/>
         </Col>
         <Col xs='9' className='collection'>
-          <h3><Label>{this.clientTitle()}</Label></h3>
-          <div>Créer le {moment(client.created_at).format('dddd DD MMMM YYYY à HH:mm')}</div>
+          <h3><Label>{this.itemTitle()}</Label></h3>
+          <div>Créer le {moment(item.created_at).format('dddd DD MMMM YYYY à HH:mm')}</div>
         </Col>
       </FormGroup>,
       ...Object.keys(DICO).map( key =>
@@ -149,7 +152,7 @@ export default class ClientForm extends Component {
             <Label>{DICO[key]}</Label>
           </Col>
           <Col xs='9'>
-            {client[key]||'(vide)'}
+            {item[key]||'(vide)'}
           </Col>
         </FormGroup>
       )
@@ -157,10 +160,10 @@ export default class ClientForm extends Component {
   }
 
   render() {
-    let {client, toArch, toDel, toInfo, toUnar}  = this.state
+    let {item, toArch, toUnar, toDel, toInfo}  = this.state
       , msgKey = toArch ? 'arc' : toDel ? 'del' : toUnar ? 'una' : null
 
-    if (toDel || toInfo || toArch || toUnar) {
+    if (toArch || toUnar || toDel || toInfo) {
       return <Row className='fx fx-jc'>
         {msgKey && <h5 className={`${msgKey}-clr pb-2`}>{MSG[msgKey].client}</h5>}
         <Col xs='12'>
@@ -172,22 +175,22 @@ export default class ClientForm extends Component {
     return <form className='form-horizontal' >
       <Row className={`form-${this.props.theme}`}>
         <Col xs='12'>
-          <Input hidden type='text' name='_id' defaultValue={client._id}/>
+          <Input hidden type='text' name='_id' defaultValue={item._id}/>
           <FormGroup row className='fx fx-ac'>
             <Col md='3'>
               <Label>Civilité</Label>
             </Col>
             <Col md='9'>
               <FormGroup check inline>
-                <Input className='form-check-input' type='radio' name='civility' checked={client.civility=='mr'} value='mr' onChange={e => this.clientHandler({ civility: e.target.value })} />
+                <Input className='form-check-input' type='radio' name='civility' checked={item.civility=='mr'} value='mr' onChange={e => this.itemHandler({ civility: e.target.value })} />
                 <Label className='form-check-label' check>Mr</Label>
               </FormGroup>
               <FormGroup check inline>
-                <Input className='form-check-input' type='radio' name='civility' checked={client.civility=='mme'} value='mme' onChange={e => this.clientHandler({ civility: e.target.value })} />
+                <Input className='form-check-input' type='radio' name='civility' checked={item.civility=='mme'} value='mme' onChange={e => this.itemHandler({ civility: e.target.value })} />
                 <Label className='form-check-label' check>Mme</Label>
               </FormGroup>
               <FormGroup check inline>
-                <Input className='form-check-input' type='radio' name='civility' checked={client.civility=='mlle'} value='mlle' onChange={e => this.clientHandler({ civility: e.target.value })} />
+                <Input className='form-check-input' type='radio' name='civility' checked={item.civility=='mlle'} value='mlle' onChange={e => this.itemHandler({ civility: e.target.value })} />
                 <Label className='form-check-label' check>Mlle</Label>
               </FormGroup>
             </Col>
@@ -197,7 +200,7 @@ export default class ClientForm extends Component {
               <Label>Prénom <i className='fa fa-star font-xs ml-3 info-clr' title='Champ obligatoire'/></Label>
             </Col>
             <Col xs='12' md='9'>
-              <Input type='text' name='firstname' className='danger' defaultValue={client.firstname} onChange={e => this.clientHandler({firstname: e.target.value})} placeholder='Entrez le prénom ..'/>
+              <Input type='text' name='firstname' className='danger' defaultValue={item.firstname} onChange={e => this.itemHandler({firstname: e.target.value})} placeholder='Entrez le prénom ..'/>
               <div className='invalid-feedback'>{ERRORS_STACK.firstname}</div>
             </Col>
           </FormGroup>
@@ -206,7 +209,7 @@ export default class ClientForm extends Component {
               <Label>Nom <i className='fa fa-star font-xs ml-3 info-clr' title='Champ obligatoire'/></Label>
             </Col>
             <Col xs='12' md='9'>
-              <Input type='text' name='lastname'  defaultValue={client.lastname} onChange={e => this.clientHandler({lastname: e.target.value})} placeholder='Entrez le nom ..'/>
+              <Input type='text' name='lastname'  defaultValue={item.lastname} onChange={e => this.itemHandler({lastname: e.target.value})} placeholder='Entrez le nom ..'/>
               <div className='invalid-feedback'>{ERRORS_STACK.lastname}</div>
             </Col>
           </FormGroup>
@@ -215,7 +218,7 @@ export default class ClientForm extends Component {
               <Label>Photo</Label>
             </Col>
             <Col xs='12' md='9'>
-              <ImageFileLoader src={client.image} handler={this.clientHandler} progress={this.props.progress} />
+              <ImageFileLoader src={item.image} handler={this.itemHandler} progress={this.props.progress} />
               <div className='invalid-feedback'>{ERRORS_STACK.image}</div>
             </Col>
           </FormGroup>
@@ -224,7 +227,7 @@ export default class ClientForm extends Component {
               <Label>Email</Label>
             </Col>
             <Col xs='12' md='9'>
-              <Input type='email' name='email' defaultValue={client.email} onChange={e => this.clientHandler({email: e.target.value})} placeholder={'Entrez l\'email ..'}/>
+              <Input type='email' name='email' defaultValue={item.email} onChange={e => this.itemHandler({email: e.target.value})} placeholder={'Entrez l\'email ..'}/>
               <div className='invalid-feedback'>{ERRORS_STACK.email}</div>
             </Col>
           </FormGroup>
@@ -233,7 +236,7 @@ export default class ClientForm extends Component {
               <Label>Téléphone <i className='fa fa-star font-xs ml-1 info-clr' title='Champ obligatoire'/></Label>
             </Col>
             <Col xs='12' md='9'>
-              <Input type='tel' name='phone'  defaultValue={client.phone} onChange={e => this.clientHandler({phone: e.target.value})} placeholder='Entrez le numero de téléphone ..'/>
+              <Input type='tel' name='phone'  defaultValue={item.phone} onChange={e => this.itemHandler({phone: e.target.value})} placeholder='Entrez le numero de téléphone ..'/>
               <div className='invalid-feedback'>{ERRORS_STACK.phone}</div>
             </Col>
           </FormGroup>
@@ -242,7 +245,7 @@ export default class ClientForm extends Component {
               <Label>CIN</Label>
             </Col>
             <Col xs='12' md='9'>
-              <Input type='text' name='nidc' defaultValue={client.nidc} onChange={e => this.clientHandler({nidc: e.target.value})} placeholder='Entrez le CIN ..'/>
+              <Input type='text' name='nidc' defaultValue={item.nidc} onChange={e => this.itemHandler({nidc: e.target.value})} placeholder='Entrez le CIN ..'/>
             </Col>
           </FormGroup>
           <FormGroup row className={`fx fx-ac form-${this.state.errorsFlag.adress}`}>
@@ -250,11 +253,11 @@ export default class ClientForm extends Component {
               <Label>Adresse <i className='fa fa-star font-xs ml-3 info-clr' title='Champ obligatoire'/></Label>
             </Col>
             <Col xs='12' md='9'>
-              <Input type='text' name='adress' defaultValue={client.adress} onChange={e => this.clientHandler({ adress: e.target.value })} placeholder={'Entrez l\'addresse ..'} />
+              <Input type='text' name='adress' defaultValue={item.adress} onChange={e => this.itemHandler({ adress: e.target.value })} placeholder={'Entrez l\'addresse ..'} />
               <div className='invalid-feedback'>{ERRORS_STACK.adress}</div>
               {
                 // <PlacesAutocomplete
-                //     value={client.adress}
+                //     value={item.adress}
                 //     onChange={this.adressHandler}
                 //     onSelect={this.adressSelector} >
                 //   {
@@ -293,7 +296,7 @@ export default class ClientForm extends Component {
               <Label>Date de naissance</Label>
             </Col>
             <Col xs='12' md='9'>
-              <Input type='date' name='birdday' defaultValue={client.birdday} onChange={e => this.clientHandler({birdday: e.target.value})} placeholder='Entrez la date de naissance ..'/>
+              <Input type='date' name='birdday' defaultValue={item.birdday} onChange={e => this.itemHandler({birdday: e.target.value})} placeholder='Entrez la date de naissance ..'/>
             </Col>
           </FormGroup>
           <FormGroup row className={`fx fx-ac form-${this.state.errorsFlag.city}`}>
@@ -301,7 +304,7 @@ export default class ClientForm extends Component {
               <Label>Ville <i className='fa fa-star font-xs ml-3 info-clr' title='Champ obligatoire'/></Label>
             </Col>
             <Col xs='12' md='9'>
-              <Input type='text' name='city'  defaultValue={client.city} onChange={e => this.clientHandler({city: e.target.value})} placeholder='Entrez le nom de la ville ..'/>
+              <Input type='text' name='city'  defaultValue={item.city} onChange={e => this.itemHandler({city: e.target.value})} placeholder='Entrez le nom de la ville ..'/>
               <div className='invalid-feedback'>{ERRORS_STACK.city}</div>
             </Col>
           </FormGroup>

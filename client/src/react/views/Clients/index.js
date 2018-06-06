@@ -8,68 +8,21 @@ import {ButtonsControl} from 'ayla-client/react/components/Buttons'
 import ClientForm from './ClientForm'
 import {Image} from 'ayla-client/react/components/Media'
 import moment from 'moment'
-import {MSG} from 'ayla-client/react/views/settings'
+import {TableConf} from 'ayla-client/react/views/settings'
+import CommonCycles from 'ayla-client/react/views/CommonCycles'
 
 const DISPLAY = 'client'
-
-const selectRowProp = (isArch, cb) => ({
-  mode: 'radio',
-  clickToSelect: true,
-  bgColor: isArch ? '#AED581' : '#B2EBF2',
-  onSelect: cb
-})
-
-const options = {
-  sizePerPageList: [ 10, 100 ],
-  sizePerPage: 10,
-  sortName: 'created_at',
-  sortOrder: 'desc',
-  noDataText: MSG.load.client
-}
-
 
 class Clients extends Component {
 
   static defaultProps = {
     data: [],
-    dataArch: []
-  }
-
-  state = {
-    client: {},
-    selected: false,
-    isOpen: false,
-    theme: '',
-    display: DISPLAY,
-    isArch: false,
+    dataArch: [],
+    display: DISPLAY
   }
 
   componentWillMount() {
     this.props.dispatch(getClients())
-  }
-
-  onSelectClient = (client, selected) => {
-    selected
-    ? this.setState({client, selected})
-    : this.setState({client: {}, selected})
-  }
-
-  resetSelection  = () => {
-    this.refs.table.cleanSelected()
-    this.setState({ client: {}, selected: false })
-  }
-
-  openModal  = (theme) => {
-    this.setState({ isOpen: true, theme })
-  }
-
-  closeModal = () => {
-    this.setState({ isOpen: false })
-  }
-
-  toggleArc = (e, isArch) => {
-    this.setState({ isArch })
-    this.resetSelection()
   }
 
   imageFormater = cell => <Image src={cell} width='30' height='30' alt='Image aperçu' className='image-preview radius-2' />
@@ -80,32 +33,33 @@ class Clients extends Component {
 
   render() {
     const [
-            {isOpen, theme, display, client, selected, isArch},
-            {dispatch, data, dataArch},
+            {isOpen, theme, item, selected, isArch},
+            {display, dispatch, data, dataArch},
             {closeModal, openModal, resetSelection, toggleArc}
           ] = [this.state, this.props, this]
         , modalProps      = {isOpen, theme, display, modalWillClose:closeModal}
-        , clientFormProps = {client, dispatch, resetSelection}
-        , {archived}      = client
+        , clientFormProps = {item, dispatch, resetSelection}
+        , {archived}      = item
+        , buttonsControlProps = {display, archived, selected, openModal, toggleArc, isArch}
 
     return (
-      <div className='animated slide clients-view'>
+      <div className='animated fadeIn'>
         <Container>
           <Row className='fx fx-jb'>
             <div>
               <h2 className='flat-burn mb-0'>Tous les clients</h2>
             </div>
-            <ButtonsControl {...{archived, selected, openModal, toggleArc, isArch}} />
+            <ButtonsControl {...buttonsControlProps} />
           </Row>
           <Row className='pt-5'>
             <BootstrapTable hover bordered={false} condensed
                 ref='table'
                 maxHeight='398'
                 containerClass='main-table'
-                trClassName='pointer'
+                trClassName='pointer tr-tdvertical'
                 data={isArch?dataArch:data}
-                selectRow={selectRowProp(isArch,this.onSelectClient)}
-                pagination options={options} >
+                selectRow={TableConf.selectRowProp(isArch,this.onSelectItem)}
+                pagination options={TableConf.options(DISPLAY)} >
               <TableHeaderColumn dataField='_id' isKey hidden>#</TableHeaderColumn>
               <TableHeaderColumn dataField='created_at' dataFormat={this.dateFormater} dataSort={true}>{'Date d\'ajout'}</TableHeaderColumn>
               <TableHeaderColumn dataField='image' dataFormat={this.imageFormater} thStyle={{width:'64px'}} tdStyle={{padding:'2px 16px', width:'64px'}}>Image</TableHeaderColumn>
@@ -136,4 +90,4 @@ const mapState = ({clients:{data}}, ownProps) => {
   return ownProps
 }
 
-export default connect(mapState)(Clients)
+export default connect(mapState)(CommonCycles(Clients))

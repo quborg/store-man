@@ -1,11 +1,7 @@
 import urls from 'ayla-client/redux/config'
-import {saveBasket, arcBasket, delBasket} from './baskets'
+import {saveBasket, delBasket} from './baskets'
 import {getCollectionByKeyValue} from 'ayla-helper/ext'
 
-
-let   baskets           = []
-const basketFamily      = getCollectionByKeyValue(baskets, 'name', 'Familiale')
-    , basketDecouverte  = getCollectionByKeyValue(baskets, 'name', 'Decouverte')
 
 const headers = { 'Content-Type': 'application/json' }
     , options = {
@@ -20,7 +16,7 @@ const headers = { 'Content-Type': 'application/json' }
         }
       }
 
-function saveOrderOneCall(url, options) {
+const saveOrderOneCall = (url, options) => dispatch => {
   fetch(url, options)
     .then(res  => res.json())
     .then(data => { dispatch({ type: 'FULFILLED_ORDER' }); dispatch(getOrders()) })
@@ -87,11 +83,11 @@ export const saveOrder = (data, archive) => dispatch => {
     , _options  = options.ppt(method, _data)
 
   if (basket && basket.name) {
-    saveOrderOneCall(url, _options)
+    dispatch(saveOrderOneCall(url, _options))
   } else {
     if (basket._id) {
       dispatch(saveBasket(basket))
-      saveOrderOneCall(url, _options)
+      dispatch(saveOrderOneCall(url, _options))
     } else {
       saveOrderTwoCalls()
     }
@@ -102,7 +98,7 @@ export const saveOrder = (data, archive) => dispatch => {
       .then(id => {
         let __data = {..._data, basket_id: id}
         _options  = options.ppt(method, __data)
-        saveOrderOneCall(url, _options)
+        dispatch(saveOrderOneCall(url, _options))
       })
   }
 
@@ -110,29 +106,32 @@ export const saveOrder = (data, archive) => dispatch => {
 
 
 /**/
-export const arcOrder = ({_id, basket_id}, _baskets) => dispatch => {
+export const arcOrder = (_id, arch=true) => dispatch => {
   dispatch({ type: 'PENDING_ORDER' })
 
-  let data      = {_id, archived: true}
+  let data      = {_id, archived: arch}
     , url       = urls.order +'/'+ _id
     , method    = 'PUT'
     , _options  = options.ppt(method, data)
 
-  baskets = _baskets
-  if (basket_id!=basketFamily._id && basket_id!=basketDecouverte._id)
-    dispatch( arcBasket(basket_id) )
-      .then(id => { if (id) saveOrderOneCall(url, _options) })
-  else
-    saveOrderOneCall(url, _options)
+  dispatch(saveOrderOneCall(url, _options))
+}
+
+
+/**/
+export const unaOrder = _id => dispatch => {
+
+  dispatch( arcOrder(_id, false) )
 
 }
 
 
 /**/
-export const delOrder = ({_id, basket_id}, _baskets) => dispatch => {
+export const delOrder = ({_id, basket_id}, baskets) => dispatch => {
   dispatch({ type: 'PENDING_ORDER' })
 
-  baskets = _baskets
+  const basketFamily      = getCollectionByKeyValue(baskets, 'name', 'Familiale')
+      , basketDecouverte  = getCollectionByKeyValue(baskets, 'name', 'Decouverte')
   if (basket_id!=basketFamily._id && basket_id!=basketDecouverte._id)
     dispatch(delBasket(basket_id))
 

@@ -47,7 +47,7 @@ class Login extends Component {
 
     return loggedIn
     ? <Redirect to="/commandes"/>
-    : <div className="app flex-row align-items-center fixed animated slide">
+    : <div className="app flex-row align-items-center fixed animated fadeIn">
         <Container>
           <Row className="justify-content-center">
             <Col md="4">

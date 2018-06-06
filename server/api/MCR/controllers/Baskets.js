@@ -23,7 +23,8 @@ module.exports = {
   },
 
   create: function(req, res, next) {
-    req.models.basket.create(req.body, function(err, result) {
+    let data = _.merge({}, req.body, req.params)
+    req.models.basket.create(data, function(err, result) {
       if (err) res.status(err.status||500).json(err);
       res.status(201).json(result);
     });
@@ -46,10 +47,16 @@ module.exports = {
   destroy: function(req, res, next) {
     var id = req.params.id
     if (!id) res.status(400).json({msg:'No id provided.'});
-    req.models.basket.findByIdAndRemove(id, req.body, function (err, result) {
+    req.models.basket.findById(id, 'name', function (err, result) {
       if (err) res.status(err.status||500).json(err);
-      res.json(result);
-    });
+      if (result.name != 'Familiale' && result.name != 'Decouverte') {
+
+        req.models.basket.findByIdAndRemove(id, req.body, function (err, item) {
+          if (err) res.status(err.status||500).json(err);
+          res.json(item);
+        })
+      }
+    })
   }
 
 }

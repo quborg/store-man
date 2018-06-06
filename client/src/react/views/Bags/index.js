@@ -8,7 +8,7 @@ import {Modal} from 'ayla-client/react/components/Notifications'
 import {ButtonsControl} from 'ayla-client/react/components/Buttons'
 import {MSG} from 'ayla-client/react/views/settings'
 
-const DISPLAY         = 'embalage'
+const DISPLAY = 'embalage'
 
 
 class Bags extends Component {
@@ -57,7 +57,7 @@ class Bags extends Component {
         , bagProps    = {dispatch, bag, resetSelection}
 
     return (
-      <div className='animated slide'>
+      <div className='animated fadeIn'>
         <Container>
           <Row className='fx fx-jb'>
             <div>

@@ -26,7 +26,7 @@ class WeekOrders extends Component {
     const {data} = this.props
 
     return (
-      <div className='animated slide'>
+      <div className='animated fadeIn'>
         <Container>
           <Row className='fx fx-jb'>
             <div>

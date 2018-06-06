@@ -44,12 +44,6 @@ export const saveBasket = data => dispatch => {
             .catch(e   => { dispatch({ type:'REJECTED_BASKET', payload: e }) })
 }
 
-export const arcBasket = _id => dispatch => {
-
-  const data = {_id, archived: true}
-  return dispatch( saveBasket(data) )
-
-}
 
 export const delBasket = id => dispatch => {
   dispatch({ type: 'PENDING_BASKET' })

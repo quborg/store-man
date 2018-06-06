@@ -10,7 +10,7 @@ import {getCollectionById, getCollectionByKeyValue} from 'ayla-helper/ext'
 import {MSG} from 'ayla-client/react/views/settings'
 
 
-const DISPLAY         = 'panier'
+const DISPLAY = 'panier'
 
 
 class Baskets extends Component {
@@ -60,7 +60,7 @@ class Baskets extends Component {
         , basketProps = {dispatch, basket, products, resetSelection}
 
     return (
-      <div className='animated slide'>
+      <div className='animated fadeIn'>
         <Container>
           <Row className='fx fx-jb'>
             <div>

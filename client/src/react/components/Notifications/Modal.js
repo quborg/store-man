@@ -3,7 +3,7 @@ import  { Progress, Modal, ModalHeader, ModalBody, ModalFooter, Button } from 'r
 
 const THEME_OPS  =  {
                       primary   : { label: 'Ajouter',     action: 'NEW', icon: 'plus',        operation: 'Ajouter'           },
-                      warning   : { label: 'Sauvegarder', action: 'PUT', icon: 'edit',        operation: 'Sauvegarder'       },
+                      warning   : { label: 'Modifier',    action: 'PUT', icon: 'edit',        operation: 'Modifier'          },
                       secondary : { label: 'Archiver',    action: 'ARC', icon: 'folder',      operation: 'Archiver'          },
                       success   : { label: 'Désarchiver', action: 'UNA', icon: 'folder-open', operation: 'Désarchiver'       },
                       danger    : { label: 'Supprimer',   action: 'DEL', icon: 'trash',       operation: 'Supprimer'         },

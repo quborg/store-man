@@ -18,8 +18,9 @@ const REG = {
  * @return Object {errorsFlag:Object, errorRuntime:Boolean}
  */
 export default function validateFields(fields, errorsFlag) {
-  let keys = Object.keys(fields)
+  let keys         = Object.keys(fields)
     , errorRuntime = false
+
   if (keys.length) {
     keys.map( key => {
       if (fields.hasOwnProperty(key) && key in errorsFlag) {
@@ -40,5 +41,6 @@ export default function validateFields(fields, errorsFlag) {
       }
     })
   }
+
   return {errorsFlag, errorRuntime}
 }

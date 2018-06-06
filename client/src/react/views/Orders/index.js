@@ -10,31 +10,16 @@ import {Image} from 'ayla-client/react/components/Media'
 import RaisedButton from 'material-ui/RaisedButton'
 import moment from 'moment'
 import {getCollectionById} from 'ayla-helper/ext'
-import {MSG} from 'ayla-client/react/views/settings'
+import {TableConf} from 'ayla-client/react/views/settings'
+import CommonCycles from 'ayla-client/react/views/CommonCycles'
 
-const DISPLAY = 'order'
-
-const selectRowProp = cb => ({
-  mode: 'radio',
-  clickToSelect: true,
-  bgColor: '#B2EBF2',
-  onSelect: cb,
-})
-const options = {
-  sizePerPageList: [ 10, 100 ],
-  sizePerPage: 10,
-  sortName: 'created_at',
-  sortOrder: 'desc',
-  noDataText: MSG.load.order
-}
+const DISPLAY = 'commande'
 
 class Orders extends Component {
 
-  state = {
-    order: {},
-    selected: false,
-    isOpen: false,
-    theme: '',
+  static defaultProps = {
+    data: [],
+    dataArch: [],
     display: DISPLAY
   }
 
@@ -44,24 +29,6 @@ class Orders extends Component {
     this.props.dispatch(getClients())
     this.props.dispatch(getProducts())
     this.props.dispatch(getBags())
-  }
-
-  onSelectOrder = (order, selected) => {
-    selected
-    ? this.setState({order, selected})
-    : this.setState({order: {}, selected})
-  }
-
-  resetSelection  = () => {
-    this.setState({ product: {}, selected: false })
-  }
-
-  openModal  = (theme) => {
-    this.setState({ isOpen: true, theme })
-  }
-
-  closeModal = () => {
-    this.setState({isOpen:false})
   }
 
   dateFormater = cell => moment(cell).format('dddd DD MMMM YYYY, HH:mm')
@@ -90,36 +57,39 @@ class Orders extends Component {
       case 'open'   : return <RaisedButton label='Ouvert' backgroundColor='#4CAF50' className='dis-btn status-w' />
       case 'stock'  : return <RaisedButton label='Stock' backgroundColor='#FFEB3B' className='dis-btn status-w' />
       case 'payment': return <RaisedButton label='Payement' backgroundColor='#03A9F4' className='dis-btn status-w' />
-      default       : return <RaisedButton label='Cloturé' backgroundColor='#9E9E9E' className='dis-btn status-w' />
+      default       : return <RaisedButton label='Livré' backgroundColor='#9E9E9E' className='dis-btn status-w' />
     }
   }
 
   render() {
     const [
-            {isOpen, theme, display, order, selected},
-            {data, clients, products, baskets, dispatch},
-            {closeModal, openModal, resetSelection, basketFormater, statusFormater}
+            {isOpen, theme, item, selected, isArch},
+            {display, dispatch, data, dataArch, clients, products, baskets},
+            {closeModal, openModal, resetSelection, basketFormater, statusFormater, toggleArc}
           ] = [this.state, this.props, this]
         , modalProps     = {isOpen, theme, display, modalWillClose:closeModal}
-        , orderFormProps = {order, clients, products, baskets, dispatch, resetSelection, basketFormater, statusFormater}
+        , orderFormProps = {item, dispatch, resetSelection, basketFormater, statusFormater, clients, products, baskets}
+        , {archived}      = item
+        , buttonsControlProps = {display, archived, selected, openModal, toggleArc, isArch}
 
     return (
-      <div className='animated slide'>
+      <div className='animated fadeIn'>
         <Container>
           <Row className='fx fx-jb'>
             <div>
               <h2 className='flat-burn mb-0'>Toutes les commandes</h2>
             </div>
-            <ButtonsControl {...{selected, openModal}} />
+            <ButtonsControl {...buttonsControlProps} />
           </Row>
           <Row className='pt-5'>
             <BootstrapTable hover bordered={false}
+                ref='table'
                 maxHeight='398'
                 containerClass='main-table'
                 trClassName='pointer tr-tdvertical'
-                {...{data}}
-                selectRow={selectRowProp(this.onSelectOrder)}
-                pagination options={options} >
+                data={isArch?dataArch:data}
+                selectRow={TableConf.selectRowProp(isArch,this.onSelectItem)}
+                pagination options={TableConf.options('order')} >
               <TableHeaderColumn dataField='_id' isKey hidden>#</TableHeaderColumn>
               <TableHeaderColumn dataField='created_at' dataFormat={this.dateFormater} dataSort={true}>Date</TableHeaderColumn>
               <TableHeaderColumn dataField='client_id' dataFormat={this.clientFormater} dataSort={true}>Client</TableHeaderColumn>
@@ -138,8 +108,15 @@ class Orders extends Component {
 }
 
 const mapState = ({orders:{data}, clients:{data:clients}, products:{data:products}, baskets:{data:baskets}}, ownProps) => {
-  ownProps = { ...ownProps, data, clients, products, baskets }
+  let dataArch = []
+  data =  data.reduce( (data, item) => {
+            item.archived
+            ? dataArch.push(item)
+            : data.push(item)
+            return data
+          }, [])
+  ownProps = { ...ownProps, data, dataArch, clients, products, baskets }
   return ownProps
 }
 
-export default connect(mapState)(Orders)
+export default connect(mapState)(CommonCycles(Orders))

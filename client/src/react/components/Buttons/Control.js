@@ -53,15 +53,19 @@ export const ButtonsControl = ({archived, selected, openModal, display, isArch, 
               , toInfo = theme == 'info'
               , isBasket = display == 'panier'
               , disabled = !selected
+              , mixArchBtn = (isArch && toArch) || (!isArch && toUnar)
+              , noArch     = ['client','commande'].indexOf(display) < 0
+              , noButton   = noArch && toArch
 
             if (toAdd)    disabled = !toAdd
             if (isBasket) disabled = selected ? !toEdit && !toInfo : true
-            if (toDel)    disabled = ! (selected && isArch && archived)
+            if (toArch)   disabled = noArch ? !selected : false
+            if (toDel)    disabled = noArch ? !selected : !(selected && isArch && archived)
             if (isArch)   disabled = ! (selected && (toUnar || toDel || toInfo) && archived)
 
             disabled = selected && toInfo ? false : disabled
 
-            if (!((isArch && toArch) || (!isArch && toUnar)))
+            if ( !mixArchBtn )
               buttons.push(<RaisedButton
                             key={`${theme}-boa-ctl`}
                             onClick={() => openModal(theme)}
@@ -69,9 +73,10 @@ export const ButtonsControl = ({archived, selected, openModal, display, isArch, 
                             backgroundColor={colors[theme](disabled)}
                             icon={<i className={`fa fa-${icons[theme]} lead`} />}
                           />)
+
             return buttons
           }, []),
-          display !== 'panier'
+          display == 'client' || display == 'commande'
           ? [
               <i key='sep-boa-ctl' className='fa fa-ellipsis-v sep-clr sepa font-4xl' />,
               <Toggle key='arc-tog-boa-ctl' {...toggleProps(isArch && selected)} label="Archives" className={`btn-toggle arc ${isArch&&selected?'active':''}`} onToggle={toggleArc} />

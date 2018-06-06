@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import {saveProduct, arcProduct} from 'ayla-client/redux/actions/api'
+import {saveProduct, delProduct} from 'ayla-client/redux/actions/api'
 import {Row, Col, FormGroup, Input, Label, InputGroup, InputGroupAddon, InputGroupText} from 'reactstrap'
 import {Image, ImageFileLoader} from 'ayla-client/react/components/Media'
 import validateFields from 'ayla-client/react/plugins/form-validator'
@@ -43,7 +43,7 @@ export default class ProductForm extends Component {
     switch (action) {
       case 'NEW': this.saveProduct()  ;break
       case 'PUT': this.saveProduct()  ;break
-      case 'ARC': this.arcProduct()   ;break
+      case 'DEL': this.delProduct()   ;break
     }
   }
 
@@ -57,11 +57,6 @@ export default class ProductForm extends Component {
       this.props.initModal()
     } else this.props.setAction('REV')
     this.setState({ errorsFlag, errorRuntime })
-  }
-
-  arcProduct() {
-    this.props.dispatch( arcProduct(this.state.product._id) )
-    this.props.initModal()
   }
 
   delProduct() {

@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import {saveBag, arcBag} from 'ayla-client/redux/actions/api'
+import {saveBag, delBag} from 'ayla-client/redux/actions/api'
 import {Row, Col, FormGroup, Input, Label, InputGroup, InputGroupAddon, InputGroupText} from 'reactstrap'
 import {Image, ImageFileLoader} from 'ayla-client/react/components/Media'
 import validateFields from 'ayla-client/react/plugins/form-validator'
@@ -44,7 +44,7 @@ export default class BagForm extends Component {
     switch (action) {
       case 'NEW': this.saveBag()  ;break
       case 'PUT': this.saveBag()  ;break
-      case 'ARC': this.arcBag()   ;break
+      case 'DEL': this.delBag()   ;break
     }
   }
 
@@ -58,11 +58,6 @@ export default class BagForm extends Component {
       this.props.initModal()
     }
     this.setState({ errorsFlag, errorRuntime })
-  }
-
-  arcBag() {
-    this.props.dispatch( arcBag(this.state.bag._id) )
-    this.props.initModal()
   }
 
   delBag() {
@@ -85,7 +80,7 @@ export default class BagForm extends Component {
 
     if (toDel || toInfo) {
       return <FormGroup row className='fx fx-jc'>
-        {toDel && <h5 className='danger-clr pb-2'>{MSG.archive.bag}</h5>}
+        {toDel && <h5 className='danger-clr pb-2'>{MSG.del.bag}</h5>}
         <Col xs='3'>
           <Image src={bag.image} width='75' height='75' alt='Image aperçu' />
         </Col>

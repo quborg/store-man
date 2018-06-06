@@ -10,19 +10,19 @@ export const MSG = {
   arc: {
     client:   'Vous êtes sur le point d\'archiver le client suivant :',
     product:  'Vous êtes sur le point d\'archiver le produit suivant :',
-    bag:      'Vous êtes sur le point d\'archiver l\'embalege suivant :',
+    bag:      'Vous êtes sur le point d\'archiver l\'embalage suivant :',
     order:    'Vous êtes sur le point d\'archiver la Commande suivante :'
   },
   una: {
     client:   'Vous êtes sur le point de désarchiver le client suivant :',
     product:  'Vous êtes sur le point de désarchiver le produit suivant :',
-    bag:      'Vous êtes sur le point de désarchiver l\'embalege suivant :',
+    bag:      'Vous êtes sur le point de désarchiver l\'embalage suivant :',
     order:    'Vous êtes sur le point de désarchiver la Commande suivante :'
   },
   del: {
     client:   'Vous êtes sur le point de supprimer le client suivant :',
     product:  'Vous êtes sur le point de supprimer le produit suivant :',
-    bag:      'Vous êtes sur le point de supprimer l\'embalege suivant :',
+    bag:      'Vous êtes sur le point de supprimer l\'embalage suivant :',
     order:    'Vous êtes sur le point de supprimer la Commande suivante :'
   }
 }
@@ -39,4 +39,20 @@ export const ERRORS_STACK = {
   products  : 'SVP, choisir au moin un produit !',
   client_id : 'SVP, choisir un client !',
   basket    : 'SVP, choisir au moin un produit !'
+}
+
+export const TableConf = {
+  selectRowProp: (isArch, cb) => ({
+    mode: 'radio',
+    clickToSelect: true,
+    bgColor: isArch ? '#AED581' : '#B2EBF2',
+    onSelect: cb
+  }),
+  options: DISPLAY => ({
+    sizePerPageList: [ 10, 100 ],
+    sizePerPage: 10,
+    sortName: 'created_at',
+    sortOrder: 'desc',
+    noDataText: MSG.load[DISPLAY]
+  })
 }

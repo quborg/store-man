@@ -1,6 +1,5 @@
 import React, {Component} from 'react'
-
-import {saveBasket, arcBasket} from 'ayla-client/redux/actions/api'
+import {saveBasket} from 'ayla-client/redux/actions/api'
 import {Row, Col, FormGroup, Input, Label, InputGroup, InputGroupAddon, InputGroupText} from 'reactstrap'
 import {getCollectionById} from 'ayla-helper/ext'
 import {BasketEditor} from 'ayla-client/react/components/Widgets'
@@ -49,7 +48,7 @@ export default class BasketForm extends Component {
     switch (action) {
       case 'NEW': this.saveBasket()  ;break
       case 'PUT': this.saveBasket()  ;break
-      case 'ARC': this.arcBasket()   ;break
+      // case 'ARC': this.arcBasket()   ;break
     }
   }
 
@@ -66,16 +65,11 @@ export default class BasketForm extends Component {
     this.setState({ errorsFlag, errorRuntime })
   }
 
-  arcBasket() {
-    this.props.dispatch( arcBasket(this.state.basket._id) )
-    this.props.initModal()
-  }
-
-  delBasket() {
-    this.props.dispatch( delBasket(this.state.basket._id) )
-    this.props.resetSelection()
-    this.props.initModal()
-  }
+  // delBasket() {
+  //   this.props.dispatch( delBasket(this.state.basket._id) )
+  //   this.props.resetSelection()
+  //   this.props.initModal()
+  // }
 
   basketHandler = nextBasket => {
     let [basket, {products}]  = [{ ...this.state.basket, ...nextBasket }, this.props]

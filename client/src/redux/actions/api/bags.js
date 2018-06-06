@@ -43,12 +43,6 @@ export const saveBag = data => dispatch => {
     .catch(e   => { dispatch({ type:'REJECTED_BAG', payload: e }) })
 }
 
-export const arcBag = _id => dispatch => {
-
-  const data = {_id, archived: true}
-  dispatch( saveBag(data) )
-
-}
 
 export const delBag = id => dispatch => {
   dispatch({ type: 'PENDING_BAG' })
