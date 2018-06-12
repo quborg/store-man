@@ -28,7 +28,6 @@
 ## Table of content :
   - [Prerequisites](#prerequisites)
   - [Available Scripts](#available-scripts)
-    - [npm start:2](#npm-start2)
     - [npm run mongodb](#npm-run-mongodb)
     - [npm run server:dev](#npm-run-serverdev)
     - [npm run server:prod](#npm-run-serverprod)
@@ -53,10 +52,6 @@ Make sure you have :
 ## Available Scripts
 
 In the project directory, you can run:
-
-### `npm start:2`
-
-Runs MongoDB daemon, then Server api and try to connect to the database when `mongod` is ready.
 
 ### `npm run mongodb`
 
@@ -87,26 +82,21 @@ Runs a static server on [Ferme Ayla app](./static/html)
 ## Configs indications
 
 * **MongoDB**
-  * By default `/server/mongodb/` is the database location, you can specify your own in `/server/services/mongodb.sh`.
-  * It use default configuration. Feel free to setup new values in `mongodb.sh`
+  * By default now, `/server/mongodb/` is the database location, you can specify your own in `/server/services/mongodb.sh`.
   * A straightforward command : `mongod -dbpath '~/MongoDB' --port 10007 --bind_ip 127.0.0.1,192.167.0.1`
 
 * **Used Ports**
   * **Server**, development and production ports setup in [ecosystem](./server/ecosystem.config.js).
   * **React/Redux development mode**, get a look into [webpack](/client/webpack.config.js) `PORT` variable.
+  * **MongoDB**, we use default configuration. Feel free to setup new values in `mongodb.sh`
 
 * **Redux Store**
-  * After a true authentication, we used Saga middleware to fire up data on the browser.
-  * [File configuration](./client/redux/middlewares/Saga.js)
+  * After a successful authentication, we use [Saga middleware](./client/redux/middleware/Saga.js) to fire up data on the browser with multiple async calls to API and finally mount Redux store at once (escape side effect multiple React app updates).
 
 
 ## Metrics and Monitoring
 
-* Watch mode is installed and preconfigured for server api and for mongo db models, each change on files will reload the app process as the following structure:
-  * `/server/api/*` server reload
-  * `/server/api/models` mongodb reload
-If you changed those two paths, watch mode [setup](./server/ecosystem.config.js) have to be updated too, to Watch over.
-* In all modes development and production for both server api and mongo database we use `pm2` package, an advanced process manager and straightforward to use (start/stop/restart/delete/show/monit).<br>
+* PM2 an advanced process manager and straightforward to use (start/stop/restart/delete/show/monit).<br>
 * Use `pm2 list` to list available apps and get some information about the process. The setup is here [ecosystem](./server/ecosystem.config.js).<br>
 * Start server and mongodb with pm2 : `pm2 start [app-name]|[pid]`, example : `pm2 start api-ferme-ayla`.
 * Stoping a process : `pm2 stop api-ferme-ayla`.

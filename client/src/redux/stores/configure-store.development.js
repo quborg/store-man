@@ -6,7 +6,7 @@ import multi    from 'redux-multi'
 import thunk    from 'redux-thunk'
 import logger   from 'redux-logger'
 import createSagaMiddleware from 'redux-saga'
-import {Saga}   from 'ayla-client/redux/middlewares'
+import {Saga}   from 'ayla-client/redux/middleware'
 import Reducers from 'ayla-client/redux/reducers'
 import { loadingBarMiddleware } from 'ayla-client/react/plugins/loadingBar'
 
