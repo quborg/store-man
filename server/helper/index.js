@@ -1,4 +1,4 @@
-'use strinct'
+'use strict'
 
 
 var paths   = require('config/paths')
