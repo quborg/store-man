@@ -3,17 +3,17 @@ import {Link, Switch, Route, Redirect} from 'react-router-dom';
 import {connect} from 'react-redux'
 import {Container} from 'reactstrap';
 
-import Header  from 'ayla-client/react/components/Header';
-import Sidebar from 'ayla-client/react/components/Sidebar';
+import Header  from 'store-man-client/react/components/Header';
+import Sidebar from 'store-man-client/react/components/Sidebar';
 
-import Clients  from 'ayla-client/react/views/Clients';
-import Products from 'ayla-client/react/views/Products';
-import Bags     from 'ayla-client/react/views/Bags';
-import Baskets  from 'ayla-client/react/views/Baskets';
-import Orders   from 'ayla-client/react/views/Orders';
-import WeekOrders from 'ayla-client/react/views/Orders/WeekOrders';
+import Clients  from 'store-man-client/react/views/Clients';
+import Products from 'store-man-client/react/views/Products';
+import Bags     from 'store-man-client/react/views/Bags';
+import Baskets  from 'store-man-client/react/views/Baskets';
+import Orders   from 'store-man-client/react/views/Orders';
+import WeekOrders from 'store-man-client/react/views/Orders/WeekOrders';
 
-import LoadingBar from 'ayla-client/react/plugins/loadingBar'
+import LoadingBar from 'store-man-client/react/plugins/loadingBar'
 
 
 class Full extends Component {

@@ -3,7 +3,7 @@ import {NavLink} from 'react-router-dom';
 import {Badge, Nav, NavItem, NavLink as RsNavLink} from 'reactstrap';
 import classNames from 'classnames';
 import {nav} from './_nav';
-import SidebarMinimizer from 'ayla-client/react/components/SidebarMinimizer';
+import SidebarMinimizer from 'store-man-client/react/components/SidebarMinimizer';
 
 export default class Sidebar extends Component {
 

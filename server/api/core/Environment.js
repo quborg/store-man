@@ -4,8 +4,8 @@
  * ENVIRENMENT CONFIGURATION
  */
 
-const DB_DEV_URL  = "mongodb://localhost/fermeayla_dev"
-    , DB_PROD_URL = "mongodb://localhost/fermeayla"
+const DB_DEV_URL  = "mongodb://localhost/storeman_dev"
+    , DB_PROD_URL = "mongodb://localhost/storeman"
     , OPTIONS     = {
                       server:   { socketOptions: { keepAlive: 300000, connectTimeoutMS: 30000 } },
                       replset:  { socketOptions: { keepAlive: 300000, connectTimeoutMS: 30000 } }

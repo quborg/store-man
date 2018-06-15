@@ -8,7 +8,7 @@ import products from './products'
 import bags from './bags'
 import baskets from './baskets'
 import orders from './orders'
-import {loadingBarReducer as loadingBar} from 'ayla-client/react/plugins/loadingBar'
+import {loadingBarReducer as loadingBar} from 'store-man-client/react/plugins/loadingBar'
 
 
 const Reducers = combineReducers({

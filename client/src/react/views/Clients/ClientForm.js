@@ -1,12 +1,12 @@
 import React, { Component } from 'react'
 import moment from 'moment'
-import {saveClient, delClient, arcClient, unaClient} from 'ayla-client/redux/actions/api'
+import {saveClient, delClient, arcClient, unaClient} from 'store-man-client/redux/actions/api'
 import {Row, Col, FormGroup, Input, Label} from 'reactstrap'
-import {Image, ImageFileLoader} from 'ayla-client/react/components/Media'
+import {Image, ImageFileLoader} from 'store-man-client/react/components/Media'
 import PlacesAutocomplete from 'react-places-autocomplete'
 import RaisedButton from 'material-ui/RaisedButton'
-import {ERRORS_STACK, MSG} from 'ayla-client/react/views/settings'
-import validateFields from 'ayla-client/react/plugins/form-validator'
+import {ERRORS_STACK, MSG} from 'store-man-client/react/views/settings'
+import validateFields from 'store-man-client/react/plugins/form-validator'
 
 const REQUIRED_KEYS = { firstname:'',lastname:'',phone:'',adress:'',city:'' }
 

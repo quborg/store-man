@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import {connect} from 'react-redux'
 import moment from 'moment'
-import {getProducts, getBags, getBaskets, getOrders} from 'ayla-client/redux/actions/api'
-import {getCollectionById, getCollectionByKeyValue} from 'ayla-helper/ext'
+import {getProducts, getBags, getBaskets, getOrders} from 'store-man-client/redux/actions/api'
+import {getCollectionById, getCollectionByKeyValue} from 'store-man-helper/ext'
 import WeekOrdersCard from './WeekOrdersCard'
 import {Container, Row} from 'reactstrap'
 

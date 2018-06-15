@@ -9,7 +9,7 @@ module.exports = {
         "error_file": "./logs/mongodb.stderr.log"
       },
       {
-        "name": "api-ferme-ayla-dev",
+        "name": "api-store-man-dev",
         "script": "./index.js",
         "max_restarts": 2,
         "watch": ["./api/"],
@@ -21,7 +21,7 @@ module.exports = {
         "error_file": "./logs/api-dev.stderr.log"
       },
       {
-        "name": "api-ferme-ayla-prod",
+        "name": "api-store-man-prod",
         "script": "./index.js",
         "max_restarts": 2,
         "env": {

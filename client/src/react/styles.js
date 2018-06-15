@@ -9,10 +9,10 @@ import 'font-awesome/css/font-awesome.min.css'
 import 'simple-line-icons/css/simple-line-icons.css'
 
 // Import Main styles for this application
-import 'ayla-scss/style.scss'
+import 'store-man-scss/style.scss'
 
 // Temp fix for reactstrap
-import 'ayla-scss/core/_dropdown-menu-right.scss'
+import 'store-man-scss/core/_dropdown-menu-right.scss'
 
 // The awesome react bootstrap table
 import 'react-bootstrap-table/dist/react-bootstrap-table.min.css'

@@ -1,11 +1,11 @@
 import React, {Component} from 'react'
-import {saveBasket} from 'ayla-client/redux/actions/api'
+import {saveBasket} from 'store-man-client/redux/actions/api'
 import {Row, Col, FormGroup, Input, Label, InputGroup, InputGroupAddon, InputGroupText} from 'reactstrap'
-import {getCollectionById} from 'ayla-helper/ext'
-import {BasketEditor} from 'ayla-client/react/components/Widgets'
+import {getCollectionById} from 'store-man-helper/ext'
+import {BasketEditor} from 'store-man-client/react/components/Widgets'
 import Toggle from 'material-ui/Toggle'
-import validateFields from 'ayla-client/react/plugins/form-validator'
-import {ERRORS_STACK} from 'ayla-client/react/views/settings'
+import validateFields from 'store-man-client/react/plugins/form-validator'
+import {ERRORS_STACK} from 'store-man-client/react/views/settings'
 
 
 const REQUIRED_KEYS = { products : [] }

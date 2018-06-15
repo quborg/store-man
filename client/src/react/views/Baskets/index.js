@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import {connect} from 'react-redux'
-import {getBaskets, getProducts} from 'ayla-client/redux/actions/api'
+import {getBaskets, getProducts} from 'store-man-client/redux/actions/api'
 import BasketCard from './BasketCard'
 import BasketForm from './BasketForm'
 import {Container, Row} from 'reactstrap'
-import {Modal} from 'ayla-client/react/components/Notifications'
-import {ButtonsControl} from 'ayla-client/react/components/Buttons'
-import {getCollectionById, getCollectionByKeyValue} from 'ayla-helper/ext'
-import {MSG} from 'ayla-client/react/views/settings'
+import {Modal} from 'store-man-client/react/components/Notifications'
+import {ButtonsControl} from 'store-man-client/react/components/Buttons'
+import {getCollectionById, getCollectionByKeyValue} from 'store-man-helper/ext'
+import {MSG} from 'store-man-client/react/views/settings'
 
 
 const DISPLAY = 'panier'

@@ -2,9 +2,9 @@ import React from 'react'
 import { render } from 'react-dom'
 import { Provider } from 'react-redux'
 import { AppContainer } from 'react-hot-loader'
-import { configureStore } from 'ayla-client/redux/stores/configure-store'
+import { configureStore } from 'store-man-client/redux/stores/configure-store'
 
-import 'ayla-helper/prototypes'
+import 'store-man-helper/prototypes'
 import 'typeface-roboto'
 
 

@@ -1,7 +1,7 @@
 module.exports = {
   apps : [
       {
-        "name": "ferme-ayla-static",
+        "name": "store-man-static",
         "script": "./static-server.js",
       }
   ]

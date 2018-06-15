@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import {Input} from 'reactstrap'
-import {Image, PREVIEW_IMG_SRC} from 'ayla-client/react/components/Media'
+import {Image, PREVIEW_IMG_SRC} from 'store-man-client/react/components/Media'
 import ImageCompressor from 'image-compressor.js';
 
 const options = {

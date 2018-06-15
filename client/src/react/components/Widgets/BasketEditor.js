@@ -1,8 +1,8 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {Col, FormGroup, InputGroup, InputGroupAddon, InputGroupText} from 'reactstrap'
-import {Image} from 'ayla-client/react/components/Media'
-import {getCollectionById} from 'ayla-helper/ext'
+import {Image} from 'store-man-client/react/components/Media'
+import {getCollectionById} from 'store-man-helper/ext'
 
 
 class BasketEditor extends Component {

@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import {connect} from 'react-redux'
-import {getBags} from 'ayla-client/redux/actions/api'
+import {getBags} from 'store-man-client/redux/actions/api'
 import BagCard from './BagCard'
 import BagForm from './BagForm'
 import {Container, Row} from 'reactstrap'
-import {Modal} from 'ayla-client/react/components/Notifications'
-import {ButtonsControl} from 'ayla-client/react/components/Buttons'
-import {MSG} from 'ayla-client/react/views/settings'
+import {Modal} from 'store-man-client/react/components/Notifications'
+import {ButtonsControl} from 'store-man-client/react/components/Buttons'
+import {MSG} from 'store-man-client/react/views/settings'
 
 const DISPLAY = 'embalage'
 

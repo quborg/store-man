@@ -106,9 +106,9 @@ module.exports = (env = {}) => {
     },
     resolve: {
       alias: {
-        'ayla-client': SRC_DIR,
-        'ayla-scss': SCSS_DIR,
-        'ayla-helper': HELPER_DIR
+        'store-man-client': SRC_DIR,
+        'store-man-scss': SCSS_DIR,
+        'store-man-helper': HELPER_DIR
       }
     },
     plugins: [

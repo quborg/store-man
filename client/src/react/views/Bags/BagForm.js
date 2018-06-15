@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
-import {saveBag, delBag} from 'ayla-client/redux/actions/api'
+import {saveBag, delBag} from 'store-man-client/redux/actions/api'
 import {Row, Col, FormGroup, Input, Label, InputGroup, InputGroupAddon, InputGroupText} from 'reactstrap'
-import {Image, ImageFileLoader} from 'ayla-client/react/components/Media'
-import validateFields from 'ayla-client/react/plugins/form-validator'
-import {ERRORS_STACK, MSG} from 'ayla-client/react/views/settings'
+import {Image, ImageFileLoader} from 'store-man-client/react/components/Media'
+import validateFields from 'store-man-client/react/plugins/form-validator'
+import {ERRORS_STACK, MSG} from 'store-man-client/react/views/settings'
 
 const REQUIRED_KEYS = { name : '' }
 

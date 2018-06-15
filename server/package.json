@@ -1,12 +1,12 @@
 {
-  "name": "ferme-ayla-server",
+  "name": "store-man-server",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "mongodb": "pm2 start ecosystem.config.js --only mongo-db",
-    "dev": "pm2 start ecosystem.config.js --only api-ferme-ayla-dev",
-    "prod": "pm2 start ecosystem.config.js --only api-ferme-ayla-prod",
+    "dev": "pm2 start ecosystem.config.js --only api-store-man-dev",
+    "prod": "pm2 start ecosystem.config.js --only api-store-man-prod",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",

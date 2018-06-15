@@ -6,9 +6,9 @@ import multi    from 'redux-multi'
 import thunk    from 'redux-thunk'
 import logger   from 'redux-logger'
 import createSagaMiddleware from 'redux-saga'
-import {Saga}   from 'ayla-client/redux/middleware'
-import Reducers from 'ayla-client/redux/reducers'
-import { loadingBarMiddleware } from 'ayla-client/react/plugins/loadingBar'
+import {Saga}   from 'store-man-client/redux/middleware'
+import Reducers from 'store-man-client/redux/reducers'
+import { loadingBarMiddleware } from 'store-man-client/react/plugins/loadingBar'
 
 const sagaMiddleware   = createSagaMiddleware()
     , middlewares      = [ thunk, multi, promise, logger, sagaMiddleware, loadingBarMiddleware() ]
@@ -26,8 +26,8 @@ function configureStore () {
                 )
 
   if (module.hot) {
-    module.hot.accept('ayla-client/redux/reducers/', () => {
-      store.replaceReducer(require('ayla-client/redux/reducers/').default)
+    module.hot.accept('store-man-client/redux/reducers/', () => {
+      store.replaceReducer(require('store-man-client/redux/reducers/').default)
     })
   }
 

@@ -5,9 +5,9 @@ import createSagaMiddleware from 'redux-saga'
 import promise  from 'redux-promise'
 import multi    from 'redux-multi'
 import thunk    from 'redux-thunk'
-import {Saga}   from 'ayla-client/redux/middlewares'
-import Reducers from 'ayla-client/redux/reducers'
-import { loadingBarMiddleware } from 'ayla-client/react/plugins/loadingBar'
+import {Saga}   from 'store-man-client/redux/middlewares'
+import Reducers from 'store-man-client/redux/reducers'
+import { loadingBarMiddleware } from 'store-man-client/react/plugins/loadingBar'
 
 
 const sagaMiddleware   = createSagaMiddleware()

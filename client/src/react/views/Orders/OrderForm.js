@@ -1,15 +1,15 @@
 import React, { Component } from 'react'
-import {saveOrder, delOrder, arcOrder, unaOrder} from 'ayla-client/redux/actions/api'
+import {saveOrder, delOrder, arcOrder, unaOrder} from 'store-man-client/redux/actions/api'
 import {Row, Col, FormGroup, Input, Label, InputGroup, InputGroupAddon, InputGroupText, Collapse} from 'reactstrap'
-import {Image} from 'ayla-client/react/components/Media'
-import {getCollectionById, getCollectionByKeyValue} from 'ayla-helper/ext'
-import {BasketEditor} from 'ayla-client/react/components/Widgets'
+import {Image} from 'store-man-client/react/components/Media'
+import {getCollectionById, getCollectionByKeyValue} from 'store-man-helper/ext'
+import {BasketEditor} from 'store-man-client/react/components/Widgets'
 import SelectField from 'material-ui/SelectField'
 import MenuItem from 'material-ui/MenuItem'
 import RaisedButton from 'material-ui/RaisedButton'
 import IconButton from 'material-ui/IconButton'
-import {ERRORS_STACK, MSG} from 'ayla-client/react/views/settings'
-import validateFields from 'ayla-client/react/plugins/form-validator'
+import {ERRORS_STACK, MSG} from 'store-man-client/react/views/settings'
+import validateFields from 'store-man-client/react/plugins/form-validator'
 
 const REQUIRED_KEYS = { client_id:'',basket:{} }
 

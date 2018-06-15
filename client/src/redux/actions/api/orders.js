@@ -1,6 +1,6 @@
-import urls from 'ayla-client/redux/config'
+import urls from 'store-man-client/redux/config'
 import {saveBasket, delBasket} from './baskets'
-import {getCollectionByKeyValue} from 'ayla-helper/ext'
+import {getCollectionByKeyValue} from 'store-man-helper/ext'
 
 
 const headers = { 'Content-Type': 'application/json' }

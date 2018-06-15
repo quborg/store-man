@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {Image} from 'ayla-client/react/components/Media'
+import {Image} from 'store-man-client/react/components/Media'
 
 
 export default class ProductCard extends Component {
