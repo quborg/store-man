@@ -74,7 +74,7 @@ Runs a static server on [Ferme Ayla app](./static/html)
 
 * PM2 an advanced process manager and straightforward to use (start/stop/restart/delete/show/monit).<br>
 * Use `pm2 list` to list available apps and get some information about the process. The setup is here [ecosystem](./server/ecosystem.config.js).<br>
-* Start server and mongodb with pm2 : `pm2 start [app-name]|[pid]`, example : `pm2 start api-ferme-ayla`.
-* Stoping a process : `pm2 stop api-ferme-ayla`.
-* Clear config and reload ecosystem : `pm2 delete id|name|all`, `pm2 reload ecosystem.config.js --only api-ferme-ayla`, omit `--only` to reload all apps.
+* Start server and mongodb with pm2 : `pm2 start [app-name]|[pid]`, example : `pm2 start api-store-man`.
+* Stoping a process : `pm2 stop api-store-man`.
+* Clear config and reload ecosystem : `pm2 delete id|name|all`, `pm2 reload ecosystem.config.js --only api-store-man`, omit `--only` to reload all apps.
 * To monitor the resource usage use `pm2 imonit` and `pm2 monit`, [further command cheatsheet ..](https://github.com/Unitech/pm2).

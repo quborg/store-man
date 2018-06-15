@@ -5,7 +5,7 @@ import createSagaMiddleware from 'redux-saga'
 import promise  from 'redux-promise'
 import multi    from 'redux-multi'
 import thunk    from 'redux-thunk'
-import {Saga}   from 'store-man-client/redux/middlewares'
+import {Saga}   from 'store-man-client/redux/middleware'
 import Reducers from 'store-man-client/redux/reducers'
 import { loadingBarMiddleware } from 'store-man-client/react/plugins/loadingBar'
 
