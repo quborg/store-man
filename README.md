@@ -52,7 +52,7 @@ Bundles the React app for production in `/client/build` folder.
 
 ### `npm run static`
 
-Runs a static server on [Ferme Ayla app](./static/html)
+Runs a static server located in ./static/"html"
 
 
 ## Configs indications
